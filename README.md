@@ -1,14 +1,14 @@
 <h1 align="center">MedAdhere</h1>
 
 <p align="center">
-  MedAdhere texts patients at dose time to ask whether they took their medication.<br>
-  It records taken or missed doses and reported symptoms, asks follow-up questions,<br>
-  and gives clinicians dose history, symptom charts and the original messages.
+  MedAdhere checks each medication reply against the patient's saved record.<br>
+  It links symptoms to earlier messages, matches medication reference data,<br>
+  and records the facts, follow-up questions and review evidence for the clinician.
 </p>
 
 <p align="center">
-  <img src="assets/launch.gif" alt="MedAdhere launch video: scheduled medication check-ins, validated records, evaluation results, AWS and the clinician dashboard" width="100%"><br>
-  <i>45-second overview. <a href="assets/launch.mp4">Watch it in HD (MP4)</a>.</i>
+  <img src="assets/launch.gif" alt="MedAdhere overview: medication texts, patient-history retrieval, drug-reference matching, priority rules, evaluation and the clinician dashboard" width="100%"><br>
+  <i>69-second overview. <a href="assets/launch.mp4">Watch it in HD (MP4)</a>.</i>
 </p>
 
 <p align="center">
@@ -37,8 +37,8 @@ It runs on serverless AWS, sends real SMS through Twilio, and calls Claude throu
 ## See it working
 
 <p align="center">
-  <img src="assets/chat.gif" alt="Animated walkthrough: lock-screen notification, SMS replies and extracted facts, followed by Alice Chen's patient record, history, charts and clinician controls" width="100%"><br>
-  <i>Follow each reply from the phone, through the extracted facts, to the clinician's day thread, symptom details and severity chart. After the chat, open Alice's record from the patient list and explore her history, charts, evidence and clinician controls. All patient and cohort data are synthetic. <a href="assets/chat.mp4">Watch the full walkthrough (MP4)</a> · <a href="assets/chat.gif">Full-size GIF</a>.</i>
+  <img src="assets/chat.gif" alt="Walkthrough: lock-screen notification and SMS alongside extracted facts and the dashboard, then patient-context retrieval, symptom and reference matching, priority rules, evaluation and Alice Chen's full clinician record" width="100%"><br>
+  <i>Follow Alice's reply through her saved history, medication references, question priorities and escalation rules. Then open Alice from the patient roster and explore her day thread, charts, history, source messages and clinician controls. The processing sequence explains the implementation; all patient and cohort data are synthetic. <a href="assets/chat.mp4">Watch the full walkthrough (MP4)</a> · <a href="assets/chat.gif">Full-size GIF</a>.</i>
 </p>
 
 <p align="center">

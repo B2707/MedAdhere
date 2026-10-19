@@ -181,6 +181,8 @@
   <div class="chip" style="left:820px; top:840px"><div class="ring"></div><div class="ic">&#9719;</div><div><div class="k">Onset</div><div class="v">Around lunch</div></div></div>
 </section>
 
+<section class="sc" id="s-context"><iframe id="overview-context" src="clinical-context.html" title="Clinical context and reference matching" style="position:absolute;left:60px;top:100px;width:1600px;height:750px;transform:scale(1.125);transform-origin:0 0;border:1px solid var(--border);border-radius:10px;box-shadow:var(--elev-2)"></iframe></section>
+
 <!-- 4 · bounded authority -->
 <section class="sc" id="s4">
   <div class="kt" data-at="0.1" style="position:absolute; left:130px; top:150px; font-size:76px; width:760px" data-text="Read the patient's reply."></div>
@@ -292,7 +294,10 @@ $('#chain').innerHTML = A.map(([k, v], i) => `<div class="anode" style="left:${N
 
 const S = [['#s1', 0, 3.6], ['#s2', 3.6, 6.8], ['#s3', 6.8, 15.8], ['#s4', 15.8, 22.2], ['#s5', 22.2, 27.4], ['#s6', 27.4, 33.0], ['#s7', 33.0, 37.6], ['#s8', 37.6, 43]];
 S.forEach((scene, i) => { if (i >= 2) scene[2] += phoneDelay; if (i >= 3) scene[1] += phoneDelay; });
-const END = 43 + phoneDelay;
+const CONTEXT_LENGTH=24, contextStart=S[2][2];
+S.forEach((scene,i)=>{if(i>=3){scene[1]+=CONTEXT_LENGTH;scene[2]+=CONTEXT_LENGTH;}});
+S.splice(3,0,['#s-context',contextStart,contextStart+CONTEXT_LENGTH]);
+const END = 43 + phoneDelay + CONTEXT_LENGTH;
 
 function pop(el, p) {
   el.style.opacity = clamp(p / .18);
@@ -307,6 +312,10 @@ function kinetic(sc, lt) {
 }
 
 const scene = {
+  '#s-context'(lt) {
+    const frame=$('#overview-context').contentWindow;
+    if(typeof frame.render==='function') frame.render(Math.max(0,lt)*34/CONTEXT_LENGTH);
+  },
   '#s1'(lt, sc) {
     pop($('#logo'), lt - .15);
     $('#wordmark').style.opacity = clamp((lt - .45) / .2);

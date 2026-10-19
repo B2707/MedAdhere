@@ -43,7 +43,7 @@ async function render(browser, html, states, size, gif, width, fps = FPS, device
   }
   await page.close();
   const out = path.join(__dirname, '..', gif);
-  const gifScale = html === 'chat.html' ? 1500 : width;
+  const gifScale = html === 'chat.html' ? 1360 : width;
   const sampling = html === 'chat.html' ? "select='if(lt(t,21.6),1,not(mod(n,2)))'," : '';
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(fps), '-i', path.join(dir, 'f%04d.png'),
     '-vf', `${sampling}scale=${gifScale}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle`,

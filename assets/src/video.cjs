@@ -8,7 +8,7 @@ const FPS = 30;
 
 (async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'medvid-'));
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, args: ['--allow-file-access-from-files'] });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   await page.goto('file://' + path.join(__dirname, 'launch.html'));
   await Promise.all(page.frames().map(frame => frame.evaluate(async () => {

@@ -147,6 +147,9 @@
   #walkthrough .tour-window { position: absolute; left: 160px; top: 86px; width: 1850px; height: 868px; overflow: hidden; border: 1px solid #334155; border-radius: 17px; box-shadow: 0 28px 70px rgba(0,0,0,.4); }
   #walkthrough iframe { width: 1600px; height: 750px; border: 0; transform: scale(1.15625); transform-origin: 0 0; }
   #tour-caption { position: absolute; right: 160px; top: 40px; font-size: 21px; font-weight: 500; color: #b9c6d8; }
+  #context-stage { position:absolute;inset:0;background:var(--canvas);z-index:81;visibility:hidden;opacity:0;pointer-events:none; }
+  #context-stage .context-window { position:absolute;left:160px;top:66px;width:1850px;height:868px;overflow:hidden;border:1px solid var(--border);border-radius:16px;box-shadow:var(--elev-2); }
+  #context-stage iframe { width:1600px;height:750px;border:0;transform:scale(1.15625);transform-origin:0 0; }
 </style>
 <link rel="stylesheet" href="lock-screen.css">
 <script src="lock-screen.js"></script>
@@ -230,6 +233,7 @@
 </div>
 
 <div class="pk" id="pk"></div>
+<section id="context-stage"><div class="context-window"><iframe id="clinical-context" src="clinical-context.html" title="Patient context, reference matching, priority and evaluation"></iframe></div></section>
 <section id="walkthrough"><div class="label" style="left:160px;top:42px">Clinician workspace</div><div id="tour-caption"></div><div class="tour-window"><iframe id="clinician-tour" src="clinician-tour.html" title="Alice Chen clinician dashboard walkthrough"></iframe></div></section>
 
 <script>
@@ -405,21 +409,28 @@ window.render = t => {
   [...ticks.children].forEach((d, i) => d.style.background = i < shown ? 'var(--accent)' : 'var(--subtle)');
   renderDashboard(t, times);
 };
-// Preserve the conversation, then freeze it while the clinician walkthrough continues.
-const CHAT_END = END, renderConversation = window.render;
+// Preserve the conversation, explain retrieval and routing, then continue the full clinician tour.
+const CHAT_END = END, CONTEXT_END = 34, TOUR_START = CHAT_END + CONTEXT_END, renderConversation = window.render;
 window.render = t => {
   renderConversation(Math.min(t, CHAT_END - .04));
-  const local = t - CHAT_END, stage = $('#walkthrough');
+  const contextLocal=t-CHAT_END, contextStage=$('#context-stage'), contextFrame=$('#clinical-context').contentWindow;
+  const inContext=contextLocal>=0 && t<TOUR_START;
+  contextStage.style.visibility=inContext?'visible':'hidden';
+  contextStage.style.opacity=inContext?ease(contextLocal/.25).toFixed(3):0;
+  const contextState=typeof contextFrame.render==='function'?contextFrame.render(Math.max(0,Math.min(CONTEXT_END-.001,contextLocal))):{key:'loading'};
+  const local = t - TOUR_START, stage = $('#walkthrough');
   const opening = ease(local / .25), frame = $('#clinician-tour').contentWindow;
   stage.style.visibility = local < 0 ? 'hidden' : 'visible';
   stage.style.opacity = opening.toFixed(3);
   stage.style.transform = 'none';
   const state = typeof frame.render === 'function' ? frame.render(Math.max(0,local)) : {key:'loading',title:''};
   $('#tour-caption').textContent = state.title;
-  return local < 0 ? `chat:${t}` : `tour:${opening.toFixed(3)}:${state.key}`;
+  return t < CHAT_END ? `chat:${t}` : inContext ? `context:${contextStage.style.opacity}:${contextState.key}` : `tour:${opening.toFixed(3)}:${state.key}`;
 };
 window.CHAT_END = CHAT_END;
-window.END = CHAT_END + 60;
+window.CONTEXT_END = CONTEXT_END;
+window.TOUR_START = TOUR_START;
+window.END = TOUR_START + 60;
 if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % window.END); requestAnimationFrame(loop); }; loop(); }
 else render(0);
 </script></body></html>
