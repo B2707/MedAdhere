@@ -26,7 +26,10 @@ async function render(browser, html, states, size, gif, width, fps = FPS, device
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'medgif-'));
   const page = await browser.newPage({ viewport: size, deviceScaleFactor });
   await page.goto('file://' + path.join(__dirname, html));
-  await page.waitForTimeout(400);
+  await Promise.all(page.frames().map(frame => frame.evaluate(async () => {
+    await Promise.all([document.fonts.load('400 16px "Public Sans"'), document.fonts.load('400 12px "IBM Plex Mono"')]);
+    await document.fonts.ready;
+  })));
   let last = null, lastBuf = null, lastRendered = null;
   for (let i = 0; i < states.length; i++) {
     const key = JSON.stringify(states[i]);

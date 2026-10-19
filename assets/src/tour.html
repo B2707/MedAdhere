@@ -1,5 +1,5 @@
 <!doctype html>
-<html><head><meta charset="utf-8">
+<html><head><meta charset="utf-8"><title>MedAdhere</title>
 <!-- Animated dashboard tour for the README (dashboard-tour.gif). Uses the real screenshots in ../ -->
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,10 +16,11 @@
   .tab { font-size: 15px; font-weight: 700; letter-spacing: 1.5px; padding: 8px 16px; border-radius: 999px; color: #7f93ad; border: 1px solid #1f3a4f; }
   .tab.on { color: #04120e; background: #2dd4a7; border-color: #2dd4a7; }
   .brand { position: absolute; top: 28px; right: 34px; color: #2dd4a7; font-size: 15px; font-weight: 700; letter-spacing: 3px; }
-</style></head>
-<body>
-  <div class="tabs"><span class="tab">COHORT OVERVIEW</span><span class="tab">PATIENT DETAIL</span><span class="tab">ENROLL PATIENT</span></div>
-  <div class="brand">NEXT.JS CLINICIAN DASHBOARD</div>
+</style><link rel="stylesheet" href="visual-theme.css">
+</head>
+<body data-view="tour">
+  <div class="tabs"><span class="tab">Cohort overview</span><span class="tab">Patient detail</span><span class="tab">Enroll patient</span></div>
+  <div class="brand">Clinician dashboard</div>
   <div class="win">
     <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
       <div class="url" id="url">medadhere / dashboard</div></div>

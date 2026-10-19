@@ -1,5 +1,5 @@
 <!doctype html>
-<html><head><meta charset="utf-8">
+<html><head><meta charset="utf-8"><title>MedAdhere</title>
 <!-- MedAdhere launch video (motion graphics). 1920x1080, driven by window.render(t).
      Open with ?play to watch it live. Rendered to launch.mp4 / launch.gif by video.cjs.
      Every claim matches README.md and the thesis chapters. The SMS exchange is an example. -->
@@ -25,7 +25,7 @@
     display: flex; align-items: center; justify-content: center; font-size: 92px; font-weight: 800; color: #04120e;
     box-shadow: 0 30px 80px rgba(45,212,167,.35), inset 0 2px 0 rgba(255,255,255,.35); }
   .shock { position: absolute; width: 150px; height: 150px; border-radius: 50%; border: 3px solid #2dd4a7; opacity: 0; }
-  .wordmark { font-size: 150px; font-weight: 800; letter-spacing: -0.045em; margin-top: 36px; }
+  .wordmark { font-size:88px; font-weight: 800; letter-spacing: -0.045em; margin-top: 36px; }
   .wordmark span { display: inline-block; }
 
   /* phone */
@@ -67,7 +67,7 @@
 
   /* stats */
   .tile { position: absolute; top: 400px; width: 395px; height: 360px; border-radius: 30px; background: linear-gradient(170deg, #0f1f33, #0a1424); border: 1px solid #1f3a58; padding: 40px 36px; opacity: 0; overflow: hidden; }
-  .tile .num { font-size: 116px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tile .num { font-size:82px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
   .tile .lab { font-size: 26px; font-weight: 700; margin-top: 22px; }
   .tile .sub { font-size: 19px; color: #8ea2bc; margin-top: 10px; line-height: 1.35; }
   .tile .bar { position: absolute; left: 36px; right: 36px; bottom: 34px; height: 6px; border-radius: 3px; background: #1a2d45; }
@@ -128,8 +128,9 @@
 </style>
 <link rel="stylesheet" href="lock-screen.css">
 <script src="lock-screen.js"></script>
+<link rel="stylesheet" href="visual-theme.css">
 </head>
-<body>
+<body data-view="launch">
 <div class="bg"></div><div class="grid"></div>
 
 <!-- 1 · brand -->
@@ -139,13 +140,13 @@
     <div class="logo" id="logo">M</div>
   </div>
   <div class="wordmark" id="wordmark">MedAdhere</div>
-  <div class="kt" data-at="1.5" data-st="0.06" style="font-size:44px; font-weight:600; letter-spacing:-0.01em; color:#a9b8cc; margin-top:18px" data-text="A clinical AI agent that lives in *plain_SMS.*"></div>
+  <div class="kt" data-at="1.5" data-st="0.06" style="font-size:40px; font-weight:600; letter-spacing:-0.01em; color:#475569; margin-top:18px" data-text="Medication check-ins by text."></div>
 </div></section>
 
 <!-- 2 · hook -->
 <section class="sc" id="s2"><div class="center">
-  <div class="kt" data-at="0.15" style="font-size:150px" data-text="No app. No portal."></div>
-  <div class="kt" data-at="1.25" style="font-size:150px; margin-top:20px" data-text="Patients just *text_back.*"></div>
+  <div class="kt" data-at="0.15" style="font-size:88px" data-text="Patients reply by text."></div>
+  <div class="kt" data-at="1.25" style="font-size:88px; margin-top:20px" data-text="Clinicians review the record."></div>
 </div></section>
 
 <!-- 3 · conversation -->
@@ -174,25 +175,25 @@
   </div>
   </div></div>
   <div class="eyebrow" style="position:absolute; left:820px; top:190px" id="s3eb">Example conversation</div>
-  <div class="kt" data-at="0.7" style="position:absolute; left:820px; top:240px; font-size:88px; width:1060px" data-text="Every answer becomes a *clinical_event.*"></div>
-  <div class="chip" style="left:820px; top:560px"><div class="ring"></div><div class="ic">+</div><div><div class="k">SYMPTOM</div><div class="v">Headache</div></div></div>
-  <div class="chip" style="left:820px; top:700px"><div class="ring"></div><div class="ic">8</div><div><div class="k">SEVERITY</div><div class="v">8 / 10</div></div></div>
-  <div class="chip" style="left:820px; top:840px"><div class="ring"></div><div class="ic">&#9719;</div><div><div class="k">ONSET</div><div class="v">Around lunch</div></div></div>
+  <div class="kt" data-at="0.7" style="position:absolute; left:820px; top:240px; font-size:72px; width:1060px" data-text="Each reply updates the patient's record."></div>
+  <div class="chip" style="left:820px; top:560px"><div class="ring"></div><div class="ic">+</div><div><div class="k">Symptom</div><div class="v">Headache</div></div></div>
+  <div class="chip" style="left:820px; top:700px"><div class="ring"></div><div class="ic">8</div><div><div class="k">Severity</div><div class="v">8 / 10</div></div></div>
+  <div class="chip" style="left:820px; top:840px"><div class="ring"></div><div class="ic">&#9719;</div><div><div class="k">Onset</div><div class="v">Around lunch</div></div></div>
 </section>
 
 <!-- 4 · bounded authority -->
 <section class="sc" id="s4">
-  <div class="kt" data-at="0.1" style="position:absolute; left:130px; top:150px; font-size:104px; width:760px" data-text="The model *proposes.*"></div>
-  <div class="mcard" style="left:130px; top:400px"><div class="k">CLAUDE SONNET</div><div class="v">Extracts claims</div><div class="d">from the patient's own words</div></div>
-  <div class="mcard" style="left:130px; top:600px"><div class="k">CLAUDE HAIKU 4.5</div><div class="v">Drafts the reply</div><div class="d">one question at a time</div></div>
-  <div class="kt" data-at="2.0" style="position:absolute; left:640px; top:150px; font-size:104px; width:1200px; text-align:right" data-text="Code *disposes.*"></div>
+  <div class="kt" data-at="0.1" style="position:absolute; left:130px; top:150px; font-size:76px; width:760px" data-text="Read the patient's reply."></div>
+  <div class="mcard" style="left:130px; top:400px"><div class="k">Claude Sonnet</div><div class="v">Extracts claims</div><div class="d">from the patient's own words</div></div>
+  <div class="mcard" style="left:130px; top:600px"><div class="k">Claude Haiku 4.5</div><div class="v">Drafts the reply</div><div class="d">one question at a time</div></div>
+  <div class="kt" data-at="2.0" style="position:absolute; left:640px; top:150px; font-size:76px; width:1200px; text-align:right" data-text="Validate facts and replies."></div>
   <div id="vgrid"></div>
 </section>
 
 <!-- 5 · numbers -->
 <section class="sc" id="s5">
   <div class="eyebrow" style="position:absolute; left:130px; top:170px" id="s5eb">Pre-registered evaluation</div>
-  <div class="kt" data-at="0.15" style="position:absolute; left:130px; top:220px; font-size:96px" data-text="Measured, not *promised.*"></div>
+  <div class="kt" data-at="0.15" style="position:absolute; left:130px; top:220px; font-size:72px" data-text="Evaluation results"></div>
   <div class="tile" style="left:130px"><div class="num" data-to="1" data-dec="3">0</div><div class="lab">Life-safety recall</div><div class="sub">33 of 33 crisis and acute messages caught</div><div class="bar"><i></i></div></div>
   <div class="tile" style="left:553px"><div class="num" data-to="0.966" data-dec="3">0</div><div class="lab">Adherence accuracy</div><div class="sub">vs 0.705 for a keyword and regex matcher</div><div class="bar"><i></i></div></div>
   <div class="tile" style="left:976px"><div class="num" data-to="3483" data-dec="0" data-comma="1">0</div><div class="lab">Passing tests</div><div class="sub">against a real PostgreSQL instance</div><div class="bar"><i></i></div></div>
@@ -201,26 +202,26 @@
 
 <!-- 6 · serverless -->
 <section class="sc" id="s6">
-  <div class="eyebrow" style="position:absolute; left:110px; top:170px" id="s6eb">Event-driven · one cdk deploy</div>
-  <div class="kt" data-at="0.15" style="position:absolute; left:110px; top:220px; font-size:104px" data-text="Fully serverless on *AWS.*"></div>
+  <div class="eyebrow" style="position:absolute; left:110px; top:170px" id="s6eb">AWS message processing</div>
+  <div class="kt" data-at="0.15" style="position:absolute; left:110px; top:220px; font-size:76px" data-text="Message processing on AWS"></div>
   <div id="chain"></div>
   <div class="pk" id="pk"></div>
 </section>
 
 <!-- 7 · dashboard -->
 <section class="sc" id="s7" style="perspective: 2200px">
-  <div class="eyebrow" style="position:absolute; left:130px; top:360px" id="s7eb">Next.js · Cognito · Vercel</div>
-  <div class="kt" data-at="0.5" style="position:absolute; left:130px; top:410px; font-size:96px; width:640px" data-text="A live dashboard for the *clinician.*"></div>
+  <div class="eyebrow" style="position:absolute; left:130px; top:360px" id="s7eb">Clinician dashboard</div>
+  <div class="kt" data-at="0.5" style="position:absolute; left:130px; top:410px; font-size:72px; width:640px" data-text="Review doses, symptoms and messages."></div>
   <div class="shot" id="shot"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
     <img src="../dashboard-overview.png"><div class="shine" id="shine"></div></div>
 </section>
 
 <!-- 8 · end card -->
 <section class="sc" id="s8"><div class="center">
-  <div class="logo" id="logo2" style="width:120px;height:120px;border-radius:32px;font-size:72px">M</div>
-  <div class="kt" data-at="0.4" style="font-size:132px; margin-top:34px" data-text="MedAdhere"></div>
-  <div class="kt" data-at="1.0" data-st="0.09" style="font-size:52px; font-weight:700; letter-spacing:-0.015em; margin-top:22px; color:#b9c6d8" data-text="The model proposes. *Code_disposes.*"></div>
-  <div id="url" style="margin-top:56px; font-size:28px; font-family: 'SF Mono', Menlo, monospace; color:#7f93ad; opacity:0">github.com/B2707/medadhere-thesis</div>
+  <div class="logo" id="logo2" style="width:76px;height:76px;border-radius:10px;font-size:40px">M</div>
+  <div class="kt" data-at="0.4" style="font-size:96px; margin-top:34px" data-text="MedAdhere"></div>
+  <div class="kt" data-at="1.0" data-st="0.09" style="font-size:42px; font-weight:700; letter-spacing:-0.015em; margin-top:22px; color:#475569" data-text="Medication check-ins and patient records."></div>
+  <div id="url" style="margin-top:40px; font-size:24px; color:#475569; opacity:0">Bader El-Asadi · Carleton University</div>
 </div></section>
 <div class="flash" id="flash"></div>
 
@@ -261,10 +262,10 @@ const IOS = {
 
 const $ = s => document.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
-const spring = p => p <= 0 ? 0 : 1 - Math.exp(-6 * p) * Math.cos(10 * p);
+const spring = p => 1 - Math.pow(1 - clamp(p), 3);
 const expo = p => (p = clamp(p), p === 1 ? 1 : 1 - Math.pow(2, -10 * p));
 const inout = p => (p = clamp(p), p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
-const CHECK = '<svg width="20" height="20" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#04120e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHECK = '<svg width="20" height="20" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#0f766e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 // Kinetic text: split into words; *word* or *two_words* gets the gradient.
 $$('.kt').forEach(el => {
@@ -293,29 +294,28 @@ const S = [['#s1', 0, 3.6], ['#s2', 3.6, 6.8], ['#s3', 6.8, 15.8], ['#s4', 15.8,
 S.forEach((scene, i) => { if (i >= 2) scene[2] += phoneDelay; if (i >= 3) scene[1] += phoneDelay; });
 const END = 43 + phoneDelay;
 
-function pop(el, p, { dy = 30, base = .5, dx = 0 } = {}) {
-  const s = spring(p / .8);
-  el.style.opacity = clamp(p * 5);
-  el.style.transform = `translate(${(1 - s) * dx}px, ${(1 - s) * dy}px) scale(${base + (1 - base) * s})`;
+function pop(el, p) {
+  el.style.opacity = clamp(p / .18);
+  el.style.transform = `translateY(${(1 - inout(p / .2)) * 5}px)`;
 }
 function ringPulse(el, p) { const r = el.querySelector('.ring'); if (!r) return; const q = clamp(p / .7); r.style.opacity = p > 0 ? (1 - q) : 0; r.style.transform = `scale(${1 + q * .06}, ${1 + q * .3})`; }
 function kinetic(sc, lt) {
-  $$('.kt', sc).forEach(el => { const at = +el.dataset.at, st = +(el.dataset.st || .085);
-    $$('.w', el).forEach((w, i) => { const e = expo((lt - at - i * st) / .7);
-      w.style.opacity = e; w.style.transform = `translateY(${(1 - e) * 0.55}em) scale(${.92 + .08 * e})`; w.style.filter = `blur(${(1 - e) * 16}px)`; }); });
+  $$('.kt', sc).forEach(el => {
+    el.style.opacity = clamp((lt - +el.dataset.at) / .2);
+    $$('.w', el).forEach(w => { w.style.opacity = 1; w.style.transform = 'none'; w.style.filter = 'none'; });
+  });
 }
 
 const scene = {
   '#s1'(lt, sc) {
-    pop($('#logo'), lt - .15, { dy: 60, base: .2 }); $('#logo').style.transform += ` rotate(${(1 - Math.min(1, spring((lt - .15) / .8))) * -25}deg)`;
-    [['#shock1', .3], ['#shock2', .5]].forEach(([id, at]) => { const q = clamp((lt - at) / 1.0); const el = $(id); el.style.opacity = lt > at ? (1 - q) * .9 : 0; el.style.transform = `scale(${1 + expo(q) * 3.2})`; });
-    $$('span', $('#wordmark')).forEach((c, i) => { const p = lt - .6 - i * .045; const s = spring(p / .7);
-      c.style.opacity = clamp(p * 6); c.style.transform = `translateY(${(1 - Math.min(1.2, s)) * 80}px) rotate(${(1 - Math.min(1, s)) * 12}deg)`; });
+    pop($('#logo'), lt - .15);
+    $('#wordmark').style.opacity = clamp((lt - .45) / .2);
+    $$('span', $('#wordmark')).forEach(c => { c.style.opacity = 1; c.style.transform = 'none'; });
   },
   '#s3'(lt, sc) {
-    const ph = $('#phone'), e = spring((lt - .05) / 1.1);
-    ph.style.opacity = clamp(lt * 4);
-    ph.style.transform = `translateY(${(1 - e) * 700}px) rotateX(${(1 - Math.min(1, e)) * 40}deg) rotateY(${(1 - Math.min(1, e)) * -18 + 8 - lt * .9}deg) scale(${1 + lt * .006})`;
+    const ph = $('#phone');
+    ph.style.opacity = clamp(lt / .2);
+    ph.style.transform = `translateY(${(1 - inout(lt / .25)) * 8}px)`;
     lockScreen.render(lt);
     const times = [0.9, 2.3, 3.6, 4.8, 6.0, 7.2].map(t => t + phoneDelay);
     $$('.b', sc).forEach((b, i) => { const p = lt - times[i]; b.style.display = p > 0 ? 'block' : 'none'; if (p > 0) (b.classList.contains('out') ? IOS.send(b, p) : IOS.recv(b, p)); });
@@ -335,7 +335,7 @@ const scene = {
   '#s5'(lt, sc) {
     $('#s5eb').style.opacity = clamp(lt * 3);
     $$('.tile', sc).forEach((t, i) => { const p = lt - (.7 + i * .16); if (p <= 0) { t.style.opacity = 0; return; } pop(t, p, { dy: 120, base: .9 });
-      const n = t.querySelector('.num'), to = +n.dataset.to, dec = +n.dataset.dec, q = expo((p - .1) / 1.6);
+      const n = t.querySelector('.num'), to = +n.dataset.to, dec = +n.dataset.dec, q = 1;
       let v = (to * q).toFixed(dec); if (n.dataset.comma) v = (+v).toLocaleString('en-US'); n.textContent = v + (n.dataset.suffix || '');
       t.querySelector('.bar i').style.transform = `scaleX(${q})`; });
   },
@@ -355,10 +355,9 @@ const scene = {
   },
   '#s7'(lt, sc) {
     $('#s7eb').style.opacity = clamp((lt - .3) * 3);
-    const sh = $('#shot'), e = spring((lt - .1) / 1.2), m = Math.min(1, e);
-    sh.style.opacity = clamp(lt * 3);
-    sh.style.transform = `translateX(${(1 - e) * 500}px) rotateY(${-34 + 22 * m + lt * 1.2}deg) rotateX(${12 - 6 * m}deg) scale(${.82 + .1 * m})`;
-    $('#shine').style.left = (-300 + inout((lt - 1.3) / 1.2) * 1500) + 'px';
+    const sh = $('#shot');
+    sh.style.opacity = clamp((lt - .1) / .2);
+    sh.style.transform = `translateX(${(1 - inout((lt - .1) / .25)) * 8}px)`;
   },
   '#s8'(lt, sc) {
     pop($('#logo2'), lt - .1, { dy: 40, base: .2 });
@@ -373,14 +372,12 @@ window.render = t => {
     sc.style.visibility = 'visible';
     const i = id === '#s1' ? 1 : expo(lt / .45), o = id === '#s8' ? 0 : inout((lt - (dur - .45)) / .45);
     sc.style.opacity = i * (1 - o);
-    sc.style.transform = `scale(${(.96 + .04 * i) * (1 + .1 * o)})`;
-    sc.style.filter = (i < 1 || o > 0) ? `blur(${(1 - i) * 12 + o * 18}px)` : 'none';
+    sc.style.transform = 'none';
+    sc.style.filter = 'none';
     kinetic(sc, lt);
     if (scene[id]) scene[id](lt, sc);
   });
-  // flash on each cut
-  const cut = S.slice(1).map(s => s[1]).find(c => Math.abs(t - c) < .35);
-  $('#flash').style.opacity = cut !== undefined ? (1 - Math.abs(t - cut) / .35) * .7 : 0;
+
 };
 window.END = END;
 if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % END); requestAnimationFrame(loop); }; loop(); }

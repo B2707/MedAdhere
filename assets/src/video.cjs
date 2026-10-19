@@ -11,7 +11,10 @@ const FPS = 30;
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   await page.goto('file://' + path.join(__dirname, 'launch.html'));
-  await page.waitForTimeout(500);
+  await Promise.all(page.frames().map(frame => frame.evaluate(async () => {
+    await Promise.all([document.fonts.load('400 16px "Public Sans"'), document.fonts.load('400 12px "IBM Plex Mono"')]);
+    await document.fonts.ready;
+  })));
   const end = await page.evaluate(() => window.END);
   const n = Math.round(end * FPS);
   for (let i = 0; i < n; i++) {

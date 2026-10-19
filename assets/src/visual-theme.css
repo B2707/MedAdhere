@@ -1,0 +1,132 @@
+/* The dashboard's light theme: slate canvas, white surfaces, dark text, restrained teal.
+   Public Sans is the application face; the phone retains the native Messages face.
+   Preserve the three-panel explanation and use motion only to reveal a new record. */
+@font-face { font-family: "Public Sans"; src: url("fonts/PublicSans.ttf") format("truetype"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/IBMPlexMono-Regular.ttf") format("truetype"); font-weight: 400; font-display: block; }
+:root {
+  --canvas: #edf1f7;
+  --raised: #f1f5f9;
+  --surface: #fff;
+  --border: #cbd5e1;
+  --subtle: #e2e8f0;
+  --ink: #0f172a;
+  --muted: #475569;
+  --accent: #0f766e;
+  --chart: #0d9488;
+  --tint: #f0fdfa;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --font-ui: "Public Sans", system-ui, sans-serif;
+  --font-meta: "IBM Plex Mono", monospace;
+  --elev-1: 0 1px 2px rgb(15 23 42 / .06), 0 1px 3px rgb(15 23 42 / .04);
+  --elev-2: 0 2px 4px rgb(15 23 42 / .06), 0 8px 16px -4px rgb(15 23 42 / .08);
+}
+body { background: var(--canvas); color: var(--ink); font-family: var(--font-ui); }
+body > .bg, body > .bg1, body > .bg2, body > .grid, body > .glow, body > .glow2, .shock, .shine, .flash, .tr, .burst { display: none; }
+.label, .badge, .eyebrow { font-family: var(--font-ui); color: var(--ink); letter-spacing: 0; font-weight: 600; text-transform: none; }
+.label { font-size: 20px; }
+.label::before, .badge::before { display: none; }
+.phone { background: #29313d; box-shadow: 0 0 0 1px #0f172a, 0 12px 24px -6px rgb(15 23 42 / .18); }
+.screen { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif; }
+
+/* The explanation beside the phone follows the application's surface hierarchy. */
+[data-view="chat"] .node { background: var(--surface); border-color: var(--border); border-radius: var(--radius-md); font-family: var(--font-ui); }
+[data-view="chat"] .node .k { color: var(--muted); font-size: 13px; font-weight: 500; letter-spacing: 0; }
+[data-view="chat"] .node .v { color: var(--ink); font-size: 18px; }
+[data-view="chat"] .node .glow { border: 1px solid var(--accent); border-radius: var(--radius-md); box-shadow: none; }
+[data-view="chat"] .wire { background: var(--border); }
+[data-view="chat"] .ticks i { background: var(--subtle); }
+[data-view="chat"] .card { background: var(--surface); color: var(--ink); border-color: var(--border); border-radius: var(--radius-lg); box-shadow: var(--elev-1); font-family: var(--font-ui); }
+[data-view="chat"] .card .dot { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--raised); color: var(--accent); font-size: 20px; font-weight: 500; }
+[data-view="chat"] .card .k { color: var(--muted); font-size: 13px; font-weight: 500; letter-spacing: 0; }
+[data-view="chat"] .card .v { font-size: 23px; font-weight: 600; letter-spacing: -.01em; }
+[data-view="chat"] .card .src { color: var(--muted); font-family: var(--font-ui); }
+[data-view="chat"] .card.final { background: var(--surface); border-color: var(--border); }
+[data-view="chat"] .card.final .dot { background: var(--tint); color: var(--accent); }
+[data-view="chat"] .card.final .v { font-size: 19px; }
+[data-view="chat"] .slot, .card .ring { display: none; }
+[data-view="chat"] .pk { width: 8px; height: 8px; margin: -4px 0 0 -4px; background: var(--accent); box-shadow: none; }
+[data-view="chat"] .dashboard { color: var(--ink); border-color: var(--border); border-radius: var(--radius-lg); box-shadow: var(--elev-2); font-family: var(--font-ui); }
+[data-view="chat"] .log-kicker, [data-view="chat"] .summary-row span { font-size: 12px; font-weight: 400; letter-spacing: 0; }
+[data-view="chat"] .workspace { font-size: 12px; letter-spacing: 0; }
+[data-view="chat"] .workspace b { color: var(--muted); }
+[data-view="chat"] #walkthrough { background: var(--canvas); }
+[data-view="chat"] #walkthrough .tour-window { border-color: var(--border); box-shadow: var(--elev-2); }
+[data-view="chat"] #tour-caption { color: var(--muted); font-size: 20px; }
+
+/* The overview uses the same visual language as the clinician workspace. */
+[data-view="launch"] .kt { font-family: var(--font-ui); font-weight: 600; letter-spacing: -.02em; }
+[data-view="launch"] .hl { color: inherit; background: none; -webkit-text-fill-color: currentColor; }
+[data-view="launch"] .eyebrow { color: var(--muted); font-size: 22px; font-weight: 500; }
+[data-view="launch"] .logo { width: 76px; height: 76px; border-radius: var(--radius-md); background: var(--accent); color: #fff; font-size: 40px; font-weight: 600; box-shadow: none; }
+[data-view="launch"] .wordmark { font-size: 96px; font-weight: 650; letter-spacing: -.02em; }
+[data-view="launch"] .chip { padding: 20px 24px; background: var(--surface); border-color: var(--border); border-radius: var(--radius-lg); }
+[data-view="launch"] .chip .ic { width: 40px; height: 40px; font-size: 23px; border-radius: var(--radius-sm); background: var(--raised); color: var(--accent); font-weight: 500; }
+[data-view="launch"] .chip .k { font-size: 15px; color: var(--muted); letter-spacing: 0; font-weight: 500; }
+[data-view="launch"] .chip .v { font-size: 29px; font-weight: 600; }
+[data-view="launch"] .ring { display: none; }
+[data-view="launch"] .mcard, [data-view="launch"] .vchip { background: var(--surface); border-color: var(--border); border-radius: var(--radius-md); }
+[data-view="launch"] .mcard .k { color: var(--muted); font-size: 15px; letter-spacing: 0; font-weight: 500; }
+[data-view="launch"] .mcard .v { font-size: 30px; font-weight: 600; }
+[data-view="launch"] .mcard .d { color: var(--muted); }
+[data-view="launch"] .vchip { font-size: 20px; font-weight: 500; }
+[data-view="launch"] .vchip .ck { background: var(--tint); border-radius: var(--radius-sm); }
+[data-view="launch"] .vchip .n { color: var(--muted); }
+[data-view="launch"] .tile { height: 320px; background: transparent; border: 0; border-right: 1px solid var(--border); border-radius: 0; padding: 34px 28px; }
+[data-view="launch"] .tile:last-child { border-right: 0; }
+[data-view="launch"] .tile .num { font-size: 82px; font-weight: 600; letter-spacing: -.03em; }
+[data-view="launch"] .tile .lab { font-size: 24px; font-weight: 600; }
+[data-view="launch"] .tile .sub { color: var(--muted); font-size: 18px; }
+[data-view="launch"] .tile .bar { display: none; }
+[data-view="launch"] .anode { background: var(--surface); border-color: var(--border); border-radius: var(--radius-md); padding: 24px; }
+[data-view="launch"] .anode .k { color: var(--muted); font-size: 14px; font-weight: 500; letter-spacing: 0; }
+[data-view="launch"] .anode .v { font-size: 25px; font-weight: 600; }
+[data-view="launch"] .anode .glow { border: 1px solid var(--accent); border-radius: var(--radius-md); box-shadow: none; }
+[data-view="launch"] .wire { background: var(--border); }
+[data-view="launch"] .pill { background: var(--raised); color: var(--muted); border-color: var(--border); border-radius: var(--radius-sm); font-size: 21px; font-weight: 500; padding: 12px 18px; }
+[data-view="launch"] .pk { width: 9px; height: 9px; background: var(--accent); box-shadow: none; }
+[data-view="launch"] .shot { border-color: var(--border); border-radius: var(--radius-lg); box-shadow: var(--elev-2); }
+[data-view="launch"] .shot .bar { background: var(--raised); border-color: var(--border); }
+
+/* The walkthrough keeps the application's real type, spacing, and controls. */
+[data-view="clinician"] .brand b { font-weight: 600; }
+[data-view="clinician"] .card { border-radius: var(--radius-lg); box-shadow: var(--elev-1); }
+[data-view="clinician"] .button, [data-view="clinician"] .search, [data-view="clinician"] .input { border-radius: var(--radius-md); }
+[data-view="clinician"] .pill { border-radius: var(--radius-sm); }
+[data-view="clinician"] .heading h1 { font-size: 26px; font-weight: 600; letter-spacing: -.02em; }
+[data-view="clinician"] h2 { font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -.01em; }
+[data-view="clinician"] .metric b { font-size: 34px; line-height: 40px; font-weight: 600; letter-spacing: -.03em; }
+[data-view="clinician"] .metric p, [data-view="clinician"] .muted { font-size: 13px; line-height: 20px; }
+[data-view="clinician"] .kicker { font: 400 12px/16px var(--font-meta); letter-spacing: .02em; }
+[data-view="clinician"] .log-text, [data-view="clinician"] .reply { font-size: 17px; line-height: 26px; }
+[data-view="clinician"] .example { font-size: 12px; letter-spacing: 0; border-color: var(--subtle); }
+[data-view="clinician"] .footer { font-size: 12px; }
+[data-view="clinician"] #step-label { display: none; }
+
+/* Adjacent README figures use the same palette rather than a separate poster theme. */
+[data-view="architecture"] .badge { padding: 0; background: none; border: 0; border-radius: 0; font-size: 16px; font-weight: 500; color: var(--muted); }
+[data-view="architecture"] .head h1 span { color: inherit; }
+[data-view="architecture"] .legend { color: var(--muted); }
+[data-view="architecture"] .box { box-shadow: var(--elev-1); border-radius: var(--radius-md); }
+[data-view="architecture"] .box .n { color: var(--ink); }
+[data-view="architecture"] .box .s, [data-view="architecture"] .box .t { color: var(--muted); letter-spacing: 0; }
+[data-view="architecture"] .code { background: var(--surface); border-color: var(--accent); }
+[data-view="architecture"] .model { background: var(--surface); border-color: #64748b; }
+[data-view="architecture"] .ext, [data-view="architecture"] .store { background: var(--surface); border-color: var(--border); }
+[data-view="architecture"] .store::before { border-color: var(--border); background: var(--raised); }
+[data-view="architecture"] .panel { border-color: var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+[data-view="architecture"] .panel .ph, [data-view="architecture"] .lane, [data-view="architecture"] .lbl { color: var(--muted); letter-spacing: 0; }
+[data-view="architecture"] .panel .ph b, [data-view="architecture"] .rule b { color: var(--ink); }
+[data-view="architecture"] .rule, [data-view="architecture"] .foot { color: var(--muted); }
+[data-view="architecture"] .foot b { color: var(--ink); }
+[data-view="architecture"] .lbl { background: var(--canvas); }
+[data-view="architecture"] .lg-code { background: var(--tint); border-color: var(--accent); }
+[data-view="architecture"] .lg-model { background: var(--raised); border-color: #64748b; }
+[data-view="architecture"] .lg-ext, [data-view="architecture"] .lg-store { background: var(--surface); border-color: var(--border); }
+[data-view="phones"] .note, [data-view="phones"] .caption, [data-view="phones"] .sub { color: var(--muted); font-family: var(--font-ui); }
+[data-view="phones"] .caption b { color: var(--ink); font-weight: 500; }
+[data-view="tour"] .win { border: 1px solid var(--border); box-shadow: var(--elev-2); }
+[data-view="tour"] .tab { color: var(--muted); letter-spacing: 0; border-color: var(--border); border-radius: var(--radius-md); background: var(--surface); font-weight: 500; }
+[data-view="tour"] .tab.on { color: var(--accent); background: var(--tint); border-color: var(--accent); }
+[data-view="tour"] .brand { color: var(--ink); letter-spacing: 0; font-weight: 500; }

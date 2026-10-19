@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"><title>MedAdhere</title>
 <!-- Architecture diagram for the README. Components and order checked against
      chapters/architecture.tex and generated/fig-pipeline-conversational.tex. -->
 <style>
@@ -19,17 +19,17 @@
     background: radial-gradient(circle, rgba(45,212,167,.16) 0%, transparent 60%); top: -320px; left: -260px; }
   .head { position: absolute; left: 40px; top: 30px; z-index: 3; }
   .badge { display: inline-flex; align-items: center; gap: 10px;
-    border: 1px solid rgba(45,212,167,.55); color: #2dd4a7; background: rgba(45,212,167,.08);
+    border: 1px solid rgba(45,212,167,.55); color: #0f766e; background: rgba(45,212,167,.08);
     border-radius: 999px; padding: 7px 18px; font-size: 14px; letter-spacing: 3px; font-weight: 700; }
-  .badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2dd4a7; box-shadow: 0 0 12px #2dd4a7; }
+  .badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #0f766e; box-shadow: 0 0 12px #0f766e; }
   .head h1 { font-size: 34px; font-weight: 700; margin-top: 12px; letter-spacing: -.5px; }
-  .head h1 span { color: #2dd4a7; }
+  .head h1 span { color: #0f766e; }
   .legend { position: absolute; right: 40px; top: 40px; display: flex; gap: 22px; z-index: 3; font-size: 15px; color: #a9b6c9; }
   .legend i { display: inline-block; width: 22px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 8px; }
-  .lg-code { background: rgba(18,52,56,.95); border: 1.5px solid #2dd4a7; }
-  .lg-model { background: rgba(70,46,20,.7); border: 1.5px dashed #f5b85a; }
+  .lg-code { background: rgba(18,52,56,.95); border: 1.5px solid #0f766e; }
+  .lg-model { background: rgba(70,46,20,.7); border: 1.5px dashed #64748b; }
   .lg-ext { background: #15243a; border: 1.5px solid #3a5278; }
-  .lg-store { background: rgba(20,40,70,.95); border: 1.5px solid #5aa2ff; }
+  .lg-store { background: rgba(20,40,70,.95); border: 1.5px solid #64748b; }
 
   .box { position: absolute; z-index: 3; border-radius: 14px; padding: 11px 15px;
     box-shadow: 0 12px 28px rgba(0,0,0,.4); }
@@ -38,14 +38,14 @@
   .box .s { font-size: 13.5px; color: #a9b6c9; margin-top: 4px; line-height: 1.3; }
   .code { background: rgba(14,40,46,.96); border: 1.5px solid rgba(45,212,167,.75); }
   .code .t { color: #5fe9c3; }
-  .model { background: rgba(58,38,16,.92); border: 1.5px dashed #f5b85a; }
-  .model .t { color: #f5b85a; }
+  .model { background: rgba(58,38,16,.92); border: 1.5px dashed #64748b; }
+  .model .t { color: #64748b; }
   .ext { background: rgba(21,36,58,.96); border: 1.5px solid #3a5278; }
   .ext .t { color: #8fa6c8; }
-  .store { background: rgba(16,34,62,.96); border: 1.5px solid #5aa2ff; border-radius: 14px 14px 22px 22px; }
+  .store { background: rgba(16,34,62,.96); border: 1.5px solid #64748b; border-radius: 14px 14px 22px 22px; }
   .store .t { color: #8cc0ff; }
   .store::before { content: ""; position: absolute; left: -1.5px; right: -1.5px; top: -9px; height: 18px;
-    border-radius: 50%; border: 1.5px solid #5aa2ff; background: rgba(24,48,84,1); }
+    border-radius: 50%; border: 1.5px solid #64748b; background: rgba(24,48,84,1); }
   .store > * { position: relative; }
 
   .panel { position: absolute; z-index: 2; left: 40px; top: 268px; width: 1210px; height: 400px;
@@ -56,19 +56,20 @@
   .lane { position: absolute; left: 24px; font-size: 12px; letter-spacing: 2.5px; color: #7e8ba0; font-weight: 700; }
   .rule { position: absolute; z-index: 3; left: 40px; top: 912px;
     font-size: 15px; color: #a9b6c9; }
-  .rule b { color: #2dd4a7; }
+  .rule b { color: #0f766e; }
   .foot { position: absolute; left: 40px; bottom: 26px; font-size: 14.5px; color: #7e8ba0; z-index: 3; }
   .foot b { color: #c3cfe0; font-weight: 600; }
   svg { position: absolute; inset: 0; z-index: 2; }
   .lbl { position: absolute; z-index: 4; font-size: 12px; letter-spacing: 1.5px; font-weight: 700; color: #7e8ba0;
     background: #0b1626; padding: 1px 6px; border-radius: 4px; }
 </style>
+<link rel="stylesheet" href="visual-theme.css">
 </head>
-<body>
+<body data-view="architecture">
   <div class="grid"></div><div class="glow"></div>
   <div class="head">
-    <span class="badge">HOW A MESSAGE FLOWS</span>
-    <h1>The model proposes. <span>Code disposes.</span></h1>
+    <span class="badge">Message flow</span>
+    <h1>How a text becomes a patient record</h1>
   </div>
   <div class="legend">
     <span><i class="lg-code"></i>Deterministic code</span>
@@ -138,14 +139,14 @@ const P = (id, side, f=0.5) => {
 const svg = document.getElementById('wires');
 svg.innerHTML = `<defs>
   <marker id="a" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#2dd4a7"/></marker>
+    <path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/></marker>
   <marker id="ag" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
     <path d="M0,0 L10,5 L0,10 z" fill="#5d7397"/></marker>
   <marker id="am" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#f5b85a"/></marker></defs>`;
+    <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker></defs>`;
 function wire(pts, style='main', both=false) {
   const d = 'M' + pts.map(p => p.join(',')).join(' L');
-  const st = { main:['#2dd4a7',2.2,'','a'], side:['#5d7397',1.8,'6 6','ag'], model:['#f5b85a',1.8,'6 6','am'] }[style];
+  const st = { main:['#0f766e',2.2,'','a'], side:['#5d7397',1.8,'6 6','ag'], model:['#64748b',1.8,'6 6','am'] }[style];
   svg.insertAdjacentHTML('beforeend',
     `<path d="${d}" fill="none" stroke="${st[0]}" stroke-width="${st[1]}" stroke-dasharray="${st[2]}"
       stroke-linejoin="round" marker-end="url(#${st[3]})" ${both?`marker-start="url(#${st[3]})"`:''}/>`);

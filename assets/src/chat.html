@@ -1,5 +1,5 @@
 <!doctype html>
-<html><head><meta charset="utf-8">
+<html><head><meta charset="utf-8"><title>MedAdhere</title>
 <!-- Animated example conversation for the README (chat.gif). Wording follows phones.html and the
      live day in chapters/conversational-agent.tex. Driven by window.render(t) so every frame is exact;
      open with ?play to watch it live in a browser. -->
@@ -150,12 +150,13 @@
 </style>
 <link rel="stylesheet" href="lock-screen.css">
 <script src="lock-screen.js"></script>
+<link rel="stylesheet" href="visual-theme.css">
 </head>
-<body>
+<body data-view="chat">
 <div class="bg1"></div><div class="bg2"></div>
-<div class="label" style="left:150px; top:42px">PATIENT'S PHONE</div>
-<div class="label" style="left:600px; top:42px">AI PIPELINE · EVERY REPLY</div>
-<div class="label" style="left:1270px; top:42px">CLINICIAN'S DASHBOARD</div>
+<div class="label" style="left:150px; top:42px">Patient's phone</div>
+<div class="label" style="left:600px; top:42px">From reply to patient record</div>
+<div class="label" style="left:1270px; top:42px">Clinician dashboard</div>
 
 <div class="phone"><div class="screen">
   <div class="island"></div>
@@ -185,18 +186,18 @@
 </div></div>
 
 <div class="wire" style="left:796px; width:12px"></div><div class="wire" style="left:1000px; width:12px"></div>
-<div class="node" id="n0" style="left:600px"><div class="glow"></div><div class="k">1 · EXTRACTS</div><div class="v">Claude Sonnet</div></div>
-<div class="node" id="n1" style="left:804px"><div class="glow"></div><div class="k">2 · CODE CHECKS</div><div class="v"><span><span id="vc">0</span>/10 validators</span></div><div class="ticks" id="ticks"></div></div>
-<div class="node" id="n2" style="left:1008px"><div class="glow"></div><div class="k">3 · COMMITS</div><div class="v">PostgreSQL</div></div>
+<div class="node" id="n0" style="left:600px"><div class="glow"></div><div class="k">1. Extract facts</div><div class="v">Claude Sonnet</div></div>
+<div class="node" id="n1" style="left:804px"><div class="glow"></div><div class="k">2. Validate</div><div class="v"><span><span id="vc">0</span>/10 validators</span></div><div class="ticks" id="ticks"></div></div>
+<div class="node" id="n2" style="left:1008px"><div class="glow"></div><div class="k">3. Save</div><div class="v">PostgreSQL</div></div>
 
 <div class="slot" style="top:262px"></div><div class="slot" style="top:370px"></div><div class="slot" style="top:478px"></div><div class="slot" style="top:586px"></div><div class="slot" style="top:712px; height:104px"></div>
-<div class="card" style="top:262px"><div class="ring"></div><div class="dot">+</div><div><div class="k">SYMPTOM</div><div class="v">Headache</div></div><div class="src">clinical event</div></div>
-<div class="card" style="top:370px"><div class="ring"></div><div class="dot">8</div><div><div class="k">SEVERITY</div><div class="v">8 / 10</div></div><div class="src">clinical event</div></div>
-<div class="card" style="top:478px"><div class="ring"></div><div class="dot">&#9719;</div><div><div class="k">ONSET</div><div class="v">Around lunch</div></div><div class="src">clinical event</div></div>
-<div class="card" style="top:586px"><div class="ring"></div><div class="dot">~</div><div><div class="k">CHARACTER</div><div class="v">Pressure behind the eyes</div></div><div class="src">clinical event</div></div>
+<div class="card" style="top:262px"><div class="ring"></div><div class="dot">+</div><div><div class="k">Symptom</div><div class="v">Headache</div></div><div class="src">clinical event</div></div>
+<div class="card" style="top:370px"><div class="ring"></div><div class="dot">8</div><div><div class="k">Severity</div><div class="v">8 / 10</div></div><div class="src">clinical event</div></div>
+<div class="card" style="top:478px"><div class="ring"></div><div class="dot">&#9719;</div><div><div class="k">Onset</div><div class="v">Around lunch</div></div><div class="src">clinical event</div></div>
+<div class="card" style="top:586px"><div class="ring"></div><div class="dot">~</div><div><div class="k">Character</div><div class="v">Pressure behind the eyes</div></div><div class="src">clinical event</div></div>
 <div class="card final" style="top:712px"><div class="ring"></div>
-  <div class="dot"><svg width="26" height="26" viewBox="0 0 26 26"><path id="chk" d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#04120e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"/></svg></div>
-  <div><div class="k">CLINICIAN DASHBOARD</div><div class="v">Severity on the symptom chart the same day</div></div></div>
+  <div class="dot"><svg width="26" height="26" viewBox="0 0 26 26"><path id="chk" d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#0f766e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"/></svg></div>
+  <div><div class="k">Patient record</div><div class="v">Severity on the symptom chart the same day</div></div></div>
 
 <div class="dashboard">
   <div class="browser-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="browser-url">medadhere / patients / Alice Chen</span></div>
@@ -229,7 +230,7 @@
 </div>
 
 <div class="pk" id="pk"></div>
-<section id="walkthrough"><div class="label" style="left:160px;top:42px">CLINICIAN WORKSPACE</div><div id="tour-caption"></div><div class="tour-window"><iframe id="clinician-tour" src="clinician-tour.html" title="Alice Chen clinician dashboard walkthrough"></iframe></div></section>
+<section id="walkthrough"><div class="label" style="left:160px;top:42px">Clinician workspace</div><div id="tour-caption"></div><div class="tour-window"><iframe id="clinician-tour" src="clinician-tour.html" title="Alice Chen clinician dashboard walkthrough"></iframe></div></section>
 
 <script>
 // iOS Messages motion: type into the field, send, the bubble lifts out of the field into the thread.
@@ -271,11 +272,8 @@ const bubbles = $$('#thread .b'), cards = $$('.card'), nodes = $$('.node');
 IOS.init(document.querySelector('.screen'));
 const lockScreen = createLockScreen(document.querySelector('.screen'));
 const ticks = $('#ticks'); for (let i = 0; i < 10; i++) ticks.appendChild(document.createElement('i'));
-const TR = 7; const trail = []; for (let i = 0; i < TR; i++) { const d = document.createElement('div'); d.className = 'tr'; document.body.appendChild(d); trail.push(d); }
-const BN = 10; const burst = []; for (let i = 0; i < BN; i++) { const d = document.createElement('div'); d.className = 'burst'; document.body.appendChild(d); burst.push(d); }
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
-const spring = p => p <= 0 ? 0 : 1 - Math.exp(-6.5 * p) * Math.cos(10.5 * p);
 const ease = p => { p = clamp(p); return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
 
 // Timeline (seconds)
@@ -294,7 +292,7 @@ function arc(a, b, p, lift) { const cx = (a.x + b.x) / 2, cy = Math.min(a.y, b.y
 function packetAt(k, t) { // position of packet k at time t, or null
   let s = t - PK[k]; if (s < 0) return null;
   const pts = [center(bubbles[2 * k + 1], 'r'), center(nodes[0], 'b'), center(nodes[1], 'b'), center(nodes[2], 'b'), center(cards[k], 'l')];
-  const lifts = [120, 0, 0, 40];
+  const lifts = [24, 0, 0, 16];
   let seg = 0;
   for (let i = 0; i < LEGS.length; i++) {
     if (s < LEGS[i]) {
@@ -308,12 +306,6 @@ function packetAt(k, t) { // position of packet k at time t, or null
 }
 function packetDone(k) { return PK[k] + LEGS.reduce((a, b) => a + b, 0); }
 const FINAL = packetDone(3) + 0.5;
-
-function popStyle(el, p, dy = 18, base = .35) {
-  const s = spring(p / 0.75);
-  el.style.opacity = clamp(p * 6);
-  el.style.transform = `translateY(${(1 - Math.min(1, s)) * dy}px) scale(${base + (1 - base) * s})`;
-}
 
 // The dashboard keeps the source message beside the event derived from it.
 const dashboardRows = $$('.summary-row');
@@ -388,38 +380,29 @@ window.render = t => {
 
   // nodes, packets, cards
   let glow = [0, 0, 0], vcount = null;
-  const pk = $('#pk'); pk.style.opacity = 0; trail.forEach(d => d.style.opacity = 0);
+  const pk = $('#pk'); pk.style.opacity = 0;
   for (let k = 0; k < 4; k++) {
     const P = packetAt(k, t);
     if (P) {
       pk.style.opacity = 1; pk.style.left = P.x + 'px'; pk.style.top = P.y + 'px';
-      const pulse = 1 + 0.25 * Math.sin(t * 30); pk.style.transform = `scale(${P.phase === 'at' ? pulse : 1})`;
-      if (P.phase === 'fly') trail.forEach((d, i) => { const Q2 = packetAt(k, t - (i + 1) * 0.022); if (!Q2 || Q2.phase !== 'fly') return;
-        const sz = 12 - i * 1.4; d.style.width = d.style.height = sz + 'px'; d.style.left = Q2.x - sz / 2 + 'px'; d.style.top = Q2.y - sz / 2 + 'px'; d.style.opacity = 0.5 - i * 0.065; });
+      pk.style.transform = 'none';
       if (P.phase === 'at') { const n = (P.i - 1) / 2; glow[n] = Math.max(glow[n], Math.sin(Math.PI * P.p) * 0.6 + 0.4); if (n === 1) vcount = Math.min(10, Math.floor(P.p * 11)); }
     }
-    // nodes stay softly lit right after a pass
-    const c = cards[k], d = t - packetDone(k);
-    if (d > 0) { popStyle(c, d, 0, .6); c.style.transform = `translateX(${(1 - Math.min(1, spring(d / .75))) * -40}px) scale(${.85 + .15 * spring(d / .75)})`;
-      const ring = c.querySelector('.ring'); const rp = clamp(d / 0.7); ring.style.opacity = (1 - rp) * 0.9; ring.style.transform = `scale(${1 + rp * 0.08}, ${1 + rp * 0.35})`;
-    } else { c.style.opacity = 0; }
+    const c = cards[k], age = t - packetDone(k);
+    c.style.opacity = clamp(age / .18);
+    c.style.transform = 'none';
   }
   // final card
   const fc = cards[4], fd = t - FINAL;
-  if (fd > 0) { fc.style.opacity = clamp(fd * 5); const s = spring(fd / .8); fc.style.transform = `translateY(${(1 - Math.min(1, s)) * 30}px) scale(${.8 + .2 * s})`;
-    const ring = fc.querySelector('.ring'); const rp = clamp(fd / 0.9); ring.style.opacity = (1 - rp); ring.style.transform = `scale(${1 + rp * 0.06}, ${1 + rp * 0.3})`;
-    $('#chk').style.strokeDashoffset = 30 * (1 - ease((fd - 0.35) / 0.45));
-  } else fc.style.opacity = 0;
-  // burst of sparks when the final card lands
-  burst.forEach((b, i) => { const bp = (t - FINAL - 0.3) / 0.8; if (bp <= 0 || bp >= 1) { b.style.opacity = 0; return; }
-    const r = fc.getBoundingClientRect(), cx = r.left + 45, cy = r.top + r.height / 2, a = i / BN * Math.PI * 2, dist = 20 + ease(bp) * 70;
-    b.style.left = cx + Math.cos(a) * dist + 'px'; b.style.top = cy + Math.sin(a) * dist + 'px'; b.style.opacity = 1 - bp; });
+  fc.style.opacity = clamp(fd / .18);
+  fc.style.transform = 'none';
+  $('#chk').style.strokeDashoffset = 30 * (1 - ease((fd - .15) / .2));
 
   nodes.forEach((n, i) => n.querySelector('.glow').style.opacity = glow[i]);
   // validators counter: counts up while the packet sits on node 2, otherwise shows 10/10 after the first pass
   const shown = vcount ?? (t > PK[0] + LEGS.slice(0, 4).reduce((a, b) => a + b, 0) ? 10 : 0);
   $('#vc').textContent = shown;
-  [...ticks.children].forEach((d, i) => d.style.background = i < shown ? '#2dd4a7' : '#1f3550');
+  [...ticks.children].forEach((d, i) => d.style.background = i < shown ? 'var(--accent)' : 'var(--subtle)');
   renderDashboard(t, times);
 };
 // Preserve the conversation, then freeze it while the clinician walkthrough continues.
@@ -427,10 +410,10 @@ const CHAT_END = END, renderConversation = window.render;
 window.render = t => {
   renderConversation(Math.min(t, CHAT_END - .04));
   const local = t - CHAT_END, stage = $('#walkthrough');
-  const opening = ease(local / .7), frame = $('#clinician-tour').contentWindow;
+  const opening = ease(local / .25), frame = $('#clinician-tour').contentWindow;
   stage.style.visibility = local < 0 ? 'hidden' : 'visible';
   stage.style.opacity = opening.toFixed(3);
-  stage.style.transform = `translateY(${((1-opening)*28).toFixed(2)}px) scale(${(.97+.03*opening).toFixed(3)})`;
+  stage.style.transform = 'none';
   const state = typeof frame.render === 'function' ? frame.render(Math.max(0,local)) : {key:'loading',title:''};
   $('#tour-caption').textContent = state.title;
   return local < 0 ? `chat:${t}` : `tour:${opening.toFixed(3)}:${state.key}`;

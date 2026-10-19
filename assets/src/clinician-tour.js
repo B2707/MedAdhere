@@ -155,7 +155,7 @@ window.render = t => {
   // Scroll the page to reveal longer records, as the clinician would in the app.
   const page = $('#page'), overflow = Math.max(0,page.scrollHeight-page.clientHeight);
   let pageProgress = 0;
-  if (['roster','record','doses','adherence','revisions','severity','finish'].includes(step.id)) pageProgress = ease((local-1.3)/1.7);
+  if (['roster','record','doses','adherence','revisions','severity','history','enroll','finish'].includes(step.id)) pageProgress = ease((local-1.3)/1.7);
   if (step.id === 'evidence' || step.id === 'manage') pageProgress = 1;
   if (step.id === 'calendar' && local > 2.1) pageProgress = ease((local-2.3)/.8);
   page.scrollTop = Math.round(overflow*pageProgress);

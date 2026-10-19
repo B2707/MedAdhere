@@ -1,26 +1,13 @@
-<p align="center">
-  <img src="assets/hero.jpg" alt="MedAdhere: a conversational clinical agent for SMS medication adherence" width="100%">
-</p>
-
 <h1 align="center">MedAdhere</h1>
 
 <p align="center">
-  <b>An SMS agent that turns a patient's own words into a structured clinical record.<br>
-  The model proposes. Deterministic code disposes.</b>
+  MedAdhere texts patients at dose time to ask whether they took their medication.<br>
+  It records taken or missed doses and reported symptoms, asks follow-up questions,<br>
+  and gives clinicians dose history, symptom charts and the original messages.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/AWS%20Lambda-FF9900?style=flat-square&logo=awslambda&logoColor=white" alt="AWS Lambda">
-  <img src="https://img.shields.io/badge/AWS%20CDK-232F3E?style=flat-square&logo=amazonwebservices&logoColor=white" alt="AWS CDK">
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
-  <img src="https://img.shields.io/badge/Twilio%20SMS-F22F46?style=flat-square&logo=twilio&logoColor=white" alt="Twilio">
-  <img src="https://img.shields.io/badge/Claude%20(Anthropic)-D97757?style=flat-square&logo=claude&logoColor=white" alt="Claude by Anthropic">
-  <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white" alt="Next.js">
-</p>
-
-<p align="center">
-  <img src="assets/launch.gif" alt="MedAdhere launch video: plain SMS check-ins, the model proposes and code disposes, results, serverless AWS, clinician dashboard" width="100%"><br>
+  <img src="assets/launch.gif" alt="MedAdhere launch video: scheduled medication check-ins, validated records, evaluation results, AWS and the clinician dashboard" width="100%"><br>
   <i>45-second overview. <a href="assets/launch.mp4">Watch it in HD (MP4)</a>.</i>
 </p>
 
@@ -99,7 +86,7 @@ It runs on serverless AWS, sends real SMS through Twilio, and calls Claude throu
   <img src="assets/architecture.jpg" alt="MedAdhere architecture: Twilio, API Gateway, Lambda, SQS FIFO, turn worker, RDS PostgreSQL, Next.js dashboard" width="100%">
 </p>
 
-- **The model proposes, code disposes.** The system makes two model calls. Claude Sonnet extracts claims from the reply and Claude Haiku 4.5 drafts the wording of the answer. Neither call can write a clinical fact. Pure code resolves each claim to a dose, a medication and a time, and decides what is recorded, asked and sent.
+- **Model output is checked before it changes a record.** The system makes two model calls. Claude Sonnet extracts claims from the reply and Claude Haiku 4.5 drafts the wording of the answer. Neither call can write a clinical fact. Pure code resolves each claim to a dose, a medication and a time, and decides what is recorded, asked and sent.
 - **Constrained generation behind a parse-or-fail gate.** Each request declares exactly one tool and pins `tool_choice` to it, so the model cannot answer in prose. A shared Zod schema then parses the output. Anything that fails the parse is never written.
 - **An append-only clinical record.** Every fact is an event in PostgreSQL. A correction appends a new event that supersedes the old one, so the record keeps both what the patient said first and what they believe now. Open questions live in the database as durable information needs, because an SMS conversation has no session.
 - **Ten validators over a fail-closed template floor.** Every drafted SMS must pass ten pure-code checks: grounding in what the patient said, no medication advice, no reassurance, no injection markers, GSM-7 and length. Any failure falls back to a fixed template. The full set runs again at send time against the stored text.

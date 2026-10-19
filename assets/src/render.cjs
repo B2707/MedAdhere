@@ -17,7 +17,10 @@ const jobs = [
       deviceScaleFactor: 2,
     });
     await page.goto('file://' + path.join(__dirname, job.html));
-    await page.waitForTimeout(400);
+    await Promise.all(page.frames().map(frame => frame.evaluate(async () => {
+    await Promise.all([document.fonts.load('400 16px "Public Sans"'), document.fonts.load('400 12px "IBM Plex Mono"')]);
+    await document.fonts.ready;
+  })));
     await page.screenshot({ path: path.join(__dirname, job.out), type: 'jpeg', quality: 90 });
     await page.close();
     console.log('rendered', job.out);
