@@ -22,9 +22,9 @@ function tourStates() {
   return out;
 }
 
-async function render(browser, html, states, size, gif, width, fps = FPS) {
+async function render(browser, html, states, size, gif, width, fps = FPS, deviceScaleFactor = 2) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'medgif-'));
-  const page = await browser.newPage({ viewport: size, deviceScaleFactor: 2 });
+  const page = await browser.newPage({ viewport: size, deviceScaleFactor });
   await page.goto('file://' + path.join(__dirname, html));
   await page.waitForTimeout(400);
   let last = null, lastBuf = null;
@@ -48,7 +48,7 @@ async function render(browser, html, states, size, gif, width, fps = FPS) {
   await probe.goto('file://' + path.join(__dirname, 'chat.html'));
   const end = await probe.evaluate(() => window.END);
   await probe.close();
-  await render(browser, 'chat.html', chatStates(end), { width: 1240, height: 1000 }, 'chat.gif', 900, CHAT_FPS);
+  await render(browser, 'chat.html', chatStates(end), { width: 2170, height: 1000 }, 'chat.gif', 1800, CHAT_FPS, 1);
   if (process.argv[2] === 'chat') { await browser.close(); return; }
   await render(browser, 'tour.html', tourStates(), { width: 1100, height: 900 }, 'dashboard-tour.gif', 820);
   await browser.close();

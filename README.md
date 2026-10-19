@@ -50,8 +50,8 @@ It runs on serverless AWS, sends real SMS through Twilio, and calls Claude throu
 ## See it working
 
 <p align="center">
-  <img src="assets/chat.gif" alt="Animated example: a patient opens a lock-screen notification, texts about a headache and each answer becomes a clinical event" width="90%"><br>
-  <i>The patient just texts back. Each answer becomes its own clinical event on the record (example conversation).</i>
+  <img src="assets/chat.gif" alt="Animated example: a patient opens a notification and texts about a headache while the extracted facts and the clinician's day thread and symptom chart update in the panels beside the phone" width="100%"><br>
+  <i>Follow each reply from the phone, through the extracted facts, to the clinician's day thread, symptom details and severity chart. Illustrated example with a synthetic patient. <a href="assets/chat.gif">View full size</a>.</i>
 </p>
 
 <p align="center">

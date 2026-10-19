@@ -5,11 +5,11 @@
      open with ?play to watch it live in a browser. -->
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { width: 1240px; height: 1000px; overflow: hidden; position: relative; background: #070f1c;
+  body { width: 2170px; height: 1000px; overflow: hidden; position: relative; background: #070f1c;
     font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif; color: #e8eef7; }
   .bg1 { position: absolute; width: 900px; height: 900px; left: -260px; top: -300px; border-radius: 50%;
     background: radial-gradient(circle, rgba(45,212,167,.16), transparent 62%); }
-  .bg2 { position: absolute; width: 900px; height: 900px; right: -300px; bottom: -340px; border-radius: 50%;
+  .bg2 { position: absolute; width: 900px; height: 900px; left: 640px; bottom: -340px; border-radius: 50%;
     background: radial-gradient(circle, rgba(72,128,255,.14), transparent 62%); }
   .label { position: absolute; font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 16px;
     letter-spacing: 3px; font-weight: 700; color: #2dd4a7; display: flex; align-items: center; gap: 10px; }
@@ -63,6 +63,48 @@
   .card.final .dot { background: #2dd4a7; color: #04120e; }
 
   .slot { position: absolute; left: 600px; width: 600px; height: 92px; border-radius: 18px; border: 1.5px dashed #1a2d44; }
+  /* Focused clinician view, following the dashboard's day-thread and severity-chart components. */
+  .dashboard { position: absolute; left: 1270px; top: 86px; width: 850px; height: 872px; overflow: hidden;
+    border-radius: 17px; background: #edf1f7; color: #0f172a; border: 1px solid #334155;
+    box-shadow: 0 28px 70px rgba(0,0,0,.35); font-family: -apple-system, "Helvetica Neue", sans-serif; }
+  .browser-bar { height: 33px; padding: 0 14px; display: flex; gap: 6px; align-items: center; background: #e9ecf1; border-bottom: 1px solid #cbd5e1; }
+  .browser-bar i { width: 9px; height: 9px; border-radius: 50%; }
+  .browser-url { margin-left: 15px; color: #475569; font-size: 12px; }
+  .dash-body { padding: 18px; }
+  .patient-heading { display: flex; align-items: center; gap: 12px; height: 44px; }
+  .patient-avatar { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: #dcefee; color: #0f766e; font-size: 16px; font-weight: 600; }
+  .patient-heading h1 { font-size: 22px; letter-spacing: -.6px; }
+  .patient-heading p { font-size: 13px; color: #475569; margin-top: 4px; }
+  .workspace { margin-left: auto; text-align: right; font-size: 12px; letter-spacing: 1px; color: #475569; }
+  .workspace b { display: block; color: #0f766e; margin-top: 5px; font-size: 12px; letter-spacing: 0; font-weight: 500; }
+  .day-heading { display: flex; align-items: center; justify-content: space-between; margin: 16px 0 12px; }
+  .day-heading h2 { font-size: 17px; letter-spacing: -.3px; font-weight: 600; }
+  .day-heading span { font-size: 13px; color: #475569; font-variant-numeric: tabular-nums; }
+  .dash-columns { display: grid; grid-template-columns: 1fr 292px; gap: 16px; }
+  .log-viewport { height: 650px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; }
+  .log-track { display: flex; flex-direction: column; gap: 12px; }
+  .log-entry { flex: none; overflow: hidden; }
+  .log-message { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 9px; background: #fff; }
+  .log-entry.agent .log-message { margin-left: 40px; background: #edf1f7; border-color: transparent; }
+  .log-kicker { font-size: 10px; color: #475569; font-weight: 600; letter-spacing: .65px; margin-bottom: 5px; }
+  .log-text { font-size: 15px; line-height: 20px; }
+  .derived { overflow: hidden; margin-left: 17px; border-left: 2px solid #cbd5e1; padding-left: 10px; }
+  .event-mark { padding: 11px 12px; margin-top: 7px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; font-size: 15px; line-height: 20px; color: #334155; }
+  .event-mark b { font-weight: 600; }
+  .event-source { display: block; margin-top: 4px; font-size: 11px; color: #0f766e; }
+  .chart-panel { height: 210px; border: 1px solid #e2e8f0; background: #fff; border-radius: 12px; padding: 12px; position: relative; }
+  .chart-panel h3 { font-size: 14px; font-weight: 600; letter-spacing: -.15px; }
+  .chart-subtitle { margin-top: 5px; font-size: 11px; color: #475569; }
+  .chart-panel svg { display: block; margin-top: 8px; overflow: visible; }
+  .chart-empty { position: absolute; left: 25px; right: 15px; top: 109px; font-size: 12px; color: #475569; text-align: center; background: #fff; padding: 10px 0; }
+  .summary { margin-top: 13px; padding: 0 13px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; }
+  .summary-row { padding: 6px 0; border-bottom: 1px solid #e2e8f0; min-height: 45px; }
+  .summary-row:last-child { border-bottom: 0; }
+  .summary-row span { display: block; font-size: 10px; color: #475569; letter-spacing: .6px; text-transform: uppercase; }
+  .summary-row b { display: block; font-size: 14px; font-weight: 500; margin-top: 3px; line-height: 18px; }
+  .dash-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 13px; padding-top: 10px; border-top: 1px solid #cbd5e1; font-size: 12px; color: #475569; }
+  .update-state { color: #0f766e; font-weight: 500; display: flex; align-items: center; gap: 7px; }
+  .update-state i { width: 6px; height: 6px; background: #0d9488; border-radius: 50%; }
   .pk { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #b9fff0; z-index: 50;
     box-shadow: 0 0 10px 3px #2dd4a7, 0 0 30px 8px rgba(45,212,167,.5); opacity: 0; }
   .tr { position: absolute; border-radius: 50%; background: #2dd4a7; z-index: 49; opacity: 0; }
@@ -108,6 +150,7 @@
 <div class="bg1"></div><div class="bg2"></div>
 <div class="label" style="left:150px; top:42px">PATIENT'S PHONE</div>
 <div class="label" style="left:600px; top:42px">AI PIPELINE · EVERY REPLY</div>
+<div class="label" style="left:1270px; top:42px">CLINICIAN'S DASHBOARD</div>
 
 <div class="phone"><div class="screen">
   <div class="island"></div>
@@ -149,6 +192,36 @@
 <div class="card final" style="top:712px"><div class="ring"></div>
   <div class="dot"><svg width="26" height="26" viewBox="0 0 26 26"><path id="chk" d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#04120e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"/></svg></div>
   <div><div class="k">CLINICIAN DASHBOARD</div><div class="v">Severity on the symptom chart the same day</div></div></div>
+
+<div class="dashboard">
+  <div class="browser-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="browser-url">medadhere / patients / Alice Chen</span></div>
+  <div class="dash-body">
+    <div class="patient-heading"><div class="patient-avatar">AC</div><div><h1>Alice Chen</h1><p>Metformin 500 mg · Example patient</p></div><div class="workspace">MedAdhere clinician<b>Patient record</b></div></div>
+    <div class="day-heading"><h2>Day thread · Oct 19, 2026</h2><span id="day-counts">0 messages · 0 events</span></div>
+    <div class="dash-columns">
+      <div class="log-viewport"><div class="log-track" id="log-track"></div></div>
+      <div>
+        <div class="chart-panel">
+          <h3>Worst symptom severity by day</h3><div class="chart-subtitle">Patient-reported · scale of 1 to 10</div>
+          <svg width="260" height="140" viewBox="0 0 260 148" aria-label="Patient-reported headache severity">
+            <g stroke="#e2e8f0" stroke-dasharray="3 3"><path d="M26 12H250 M26 36H250 M26 60H250 M26 84H250 M26 108H250 M26 120H250"/></g>
+            <g fill="#475569" font-size="10" text-anchor="end"><text x="20" y="15">10</text><text x="20" y="39">8</text><text x="20" y="63">6</text><text x="20" y="87">4</text><text x="20" y="111">2</text><text x="20" y="123">1</text></g>
+            <text x="138" y="141" text-anchor="middle" fill="#475569" font-size="10">Oct 19</text>
+            <g id="severity-point"><circle id="severity-halo" cx="138" cy="36" r="12" fill="#0d9488" opacity=".15"/><circle cx="138" cy="36" r="5" fill="#0d9488" stroke="#fff" stroke-width="2"/><rect x="156" y="22" width="85" height="27" rx="6" fill="#f0fdfa"/><text x="165" y="40" fill="#0f766e" font-size="12" font-weight="600">Headache 8</text></g>
+          </svg>
+          <div class="chart-empty" id="chart-empty">Waiting for a severity rating</div>
+        </div>
+        <div class="summary">
+          <div class="summary-row"><span>Symptom</span><b>Not reported</b></div>
+          <div class="summary-row"><span>Severity</span><b>Not reported</b></div>
+          <div class="summary-row"><span>Onset</span><b>Not reported</b></div>
+          <div class="summary-row"><span>Character</span><b>Not reported</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-footer"><span class="update-state"><i></i><span id="update-state">Waiting for a reply</span></span><span>Illustrated updates · synthetic patient</span></div>
+  </div>
+</div>
 
 <div class="pk" id="pk"></div>
 
@@ -236,6 +309,59 @@ function popStyle(el, p, dy = 18, base = .35) {
   el.style.transform = `translateY(${(1 - Math.min(1, s)) * dy}px) scale(${base + (1 - base) * s})`;
 }
 
+// The dashboard keeps the source message beside the event derived from it.
+const dashboardRows = $$('.summary-row');
+const values = ['Headache', '8 / 10', 'Around lunch', 'Pressure behind the eyes'];
+const eventText = ['Headache', 'Headache · SEV 8 / 10', 'Headache · Onset: Around lunch', 'Headache · Character: Pressure behind the eyes'];
+const logEntries = bubbles.map((bubble, i) => {
+  const patient = bubble.classList.contains('out');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry' + (patient ? '' : ' agent');
+  entry.innerHTML = '<div class="entry-body"><div class="log-message"><div class="log-kicker"></div><div class="log-text"></div></div>' +
+    (patient ? '<div class="derived"><div class="event-mark"><b></b><span class="event-source">1 source ▾</span></div></div>' : '') + '</div>';
+  entry.querySelector('.log-kicker').textContent = patient ? 'FROM PATIENT' : i === 0 ? 'CHECK-IN' : 'CLARIFICATION';
+  entry.querySelector('.log-text').textContent = bubble.textContent;
+  if (patient) entry.querySelector('.event-mark b').textContent = eventText[(i - 1) / 2];
+  $('#log-track').appendChild(entry);
+  return entry;
+});
+
+function renderDashboard(t, times) {
+  let messages = 0, events = 0;
+  logEntries.forEach((entry, i) => {
+    const at = i === 0 ? .45 : times[i] + .15;
+    entry.style.display = t > at ? 'block' : 'none';
+    if (t <= at) return;
+    messages++;
+    const derived = entry.querySelector('.derived');
+    if (derived) {
+      const p = t - packetDone((i - 1) / 2);
+      const mark = derived.firstElementChild;
+      derived.style.height = `${(mark.offsetHeight + 7) * ease(p / .45)}px`;
+      derived.style.opacity = clamp(p * 6);
+    }
+    entry.style.height = `${entry.firstElementChild.offsetHeight * ease((t - at) / .35)}px`;
+    entry.style.opacity = clamp((t - at) * 6);
+  });
+  dashboardRows.forEach((row, i) => {
+    const p = t - packetDone(i), ready = p > 0;
+    if (ready) events++;
+    row.querySelector('b').textContent = ready ? values[i] : 'Not reported';
+    row.style.background = `rgba(13,148,136,${ready ? (1 - clamp(p / .8)) * .14 : 0})`;
+  });
+  $('#day-counts').textContent = `${messages} messages · ${events} events`;
+  const processing = R.some((r, i) => t > r && t <= packetDone(i));
+  $('#update-state').textContent = processing ? 'Processing patient reply' : events ? 'Patient record updated' : 'Waiting for a reply';
+  const chartAge = t - packetDone(1);
+  $('#severity-point').style.opacity = clamp(chartAge * 5);
+  $('#severity-halo').setAttribute('r', 10 + 14 * ease(chartAge / .9));
+  $('#severity-halo').style.opacity = .2 * (1 - clamp(chartAge / .9));
+  $('#chart-empty').style.display = chartAge > 0 ? 'none' : 'block';
+  const track = $('#log-track'), viewport = track.parentNode;
+  const overflow = Math.max(0, track.offsetHeight - (viewport.clientHeight - 24));
+  track.style.transform = `translateY(${-overflow}px)`;
+}
+
 window.render = t => {
   lockScreen.render(t);
 
@@ -288,6 +414,7 @@ window.render = t => {
   const shown = vcount ?? (t > PK[0] + LEGS.slice(0, 4).reduce((a, b) => a + b, 0) ? 10 : 0);
   $('#vc').textContent = shown;
   [...ticks.children].forEach((d, i) => d.style.background = i < shown ? '#2dd4a7' : '#1f3550');
+  renderDashboard(t, times);
 };
 window.END = END;
 if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % END); requestAnimationFrame(loop); }; loop(); }
