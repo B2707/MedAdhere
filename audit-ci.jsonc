@@ -1,0 +1,11 @@
+{
+  "high": true,
+  "allowlist": [
+    // 2026-08-04: dev/test-only via testcontainers -> archiver -> readdir-glob.
+    // Production-only npm audit reports zero vulnerabilities; remove on the next lockfile refresh.
+    "GHSA-rgw5-rvv9-x895",
+    // 2026-08-04: dev/test-only via testcontainers and jsdom. It is absent from the deployed workspaces.
+    // Production-only npm audit reports zero vulnerabilities; remove on the next lockfile refresh.
+    "GHSA-4cwx-7wf7-3272",
+  ],
+}

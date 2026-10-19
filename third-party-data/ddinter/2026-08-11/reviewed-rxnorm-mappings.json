@@ -1,0 +1,122 @@
+[
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "435",
+    "ddinterDrugId": "DDInter1632",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "5487",
+    "ddinterDrugId": "DDInter883",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "6809",
+    "ddinterDrugId": "DDInter1164",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "6918",
+    "ddinterDrugId": "DDInter1200",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "7646",
+    "ddinterDrugId": "DDInter1340",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "10582",
+    "ddinterDrugId": "DDInter1064",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "11289",
+    "ddinterDrugId": "DDInter1951",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "17767",
+    "ddinterDrugId": "DDInter79",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "25480",
+    "ddinterDrugId": "DDInter791",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "29046",
+    "ddinterDrugId": "DDInter1079",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "36437",
+    "ddinterDrugId": "DDInter1662",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "36567",
+    "ddinterDrugId": "DDInter1675",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "52175",
+    "ddinterDrugId": "DDInter1095",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "83367",
+    "ddinterDrugId": "DDInter133",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  },
+  {
+    "identitySystem": "rxnorm",
+    "identityCode": "321988",
+    "ddinterDrugId": "DDInter672",
+    "mappingStatus": "mapped",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T09:46:16Z"
+  }
+]

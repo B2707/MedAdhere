@@ -1,0 +1,55 @@
+{
+  "manifestVersion": 1,
+  "source": "ccdd",
+  "releaseId": "2026-06",
+  "activation": {
+    "status": "inactive",
+    "reason": "Superseded by the exact 2026-08-05 release; this placeholder never represented an activatable release."
+  },
+  "provenance": {
+    "publisher": "Health Canada",
+    "sourceUrl": "https://open.canada.ca/data/en/dataset/3e0a7b9e-a5e9-4131-bde4-ac685a1f1a38",
+    "releaseUrl": "https://health-products.canada.ca/ccdd/Release_Notes",
+    "retrievedAt": null,
+    "freshUntil": null,
+    "transformation": {
+      "status": "planned",
+      "scriptPath": null,
+      "scriptSha256": null,
+      "inputLogicalNames": [],
+      "notes": "The offline identity import is planned for 08-03 and has not run."
+    }
+  },
+  "licences": [
+    {
+      "subject": "Selected Health Canada CCDD release data",
+      "status": "cleared",
+      "licenceId": "OGL-Canada-2.0",
+      "termsUrl": "https://open.canada.ca/en/open-government-licence-canada",
+      "termsSnapshotPath": null,
+      "termsSnapshotSha256": null,
+      "redistribution": "allowed",
+      "commercialUse": "allowed",
+      "shareAlike": false,
+      "patientFacingUse": "allowed",
+      "modelProcessing": "allowed",
+      "attribution": "Contains information licensed under the Open Government Licence - Canada.",
+      "notes": "Only the listed CCDD identity files are in scope. Third-party rights, marks, personal information, and other OGL exclusions remain excluded."
+    }
+  ],
+  "scope": {
+    "included": [
+      "Manufactured Product identity and DIN fields",
+      "Non-proprietary Therapeutic Product identity fields",
+      "Therapeutic Moiety ingredient identity fields",
+      "English and French MP-NTP-TM relationships"
+    ],
+    "excluded": [
+      "Device NTP records",
+      "Special Groupings and Coded Attributes unless separately reviewed",
+      "third-party material identified as excluded by the Open Government Licence - Canada"
+    ]
+  },
+  "expectedFiles": ["mp.csv", "ntp.csv", "tm.csv", "mp-ntp-tm-en.csv", "mp-ntp-tm-fr.csv"],
+  "files": []
+}

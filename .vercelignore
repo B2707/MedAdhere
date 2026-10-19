@@ -1,0 +1,8 @@
+backend/
+infra/
+scripts/
+coverage/
+.notes/
+.tmp/
+dashboard/.env.local
+packages/*/node_modules/

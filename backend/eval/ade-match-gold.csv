@@ -1,0 +1,24 @@
+id,text,rxcui,reason_code,expected_status,expected_pt,clinician_symptom
+m01,been running to the toilet nonstop since this med,6809,side_effect,matched,Diarrhoea,Diarrhoea
+m02,feeling really queasy every morning now,36437,side_effect,matched,Nausea,Nausea
+m03,my muscles ache so bad since starting,83367,side_effect,matched,Myalgia,Myalgia
+m04,my ankles are all swollen up,29046,side_effect,matched,Oedema,Oedema
+m05,so dizzy I can barely stand up,25480,side_effect,matched,Dizziness,Dizziness
+m06,I've been completely exhausted lately,6918,side_effect,matched,Fatigue,Fatigue
+m07,terrible headache every afternoon,7646,side_effect,matched,Headache,Headache
+m08,really nauseous after each dose,321988,side_effect,matched,Nausea,Nausea
+m09,got this awful dry mouth,5487,side_effect,matched,Dry mouth,Dry mouth
+m10,my feet are puffy and swollen,17767,side_effect,matched,Oedema,Oedema
+m11,my joints have been aching,36567,side_effect,matched,Arthralgia,Arthralgia
+m12,constant cough that won't quit,52175,side_effect,matched,Cough,Cough
+r01,zero appetite these days,6809,side_effect,checked_no_match,,Decreased appetite
+r02,my sex drive has tanked,36437,side_effect,matched,Libido decreased,Libido decreased
+n01,pounding headache all day,11289,side_effect,checked_no_match,,Headache
+n02,so constipated lately,10582,side_effect,checked_no_match,,Constipation
+neg01,no nausea at all since starting,36437,none,no_symptom,,
+neg02,"not dizzy anymore, feeling good",25480,none,no_symptom,,
+c01,"took it this morning with breakfast, all good",6809,none,no_symptom,,
+c02,yep done and dusted,36437,none,no_symptom,,
+c03,missed yesterday but back on track today,17767,none,no_symptom,,
+l01,feeling really nauseous,99999,side_effect,no_label_data,,Nausea
+p01,so dizzy today,,side_effect,no_drug_profile,,Dizziness

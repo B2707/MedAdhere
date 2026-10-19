@@ -1,0 +1,63 @@
+{
+  "manifestVersion": 1,
+  "source": "health_canada",
+  "releaseId": "reviewed-dpd-2026-08-11",
+  "activation": {
+    "status": "active",
+    "reason": null
+  },
+  "provenance": {
+    "publisher": "Health Canada",
+    "sourceUrl": "https://health-products.canada.ca/api/documentation/dpd-documentation-en.html",
+    "releaseUrl": "https://health-products.canada.ca/api/drug/",
+    "retrievedAt": "2026-08-11T00:00:00Z",
+    "freshUntil": "2026-08-18T00:00:00Z",
+    "transformation": {
+      "status": "applied",
+      "scriptPath": "scripts/import-health-canada-release.ts",
+      "scriptSha256": "9e0adff868639bd0c68baf47ef0043e9f38deeb9e61fece5821a3b8a3e1e9462",
+      "inputLogicalNames": ["dpd-product-metadata.json"],
+      "notes": "Strictly validates six manually reviewed DPD product records and product-monograph link/date metadata; no monograph body is ingested."
+    }
+  },
+  "licences": [
+    {
+      "subject": "Selected Health Canada DPD metadata",
+      "status": "cleared",
+      "licenceId": "OGL-Canada-2.0",
+      "termsUrl": "https://open.canada.ca/en/open-government-licence-canada",
+      "termsSnapshotPath": "third-party-data/health-canada/reviewed-dpd-2026-08-11/REVIEWED_TERMS.md",
+      "termsSnapshotSha256": "5d8b860b0f4151c7b7b52388bc8fed9d2e839fb9b7b037e42c8a302aacf40207",
+      "redistribution": "allowed",
+      "commercialUse": "allowed",
+      "shareAlike": false,
+      "patientFacingUse": "allowed",
+      "modelProcessing": "allowed",
+      "attribution": "Contains information licensed under the Open Government Licence - Canada.",
+      "notes": "Applies only to the selected DPD metadata. Linked sponsor-authored product-monograph bodies are excluded."
+    }
+  ],
+  "scope": {
+    "included": [
+      "six reviewed human marketed-product records with DIN, status and dates, brand, ingredient names, dosage forms, routes, ATC codes, and product-monograph link/date metadata"
+    ],
+    "excluded": [
+      "product-monograph bodies",
+      "unreviewed sponsor-authored clinical passages",
+      "runtime DPD queries or fuzzy brand-name matching"
+    ]
+  },
+  "expectedFiles": ["dpd-product-metadata.json"],
+  "files": [
+    {
+      "logicalName": "dpd-product-metadata.json",
+      "path": "third-party-data/health-canada/reviewed-dpd-2026-08-11/dpd-product-metadata.json",
+      "sourceUrl": "https://health-products.canada.ca/api/drug/",
+      "kind": "derived",
+      "sha256": "5b4140895d6f0ebd60f8120c81fd36580654b1ae231c4144a83af5fc1610e212",
+      "bytes": 3841,
+      "rowCount": 6,
+      "redistribution": "allowed"
+    }
+  ]
+}

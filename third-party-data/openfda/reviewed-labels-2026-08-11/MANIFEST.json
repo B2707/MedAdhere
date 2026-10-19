@@ -1,0 +1,64 @@
+{
+  "manifestVersion": 1,
+  "source": "openfda",
+  "releaseId": "reviewed-labels-2026-08-11",
+  "activation": {
+    "status": "active",
+    "reason": null
+  },
+  "provenance": {
+    "publisher": "U.S. Food and Drug Administration",
+    "sourceUrl": "https://open.fda.gov/apis/drug/label/",
+    "releaseUrl": "https://open.fda.gov/apis/drug/label/",
+    "retrievedAt": "2026-08-11T00:00:00Z",
+    "freshUntil": "2026-09-10T00:00:00Z",
+    "transformation": {
+      "status": "applied",
+      "scriptPath": "scripts/import-openfda-label-release.ts",
+      "scriptSha256": "87ab7448c11a688f919918b68b98607bf922aba1e547ec672c46c8ce9c7137f6",
+      "inputLogicalNames": ["reviewed-label-passages.json"],
+      "notes": "Strictly validates manually reviewed exact passages and proves the complete patient-facing rendering fits 320 characters before activation."
+    }
+  },
+  "licences": [
+    {
+      "subject": "Selected openFDA drug-label records without a dataset-specific rights warning",
+      "status": "cleared",
+      "licenceId": "CC0-1.0",
+      "termsUrl": "https://open.fda.gov/terms/",
+      "termsSnapshotPath": "third-party-data/openfda/reviewed-labels-2026-08-11/REVIEWED_TERMS.md",
+      "termsSnapshotSha256": "2c077cc08f07d18eefda0a562d7afe50b7efe021fd1eb4cea8c27abe279bd45a",
+      "redistribution": "allowed",
+      "commercialUse": "allowed",
+      "shareAlike": false,
+      "patientFacingUse": "allowed",
+      "modelProcessing": "allowed",
+      "attribution": "Data provided by the U.S. Food and Drug Administration (https://open.fda.gov).",
+      "notes": "The reviewed openFDA terms say CC0 applies unless the relevant dataset documentation clearly marks an exception; no exception warning appears on the drug-label API page."
+    }
+  ],
+  "scope": {
+    "included": [
+      "six exact bounded adverse-reaction passages with RxCUI tags, label set IDs, effective dates, and source links"
+    ],
+    "excluded": [
+      "unreviewed label sections",
+      "GMDN content",
+      "diagnosis or treatment advice",
+      "records carrying non-public-domain warnings"
+    ]
+  },
+  "expectedFiles": ["reviewed-label-passages.json"],
+  "files": [
+    {
+      "logicalName": "reviewed-label-passages.json",
+      "path": "third-party-data/openfda/reviewed-labels-2026-08-11/reviewed-label-passages.json",
+      "sourceUrl": "https://api.fda.gov/drug/label.json",
+      "kind": "raw",
+      "sha256": "a16356286c93a555571592e7b672ad96968c9498ba247d141f6cf21440669fd9",
+      "bytes": 2922,
+      "rowCount": 6,
+      "redistribution": "allowed"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+# Amplify Hosting monorepo build spec (WEB_COMPUTE / App Router SSR).
+#
+# H3: NOT AUTHORITATIVE. Amplify discovers an amplify.yml ONLY at the repo ROOT
+# (or the inline App buildSpec). This subdirectory file is NEVER read by Amplify.
+# The authoritative build spec is set INLINE on the App in
+# infra/lib/constructs/hosting.ts (MONOREPO_BUILD_SPEC); this file is kept in
+# sync purely as a local/dev reference so the two do not diverge.
+#
+# H2: the SOLE package-lock.json lives at the monorepo ROOT (npm workspaces), so
+# `npm ci` must run from the root — NOT from dashboard/ (no lockfile → preBuild
+# hard-fails). Both phases `cd` to the repo root (git rev-parse is robust to
+# Amplify's working dir) and build the dashboard workspace explicitly. The output
+# lands at dashboard/.next = appRoot/.next, so artifacts.baseDirectory is `.next`
+# (appRoot-relative). Deploy-day fix 2026-06-19: a `buildPath: /` variant compiled
+# fine but Amplify could not resolve the artifacts baseDirectory under the
+# applications:/appRoot format ("Artifacts base directory not found"); removing
+# buildPath + cd-ing to root makes baseDirectory: .next unambiguously appRoot-relative.
+#
+# H4: `appRoot: dashboard` MUST equal the App's AMPLIFY_MONOREPO_APP_ROOT env var.
+version: 1
+applications:
+  - appRoot: dashboard
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - cd "$(git rev-parse --show-toplevel)" && npm ci
+        build:
+          commands:
+            - cd "$(git rev-parse --show-toplevel)" && npm run build --workspace=@medadhere/dashboard
+      artifacts:
+        baseDirectory: .next
+        files:
+          - '**/*'

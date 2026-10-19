@@ -1,0 +1,62 @@
+[
+  {
+    "din": "00618632",
+    "ccddProductCode": "00618632",
+    "ingredientOrder": 1,
+    "ingredientName": "metoprolol",
+    "ccddIngredientCode": "8000063",
+    "rxcui": "6918",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T00:00:00Z"
+  },
+  {
+    "din": "02534681",
+    "ccddProductCode": "02534681",
+    "ingredientOrder": 1,
+    "ingredientName": "levothyroxine",
+    "ccddIngredientCode": "8000001",
+    "rxcui": "10582",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T00:00:00Z"
+  },
+  {
+    "din": "02272113",
+    "ccddProductCode": "02272113",
+    "ingredientOrder": 1,
+    "ingredientName": "amlodipine",
+    "ccddIngredientCode": "8000153",
+    "rxcui": "17767",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T00:00:00Z"
+  },
+  {
+    "din": "02247011",
+    "ccddProductCode": "02247011",
+    "ingredientOrder": 1,
+    "ingredientName": "simvastatin",
+    "ccddIngredientCode": "8000142",
+    "rxcui": "36567",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T00:00:00Z"
+  },
+  {
+    "din": "02309750",
+    "ccddProductCode": "02309750",
+    "ingredientOrder": 1,
+    "ingredientName": "losartan",
+    "ccddIngredientCode": "8000216",
+    "rxcui": "52175",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T00:00:00Z"
+  },
+  {
+    "din": "02295261",
+    "ccddProductCode": "02295261",
+    "ingredientOrder": 1,
+    "ingredientName": "atorvastatin",
+    "ccddIngredientCode": "8000235",
+    "rxcui": "83367",
+    "reviewedBy": "medadhere-static-review",
+    "reviewedAt": "2026-08-11T00:00:00Z"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "kind": "conversation-scenario-manifest",
+  "schemaVersion": 1,
+  "evalSetVersion": "v1",
+  "devVersion": "v6",
+  "holdoutVersion": "v1",
+  "devFile": "dev.v6.json",
+  "holdoutFile": "holdout.v1.json",
+  "devSha256": "5f6302dc9469e016d98513040c5490a79415bd0c62e3e4ec9008ba57e2561237",
+  "holdoutSha256": "cb64a35f6fe0a869227ccb5f5fa17aac62254472f7b039e2bdb3e12f96e1eff6",
+  "lockedAtUtc": "2026-08-10T15:26:12.000Z"
+}

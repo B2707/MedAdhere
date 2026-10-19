@@ -1,0 +1,157 @@
+[
+  {
+    "scenarioId": "conv-dev-013",
+    "turnId": "63193030-f782-40f2-aa0e-ea2e543b583f",
+    "outputHash": "sha256:19bfaa667e2efc39b24cbb3006d2ffe8b9b4e1fa34c9caa804a5e866796f0a2a",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] },
+      { "metricId": "useful_clarification_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_priority_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "single_question_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_non_repetition_rate", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:19bfaa667e2efc39b24cbb3006d2ffe8b9b4e1fa34c9caa804a5e866796f0a2a"
+  },
+  {
+    "scenarioId": "conv-dev-013",
+    "turnId": "393c09f3-cf72-44dc-8b1f-a2367d519f70",
+    "outputHash": "sha256:1cf2dc892c044d613188f5e928bc239f31f2019cda64ce9d08b1dbea857a37a9",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:1cf2dc892c044d613188f5e928bc239f31f2019cda64ce9d08b1dbea857a37a9"
+  },
+  {
+    "scenarioId": "conv-dev-013",
+    "turnId": "542d4a55-4fbd-46c6-88bd-6b3e9880f549",
+    "outputHash": "sha256:78c82c426ff5a4fcc3346e46dd110fa8695d293127a7f9df485251f3d9ef5608",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": false, "failureCodes": [5001] },
+      { "metricId": "useful_clarification_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_priority_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "single_question_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_non_repetition_rate", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:78c82c426ff5a4fcc3346e46dd110fa8695d293127a7f9df485251f3d9ef5608"
+  },
+  {
+    "scenarioId": "conv-dev-017",
+    "turnId": "73dbed20-0cb2-47d4-be87-8fffb8cd2a05",
+    "outputHash": "sha256:45df92dac6861bbd3b7edfdfbc9b0b94b1810d84902e637addd7b07bc29c2b10",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:45df92dac6861bbd3b7edfdfbc9b0b94b1810d84902e637addd7b07bc29c2b10"
+  },
+  {
+    "scenarioId": "conv-dev-017",
+    "turnId": "d18d0b7f-2a8f-410b-9aeb-e6b1b66c42bd",
+    "outputHash": "sha256:10ae7f41cd685429d8a371979ea91ceb8cca2bc45e61946a9e50d9603c5620ae",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] },
+      { "metricId": "useful_clarification_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_priority_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "single_question_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_non_repetition_rate", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:10ae7f41cd685429d8a371979ea91ceb8cca2bc45e61946a9e50d9603c5620ae"
+  },
+  {
+    "scenarioId": "conv-dev-017",
+    "turnId": "8a6e86c4-3927-4e2f-bfd1-30805904f333",
+    "outputHash": "sha256:7b458cd99b6396139be649f6afe0488e87ad534c0850a066fc413cdb135141be",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:7b458cd99b6396139be649f6afe0488e87ad534c0850a066fc413cdb135141be"
+  },
+  {
+    "scenarioId": "conv-dev-021",
+    "turnId": "b919f32f-1462-4f12-bbf7-27236bed642b",
+    "outputHash": "sha256:7732583e83db50a2a4d55aa2031ce6a02e7d1fe5f6bf66dabbee01fe83550bb3",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] },
+      { "metricId": "useful_clarification_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_priority_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "single_question_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_non_repetition_rate", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:7732583e83db50a2a4d55aa2031ce6a02e7d1fe5f6bf66dabbee01fe83550bb3"
+  },
+  {
+    "scenarioId": "conv-dev-021",
+    "turnId": "2b5f984f-989c-4b7a-99b2-7bda65d3b9a1",
+    "outputHash": "sha256:c70b3777de2efdaef296b77ce785b515245155a189800cdec1ad81cbdcb8f404",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:c70b3777de2efdaef296b77ce785b515245155a189800cdec1ad81cbdcb8f404"
+  },
+  {
+    "scenarioId": "conv-dev-021",
+    "turnId": "af479246-3ec8-4e94-9ef5-c3651425da2d",
+    "outputHash": "sha256:f98b1c6b84c5f69ac1893e60993f28069cd92ef3c0047e962c88257ec1902d8a",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      { "metricId": "patient_claim_faithfulness", "passed": true, "failureCodes": [] },
+      { "metricId": "clinician_draft_source_faithfulness", "passed": false, "failureCodes": [4001] },
+      { "metricId": "clinical_field_completeness", "passed": true, "failureCodes": [] },
+      { "metricId": "useful_clarification_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_priority_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "single_question_rate", "passed": true, "failureCodes": [] },
+      { "metricId": "clarification_non_repetition_rate", "passed": true, "failureCodes": [] }
+    ],
+    "hashEcho": "sha256:f98b1c6b84c5f69ac1893e60993f28069cd92ef3c0047e962c88257ec1902d8a"
+  }
+]

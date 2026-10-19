@@ -1,0 +1,345 @@
+[
+  {
+    "scenarioId": "conv-dev-001",
+    "turnId": "cdd6c9aa-30aa-40af-8990-99754af4ca30",
+    "outputHash": "sha256:22b0b3fba9aa5df9aed7be469f360554890182a22357c97b5b441f41e4074cc2",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "useful_clarification_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_priority_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "single_question_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_non_repetition_rate",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:22b0b3fba9aa5df9aed7be469f360554890182a22357c97b5b441f41e4074cc2"
+  },
+  {
+    "scenarioId": "conv-dev-001",
+    "turnId": "a576667f-8fc1-4c40-85d1-7440eefa7290",
+    "outputHash": "sha256:3572c81a3f430942b2049ac7ee36fa92da4f366610038f8edb90e13f74e760d4",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:3572c81a3f430942b2049ac7ee36fa92da4f366610038f8edb90e13f74e760d4"
+  },
+  {
+    "scenarioId": "conv-dev-001",
+    "turnId": "0357f3bc-acdb-42e4-84f1-906a1e9f6d66",
+    "outputHash": "sha256:41471c3a05e008124f4556647155969390cc3fa7b231f5847ec1b8b83e88471d",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:41471c3a05e008124f4556647155969390cc3fa7b231f5847ec1b8b83e88471d"
+  },
+  {
+    "scenarioId": "conv-dev-005",
+    "turnId": "9741dac1-8778-4004-9d49-64a10175cf81",
+    "outputHash": "sha256:91a3838ebf7bf64e8b528b22a42b09faa86b7e3a4fdbc8d7678ef31a955e94b7",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "useful_clarification_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_priority_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "single_question_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_non_repetition_rate",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:91a3838ebf7bf64e8b528b22a42b09faa86b7e3a4fdbc8d7678ef31a955e94b7"
+  },
+  {
+    "scenarioId": "conv-dev-005",
+    "turnId": "63a6eea6-a3f8-44f7-a74b-6dc588cbd81c",
+    "outputHash": "sha256:9175f6a917ad95349901e8162d066be3c79fbf43dfe7d0a125c42707bd0681c6",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": false,
+        "failureCodes": [5001]
+      },
+      {
+        "metricId": "useful_clarification_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_priority_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "single_question_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_non_repetition_rate",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:9175f6a917ad95349901e8162d066be3c79fbf43dfe7d0a125c42707bd0681c6"
+  },
+  {
+    "scenarioId": "conv-dev-005",
+    "turnId": "5e81f99b-8588-440f-8dc8-55ec66e076a8",
+    "outputHash": "sha256:8706e30140c51e4dc9e3b3edead42a8ac2713fcf938796578136037ec599434b",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": false,
+        "failureCodes": [5001]
+      },
+      {
+        "metricId": "useful_clarification_rate",
+        "passed": false,
+        "failureCodes": [6001]
+      },
+      {
+        "metricId": "clarification_priority_rate",
+        "passed": false,
+        "failureCodes": [7001]
+      },
+      {
+        "metricId": "single_question_rate",
+        "passed": false,
+        "failureCodes": [9001]
+      },
+      {
+        "metricId": "clarification_non_repetition_rate",
+        "passed": false,
+        "failureCodes": [8001]
+      }
+    ],
+    "hashEcho": "sha256:8706e30140c51e4dc9e3b3edead42a8ac2713fcf938796578136037ec599434b"
+  },
+  {
+    "scenarioId": "conv-dev-009",
+    "turnId": "9ef73af1-4220-4943-81ba-e963da271dae",
+    "outputHash": "sha256:b82e240f2bd9bc9bf96a50cd84012889f92fae30eefcd0b42cfc612b914b943a",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "useful_clarification_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_priority_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "single_question_rate",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clarification_non_repetition_rate",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:b82e240f2bd9bc9bf96a50cd84012889f92fae30eefcd0b42cfc612b914b943a"
+  },
+  {
+    "scenarioId": "conv-dev-009",
+    "turnId": "3eb00dbd-dc5d-4b10-ad73-74c824cb401e",
+    "outputHash": "sha256:00a151f81b84083d0f1ab6db8fcacca0475544884bfb26636f4c2497cfa0d4bb",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:00a151f81b84083d0f1ab6db8fcacca0475544884bfb26636f4c2497cfa0d4bb"
+  },
+  {
+    "scenarioId": "conv-dev-009",
+    "turnId": "8c2f3b68-46a1-4e7c-9541-00f5e6dc619c",
+    "outputHash": "sha256:0390f1a778b9279446170fed9dde185dbae8306413aa005eac27266a55736eb1",
+    "reviewerKind": "llm_automated",
+    "reviewerModel": "gpt-5.6-sol",
+    "codebookVersion": "semantic-review-codebook.v2",
+    "codebookHash": "sha256:fb0bc2410511978279ce28c50d9e7f1b591195fa715c78dc37001425591a029c",
+    "metricResults": [
+      {
+        "metricId": "patient_claim_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinician_draft_source_faithfulness",
+        "passed": true,
+        "failureCodes": []
+      },
+      {
+        "metricId": "clinical_field_completeness",
+        "passed": true,
+        "failureCodes": []
+      }
+    ],
+    "hashEcho": "sha256:0390f1a778b9279446170fed9dde185dbae8306413aa005eac27266a55736eb1"
+  }
+]

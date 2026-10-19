@@ -1,0 +1,42 @@
+{
+  "name": "@medadhere/dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MedAdhere clinician dashboard — Next.js 15 App Router auth shell (Phase 2)",
+  "comments": {
+    "next-pin": "H6/D-15: next is installed as ^15.5.22 and capped to the 15.x line (>=15.5.9 <16). Amplify Hosting (D-01, WEB_COMPUTE) supports only up to Next 15; an unbounded >=15.5.9 resolves to 16.x and breaks the SSR build (SC3). >=15.5.9 is the fully-patched CVE-2025-55184/67779 floor. The <16 cap may be lifted only once Amplify adds Next-16 support, or under the Vercel fallback (D-02).",
+    "jose-pin": "D-07: jose ^6.2.3 is the ONLY Edge-safe verifier (Web Crypto). The Node-only Cognito/JWT verify libraries break on the Edge runtime (Pitfall 1)."
+  },
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "check:no-pg": "node scripts/check-no-pg.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.3.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "jose": "^6.2.3",
+    "lucide-react": "^1.21.0",
+    "next": "^15.5.22",
+    "react": "^19",
+    "react-dom": "^19",
+    "recharts": "^3.9.2",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "~5.9.0",
+    "vitest": "^4.1.9"
+  }
+}

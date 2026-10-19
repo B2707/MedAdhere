@@ -1,0 +1,51 @@
+{
+  "manifestVersion": 1,
+  "source": "health_canada",
+  "releaseId": "release-pending",
+  "activation": {
+    "status": "inactive",
+    "reason": "Superseded by reviewed-dpd-2026-08-11, which freezes the selected DPD and product-monograph metadata."
+  },
+  "provenance": {
+    "publisher": "Health Canada",
+    "sourceUrl": "https://health-products.canada.ca/api/documentation/dpd-documentation-en.html",
+    "releaseUrl": "https://health-products.canada.ca/api/drug/",
+    "retrievedAt": null,
+    "freshUntil": null,
+    "transformation": {
+      "status": "planned",
+      "scriptPath": null,
+      "scriptSha256": null,
+      "inputLogicalNames": [],
+      "notes": "Only bounded DPD product metadata and monograph URL/version metadata are planned."
+    }
+  },
+  "licences": [
+    {
+      "subject": "Selected Health Canada DPD product metadata",
+      "status": "cleared",
+      "licenceId": "OGL-Canada-2.0",
+      "termsUrl": "https://open.canada.ca/en/open-government-licence-canada",
+      "termsSnapshotPath": null,
+      "termsSnapshotSha256": null,
+      "redistribution": "allowed",
+      "commercialUse": "allowed",
+      "shareAlike": false,
+      "patientFacingUse": "allowed",
+      "modelProcessing": "allowed",
+      "attribution": "Contains information licensed under the Open Government Licence - Canada.",
+      "notes": "The clearance applies to selected DPD metadata, not sponsor-authored product-monograph bodies."
+    }
+  ],
+  "scope": {
+    "included": [
+      "DIN, status, brand, ingredient, form, route, ATC, and product-monograph URL/version metadata"
+    ],
+    "excluded": [
+      "bulk product-monograph bodies",
+      "unreviewed sponsor-authored warning or adverse-reaction passages"
+    ]
+  },
+  "expectedFiles": ["dpd-product-metadata.json"],
+  "files": []
+}

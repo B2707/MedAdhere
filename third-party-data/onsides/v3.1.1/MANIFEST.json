@@ -1,0 +1,73 @@
+{
+  "manifestVersion": 1,
+  "source": "onsides",
+  "releaseId": "v3.1.1",
+  "activation": {
+    "status": "review_required",
+    "reason": "The v3.1.1 tag has an MIT licence for software and associated documentation but no tag-specific data licence. The current main branch's later CC BY 4.0 data licence is not assumed to apply retroactively. The retained RxCUI 6809 derivative remains review-required."
+  },
+  "provenance": {
+    "publisher": "Tatonetti Lab",
+    "sourceUrl": "https://github.com/tatonetti-lab/onsides",
+    "releaseUrl": "https://github.com/tatonetti-lab/onsides/releases/tag/v3.1.1",
+    "retrievedAt": "2026-08-12T16:37:00Z",
+    "freshUntil": null,
+    "transformation": {
+      "status": "applied",
+      "scriptPath": "scripts/vendor-onsides.mjs",
+      "scriptSha256": "9c3ed071a20a7cd503fd998e6d34edfa30a4672ddc8505c27e99e8f8b4ac5b4a",
+      "inputLogicalNames": [
+        "onsides-v3.1.1.zip",
+        "vocab_rxnorm_ingredient.csv",
+        "vocab_rxnorm_ingredient_to_product.csv",
+        "product_to_rxnorm.csv",
+        "vocab_meddra_adverse_effect.csv",
+        "product_adverse_effect.csv"
+      ],
+      "notes": "The pinned 84,862,297-byte release archive and five extracted CSVs are checksum-verified, joined through single-ingredient product labels, filtered to MedDRA Preferred Terms for RxCUI 6809, de-duplicated, deterministically sorted, and emitted atomically."
+    }
+  },
+  "licences": [
+    {
+      "subject": "OnSIDES v3.1.1 release data",
+      "status": "review_required",
+      "licenceId": null,
+      "termsUrl": "https://raw.githubusercontent.com/tatonetti-lab/onsides/v3.1.1/README.md",
+      "termsSnapshotPath": null,
+      "termsSnapshotSha256": null,
+      "redistribution": "review_required",
+      "commercialUse": "review_required",
+      "shareAlike": null,
+      "patientFacingUse": "prohibited",
+      "modelProcessing": "prohibited",
+      "attribution": "Tanaka Y, Chen HY, Belloni P, et al. OnSIDES database. Med. 2025;100642.",
+      "notes": "No MIT or CC BY 4.0 claim is made for the pinned dataset. The v3.1.1 tag describes the database as academic-research-only and unsuitable for patient or healthcare-professional reliance. Rights remain review-required; patient-facing use and external model processing remain prohibited by this manifest."
+    }
+  ],
+  "scope": {
+    "included": [
+      "MedDRA Preferred Terms from single-ingredient product labels for metformin ingredient RxCUI 6809",
+      "source identity, citation, archive checksum, and deterministic build provenance"
+    ],
+    "excluded": [
+      "all RxCUIs other than 6809 and all combination-product labels",
+      "patient-facing claims",
+      "causal or diagnostic assertions",
+      "external model-provider processing",
+      "raw OnSIDES release files and MedDRA hierarchy"
+    ]
+  },
+  "expectedFiles": ["onsides-labels.v3.1.1.json"],
+  "files": [
+    {
+      "logicalName": "onsides-labels.v3.1.1.json",
+      "path": "backend/src/classifier/assets/onsides-labels.v3.1.1.json",
+      "sourceUrl": "https://github.com/tatonetti-lab/onsides/releases/tag/v3.1.1",
+      "kind": "derived",
+      "sha256": "4afa801e0bb64c78e38390be034feab49912f8ced0e4dd6997d0ad3592b6ffcd",
+      "bytes": 6859,
+      "rowCount": 53,
+      "redistribution": "review_required"
+    }
+  ]
+}

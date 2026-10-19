@@ -1,0 +1,18 @@
+{
+  "kind": "onsides-coverage",
+  "artifactVersion": 1,
+  "onsidesSourceVersion": "v3.1.1",
+  "generatedAt": "2026-08-04T00:12:26.000Z",
+  "entries": [
+    {
+      "rxcui": "6809",
+      "hasLabelData": true
+    }
+  ],
+  "covered": [
+    "6809"
+  ],
+  "uncovered": [],
+  "allCovered": true,
+  "reviewedOverride": false
+}

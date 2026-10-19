@@ -1,0 +1,64 @@
+{
+  "manifestVersion": 1,
+  "source": "medlineplus",
+  "releaseId": "2026-08-08",
+  "activation": { "status": "active", "reason": null },
+  "provenance": {
+    "publisher": "U.S. National Library of Medicine",
+    "sourceUrl": "https://medlineplus.gov/xml.html",
+    "releaseUrl": "https://medlineplus.gov/xml.html",
+    "retrievedAt": "2026-08-11T09:46:16Z",
+    "freshUntil": "2026-09-10T09:46:16Z",
+    "transformation": {
+      "status": "applied",
+      "scriptPath": "scripts/import-medlineplus-release.ts",
+      "scriptSha256": "0cec8a739b970b30de02e7364d622da5b1ca026943ccf0946aee5492be05ea85",
+      "inputLogicalNames": ["health-topic-xml-en-es"],
+      "notes": "The importer keeps only the allowlisted NLM-authored fields and excludes site-record bodies and protected media."
+    }
+  },
+  "licences": [
+    {
+      "subject": "NLM-authored MedlinePlus health-topic metadata and summaries",
+      "status": "cleared",
+      "licenceId": "LicenseRef-US-Federal-Public-Domain",
+      "termsUrl": "https://medlineplus.gov/about/using/usingcontent/",
+      "termsSnapshotPath": "third-party-data/medlineplus/2026-08-08/REVIEWED_TERMS.md",
+      "termsSnapshotSha256": "ba58ceae3a0cd08f7596b1d140137a0cfb3c0f4d8d9d87ddc01c6cf9ccb180b9",
+      "redistribution": "allowed",
+      "commercialUse": "allowed",
+      "shareAlike": false,
+      "patientFacingUse": "allowed",
+      "modelProcessing": "allowed",
+      "attribution": "Source: MedlinePlus.gov, National Library of Medicine.",
+      "notes": "The clearance applies only to the allowlisted NLM-authored public-domain fields. Every rendered summary or claim must carry the MedlinePlus.gov/NLM source credit and link."
+    }
+  ],
+  "scope": {
+    "included": [
+      "health-topic ID, title, URL, and language",
+      "MeSH, also-called, and see-reference vocabulary",
+      "NLM-authored full health-topic summary",
+      "related-topic IDs and English-Spanish topic equivalence"
+    ],
+    "excluded": [
+      "A.D.A.M. Medical Encyclopedia content",
+      "ASHP drug monographs",
+      "images, illustrations, logos, photos, and videos",
+      "site-record bodies, standard descriptions, and linked third-party content"
+    ]
+  },
+  "expectedFiles": ["health-topic-xml-en-es"],
+  "files": [
+    {
+      "logicalName": "health-topic-xml-en-es",
+      "path": "third-party-data/medlineplus/2026-08-08/raw/mplus_topics_2026-08-08.xml",
+      "sourceUrl": "https://medlineplus.gov/xml/mplus_topics_2026-08-08.xml",
+      "kind": "raw",
+      "sha256": "35d489996f5de81910db38484da8416e8713c089c50f8548036d2ef963abec1f",
+      "bytes": 30039238,
+      "rowCount": 2033,
+      "redistribution": "allowed"
+    }
+  ]
+}

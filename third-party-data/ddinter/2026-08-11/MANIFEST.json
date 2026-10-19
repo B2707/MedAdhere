@@ -1,0 +1,161 @@
+{
+  "manifestVersion": 1,
+  "source": "ddinter",
+  "releaseId": "download-snapshot-2026-08-11",
+  "activation": { "status": "active", "reason": null },
+  "provenance": {
+    "publisher": "DDInter, Computational Biology and Drug Design Group",
+    "sourceUrl": "https://ddinter2.scbdd.com/",
+    "releaseUrl": "https://ddinter2.scbdd.com/download/",
+    "retrievedAt": "2026-08-11T09:46:16Z",
+    "freshUntil": "2026-09-10T09:46:16Z",
+    "transformation": {
+      "status": "applied",
+      "scriptPath": "scripts/import-ddinter-release.ts",
+      "scriptSha256": "251e06ad163fe19da4f560d149c0216a6e9d73b9637e5d47f24844b527ef0067",
+      "inputLogicalNames": [
+        "ddinter_downloads_code_A.csv",
+        "ddinter_downloads_code_B.csv",
+        "ddinter_downloads_code_D.csv",
+        "ddinter_downloads_code_H.csv",
+        "ddinter_downloads_code_L.csv",
+        "ddinter_downloads_code_P.csv",
+        "ddinter_downloads_code_R.csv",
+        "ddinter_downloads_code_V.csv"
+      ],
+      "notes": "The importer canonicalizes and deduplicates pairs and adds only the separately reviewed cohort RxNorm mappings."
+    }
+  },
+  "licences": [
+    {
+      "subject": "DDInter downloadable drug-drug interaction data and derived mappings",
+      "status": "cleared",
+      "licenceId": "CC-BY-NC-SA-4.0",
+      "termsUrl": "https://ddinter2.scbdd.com/terms/",
+      "termsSnapshotPath": "third-party-data/ddinter/2026-08-11/REVIEWED_TERMS.md",
+      "termsSnapshotSha256": "8224bb90e77de497935f22a6484446abb9e8a43ba44c5eb2ce739b08eb8ea25b",
+      "redistribution": "restricted",
+      "commercialUse": "prohibited",
+      "shareAlike": true,
+      "patientFacingUse": "prohibited",
+      "modelProcessing": "prohibited",
+      "attribution": "DDInter data, Computational Biology and Drug Design Group, CC BY-NC-SA 4.0.",
+      "notes": "Noncommercial academic deterministic lookup only; data and mappings remain outside the MIT application-code boundary."
+    }
+  ],
+  "scope": {
+    "included": [
+      "the eight files exposed by the DDInter 2.0 download page",
+      "fifteen reviewed cohort RxNorm ingredient mappings"
+    ],
+    "excluded": [
+      "non-downloadable interaction kinds",
+      "runtime name matching",
+      "patient-facing claims",
+      "model processing"
+    ]
+  },
+  "expectedFiles": [
+    "ddinter_downloads_code_A.csv",
+    "ddinter_downloads_code_B.csv",
+    "ddinter_downloads_code_D.csv",
+    "ddinter_downloads_code_H.csv",
+    "ddinter_downloads_code_L.csv",
+    "ddinter_downloads_code_P.csv",
+    "ddinter_downloads_code_R.csv",
+    "ddinter_downloads_code_V.csv",
+    "reviewed-rxnorm-mappings.json"
+  ],
+  "files": [
+    {
+      "logicalName": "ddinter_downloads_code_A.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_A.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_A.csv",
+      "kind": "raw",
+      "sha256": "a22ca451d2b755ca2331886f7e00540c86f555f9f55704a59a19c691251f52e0",
+      "bytes": 3343434,
+      "rowCount": 56367,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "ddinter_downloads_code_B.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_B.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_B.csv",
+      "kind": "raw",
+      "sha256": "76de5115a55587f0e822e1096b684fd3ddde058fbefcbb19896df58820ace130",
+      "bytes": 867726,
+      "rowCount": 15140,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "ddinter_downloads_code_D.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_D.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_D.csv",
+      "kind": "raw",
+      "sha256": "c0627ec39965dbe27829e4934cd20d71eb079f4e373287678737bba9423a306a",
+      "bytes": 1520704,
+      "rowCount": 25681,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "ddinter_downloads_code_H.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_H.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_H.csv",
+      "kind": "raw",
+      "sha256": "f0f925f0ba1ee68c4668d3e7a6732719b34623b22a0f5d017f9090e59f63c88e",
+      "bytes": 705088,
+      "rowCount": 11727,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "ddinter_downloads_code_L.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_L.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_L.csv",
+      "kind": "raw",
+      "sha256": "f54f4486cc00344f8c86508c31c2ca3fad6d1d37ec3af5bcf609b4bbda5507ef",
+      "bytes": 3885702,
+      "rowCount": 65389,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "ddinter_downloads_code_P.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_P.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_P.csv",
+      "kind": "raw",
+      "sha256": "83f8c0edb20d09ef29b8500b48f9623e208379525688ade9e70a7df2d8749d55",
+      "bytes": 317460,
+      "rowCount": 5492,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "ddinter_downloads_code_R.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_R.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_R.csv",
+      "kind": "raw",
+      "sha256": "1c39c3d4a6e41659b7a988538d7f363867592abc6f41a815de8746f6e2150574",
+      "bytes": 1793766,
+      "rowCount": 30563,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "ddinter_downloads_code_V.csv",
+      "path": "third-party-data/ddinter/2026-08-11/raw/ddinter_downloads_code_V.csv",
+      "sourceUrl": "https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_V.csv",
+      "kind": "raw",
+      "sha256": "353973fb300453946aea95733e8fb52338e4b59426d2ce6ca318363d4f84f10a",
+      "bytes": 700777,
+      "rowCount": 12024,
+      "redistribution": "restricted"
+    },
+    {
+      "logicalName": "reviewed-rxnorm-mappings.json",
+      "path": "third-party-data/ddinter/2026-08-11/reviewed-rxnorm-mappings.json",
+      "sourceUrl": "https://ddinter2.scbdd.com/download/",
+      "kind": "derived",
+      "sha256": "96af643464f66fef023af40d6d11640730d91183e31a73aa8175b39fb24c240e",
+      "bytes": 3337,
+      "rowCount": 15,
+      "redistribution": "restricted"
+    }
+  ]
+}

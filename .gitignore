@@ -1,4 +1,46 @@
+# macOS
 .DS_Store
+
+# Node / build artifacts
+node_modules/
+local-exports/
+dist/
+build/
+*.log
+
+# CDK / TypeScript build output
+cdk.out/
+*.tsbuildinfo
+
+# Environment / secrets
+.env
+.env.*
+*.pem
+# Exception (M-2): the AWS RDS global CA bundle is a PUBLIC certificate (published at
+# https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem), NOT a secret. It is a required
+# build asset — the schema-init Lambda bundles it for RDS server-cert verification — so it MUST be
+# tracked despite the blanket *.pem rule above.
+!backend/src/schema-init/rds-global-bundle.pem
+# Every Lambda copies this one canonical public CA bundle into its own build output.
+
+# Phase-7 real-reply shift-check CSVs (gate fix U-09, DATA-01): real patient reply text must NEVER
+# enter git history — a committed real-reply CSV is un-deletable PIPEDA text outside DATA-01's
+# deletion scope. Only the synthetic gold set (backend/eval/gold-set.csv) is ever committed.
+backend/eval/real-*.csv
+
+# derived test artifacts
+coverage/
+output/
+# Live-eval result JSONs are CI artifacts / local outputs, never git history
+# (review fix F4, 2026-07-03 — id-keyed but keep the repo clean of run outputs).
+backend/eval/results/
+# Frozen third-party source bytes are local import inputs. Manifests, notices, reviewed terms,
+# and transformation code stay tracked; raw data remains outside the application repository.
+third-party-data/**/raw/
+.vercel
+.env*
+
+# LaTeX build output (thesis/)
 *.aux
 *.bbl
 *.blg

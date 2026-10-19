@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="main.pdf"><b>Read the 40-page honours thesis (PDF)</b></a>
+  <a href="thesis/main.pdf"><b>Read the 40-page honours thesis (PDF)</b></a>
 </p>
 
 ## What it is
@@ -122,7 +122,7 @@ It runs on serverless AWS, sends real SMS through Twilio, and calls Claude throu
 
 Bader El-Asadi. COMP 4905 Honours Project, School of Computer Science, Carleton University, Summer 2026.
 
-[Read the 40-page thesis (PDF)](main.pdf)
+[Read the 40-page thesis (PDF)](thesis/main.pdf)
 
 | Chapter | What it covers |
 |---|---|
@@ -135,22 +135,34 @@ Bader El-Asadi. COMP 4905 Honours Project, School of Computer Science, Carleton 
 
 ## Repository layout
 
-This repository holds the thesis source.
-
-```
-main.tex          entry point: title page, abstract, chapter order
-chapters/         one .tex file per chapter
-generated/        tables and figures included by the chapters
-style/            fonts, palette and heading styles
-figures/          dashboard screenshots used in the thesis
-references.bib    bibliography
-main.pdf          the built thesis
-assets/           README images, GIFs and launch video; HTML sources and render scripts in assets/src/
+```text
+infra/             AWS CDK stack and infrastructure tests
+backend/           Lambda handlers, database schema, conversation core and classifier evaluation
+dashboard/         Next.js clinician dashboard
+packages/shared/   shared schemas, safety rules and cross-service contracts
+scripts/           predeploy gate, operator tools, data imports, exports and runbooks
+third-party-data/  manifests, notices and reviewed selections for the drug reference sources
+thesis/            LaTeX source and the built PDF (thesis/main.pdf)
+assets/            README images, GIFs and videos; HTML sources and render scripts in assets/src/
 ```
 
-## Build the PDF
+## Run the checks
+
+Use Node.js 24 and npm.
 
 ```sh
+npm ci
+npm run typecheck
+npm run lint
+npm test
+```
+
+The database suites start a real PostgreSQL container through testcontainers, so Docker must be running. The OnSIDES label slice is not included in this repository; `backend/src/classifier/assets/NOTICE.md` explains how to rebuild it from the official release.
+
+## Build the thesis PDF
+
+```sh
+cd thesis
 tectonic -X compile main.tex
 ```
 

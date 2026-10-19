@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "conversation-core-candidate-2-regressions.v2",
+  "cases": [
+    {
+      "id": "blocker-1-candidate-answer-cannot-widen",
+      "profile": "threeMedications",
+      "message": { "id": "msg-blocker-1", "body": "It was gamma." },
+      "initialEvents": [
+        {
+          "id": "event-blocker-1",
+          "kind": "administration",
+          "current": true,
+          "canonical": false,
+          "sourceMessageIds": ["msg-earlier-1"],
+          "adherence": "taken",
+          "candidateMedicationIds": ["med-alpha", "med-beta"]
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-blocker-1",
+          "eventId": "event-blocker-1",
+          "field": "medication_identity",
+          "state": "asked",
+          "priority": 1,
+          "candidateMedicationIds": ["med-alpha", "med-beta"]
+        }
+      ],
+      "claims": [
+        {
+          "slot": "answer",
+          "kind": "need_answer",
+          "quote": "gamma",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "answerField": "medication_identity",
+          "answerText": "gamma"
+        }
+      ]
+    },
+    {
+      "id": "blocker-2-prompted-dose-must-match-medication",
+      "profile": "threeMedications",
+      "message": { "id": "msg-blocker-2", "body": "I took alpha." },
+      "promptedDoseId": "dose-beta-morning",
+      "claims": [
+        {
+          "slot": "administration",
+          "kind": "administration",
+          "quote": "took alpha",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "alpha",
+          "actionText": "took"
+        }
+      ]
+    },
+    {
+      "id": "blocker-3-certainty-and-status-are-exhaustive",
+      "profile": "threeMedications",
+      "message": {
+        "id": "msg-blocker-3",
+        "body": "I maybe took alpha and the tingling stopped."
+      },
+      "claims": [
+        {
+          "slot": "uncertain-administration",
+          "kind": "administration",
+          "quote": "maybe took alpha",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "uncertain",
+          "medicationText": "alpha",
+          "actionText": "took"
+        },
+        {
+          "slot": "resolved-symptom",
+          "kind": "symptom",
+          "quote": "tingling stopped",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "resolved",
+          "certainty": "certain",
+          "symptomText": "tingling"
+        }
+      ]
+    },
+    {
+      "id": "blocker-4-refinement-replaces-stale-needs",
+      "profile": "threeMedications",
+      "message": { "id": "msg-blocker-4", "body": "The nausea lasted an hour." },
+      "initialEvents": [
+        {
+          "id": "event-blocker-4-e0",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-earlier-4"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-blocker-4-n0",
+          "eventId": "event-blocker-4-e0",
+          "field": "severity",
+          "state": "asked",
+          "priority": 3
+        }
+      ],
+      "claims": [
+        {
+          "slot": "duration",
+          "kind": "symptom_detail",
+          "quote": "nausea lasted an hour",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "targetText": "nausea",
+          "detailField": "duration",
+          "detailText": "an hour"
+        }
+      ]
+    },
+    {
+      "id": "blocker-5-complete-command-set-hash",
+      "profile": "threeMedications",
+      "message": { "id": "msg-blocker-5", "body": "Thanks." },
+      "claims": [
+        {
+          "slot": "social",
+          "kind": "social",
+          "quote": "Thanks",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain"
+        }
+      ]
+    },
+    {
+      "id": "blocker-6-renderer-is-pure",
+      "profile": "threeMedications",
+      "message": { "id": "msg-blocker-6", "body": "Thanks." },
+      "initialEvents": [
+        {
+          "id": "event-blocker-6",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-earlier-6"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-blocker-6",
+          "eventId": "event-blocker-6",
+          "field": "severity",
+          "state": "open",
+          "priority": 3
+        }
+      ],
+      "claims": [
+        {
+          "slot": "social",
+          "kind": "social",
+          "quote": "Thanks",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain"
+        }
+      ]
+    }
+  ],
+  "profiles": {
+    "threeMedications": {
+      "medications": [
+        { "id": "med-alpha", "names": ["alpha"], "aliases": [], "active": true },
+        { "id": "med-beta", "names": ["beta"], "aliases": [], "active": true },
+        { "id": "med-gamma", "names": ["gamma"], "aliases": [], "active": true }
+      ],
+      "doses": [
+        {
+          "id": "dose-alpha-morning",
+          "medicationId": "med-alpha",
+          "label": "morning",
+          "localDate": "2026-08-12",
+          "localTime": "08:00"
+        },
+        {
+          "id": "dose-beta-morning",
+          "medicationId": "med-beta",
+          "label": "morning",
+          "localDate": "2026-08-12",
+          "localTime": "08:00"
+        },
+        {
+          "id": "dose-gamma-morning",
+          "medicationId": "med-gamma",
+          "label": "morning",
+          "localDate": "2026-08-12",
+          "localTime": "08:00"
+        }
+      ],
+      "symptomConcepts": ["nausea", "headache", "dizziness", "tingling"]
+    }
+  }
+}

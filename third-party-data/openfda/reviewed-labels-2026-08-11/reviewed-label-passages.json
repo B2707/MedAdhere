@@ -1,0 +1,60 @@
+{
+  "reviewedAt": "2026-08-11T00:00:00Z",
+  "reviewedBy": "MedAdhere source review",
+  "entries": [
+    {
+      "evidenceCode": "openfda-metoprolol-adverse-v1",
+      "rxcui": "6918",
+      "setId": "00940cc5-d2eb-4841-9138-de97d7b1c674",
+      "effectiveTime": "20260727",
+      "passage": "Most common adverse reactions: tiredness, dizziness, depression, shortness of breath, bradycardia, hypotension, diarrhea, pruritus, rash.",
+      "sourceUrl": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=00940cc5-d2eb-4841-9138-de97d7b1c674",
+      "language": "en"
+    },
+    {
+      "evidenceCode": "openfda-levothyroxine-adverse-v1",
+      "rxcui": "10582",
+      "setId": "008de8fd-150f-4022-8ccb-c8bfa94875c7",
+      "effectiveTime": "20260324",
+      "passage": "Central nervous system: headache, hyperactivity, nervousness, anxiety, irritability, emotional lability, insomnia",
+      "sourceUrl": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=008de8fd-150f-4022-8ccb-c8bfa94875c7",
+      "language": "en"
+    },
+    {
+      "evidenceCode": "openfda-amlodipine-adverse-v1",
+      "rxcui": "17767",
+      "setId": "003dd1ec-16f8-4f96-b6a8-c4689d35892a",
+      "effectiveTime": "20260420",
+      "passage": "Most common adverse reaction to amlodipine is edema which occurred in a dose related manner.",
+      "sourceUrl": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=003dd1ec-16f8-4f96-b6a8-c4689d35892a",
+      "language": "en"
+    },
+    {
+      "evidenceCode": "openfda-simvastatin-adverse-v1",
+      "rxcui": "36567",
+      "setId": "00896fff-081d-4553-be8c-1999a8a73dda",
+      "effectiveTime": "20260226",
+      "passage": "Most common adverse reactions (incidence ≥5%) are: upper respiratory infection, headache, abdominal pain, constipation, and nausea.",
+      "sourceUrl": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=00896fff-081d-4553-be8c-1999a8a73dda",
+      "language": "en"
+    },
+    {
+      "evidenceCode": "openfda-losartan-adverse-v1",
+      "rxcui": "52175",
+      "setId": "021cd76a-b093-4704-8410-5e7d01e20a54",
+      "effectiveTime": "20251022",
+      "passage": "Most common adverse reactions (incidence ≥2% and greater than placebo) are: dizziness, upper respiratory infection, nasal congestion, and back pain.",
+      "sourceUrl": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=021cd76a-b093-4704-8410-5e7d01e20a54",
+      "language": "en"
+    },
+    {
+      "evidenceCode": "openfda-atorvastatin-adverse-v1",
+      "rxcui": "83367",
+      "setId": "00afce9b-48c9-487a-a738-e359c005c707",
+      "effectiveTime": "20250828",
+      "passage": "Most common adverse reactions (incidence ≥5%) are nasopharyngitis, arthralgia, diarrhea, pain in extremity, and urinary tract infection",
+      "sourceUrl": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=00afce9b-48c9-487a-a738-e359c005c707",
+      "language": "en"
+    }
+  ]
+}

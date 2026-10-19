@@ -1,0 +1,50 @@
+{
+  "manifestVersion": 1,
+  "source": "ddinter",
+  "releaseId": "release-pending",
+  "activation": {
+    "status": "inactive",
+    "reason": "Historical pre-freeze placeholder superseded by third-party-data/ddinter/2026-08-11/MANIFEST.json; never use this manifest for activation."
+  },
+  "provenance": {
+    "publisher": "DDInter, Computational Biology and Drug Design Group",
+    "sourceUrl": "https://ddinter2.scbdd.com/",
+    "releaseUrl": "https://ddinter2.scbdd.com/download/",
+    "retrievedAt": null,
+    "freshUntil": null,
+    "transformation": {
+      "status": "planned",
+      "scriptPath": null,
+      "scriptSha256": null,
+      "inputLogicalNames": [],
+      "notes": "Historical placeholder only. The reviewed 2026-08-11 snapshot supersedes this planned transform."
+    }
+  },
+  "licences": [
+    {
+      "subject": "DDInter downloadable drug-drug interaction data and derived mappings",
+      "status": "cleared",
+      "licenceId": "CC-BY-NC-SA-4.0",
+      "termsUrl": "https://ddinter2.scbdd.com/terms/",
+      "termsSnapshotPath": null,
+      "termsSnapshotSha256": null,
+      "redistribution": "restricted",
+      "commercialUse": "prohibited",
+      "shareAlike": true,
+      "patientFacingUse": "prohibited",
+      "modelProcessing": "prohibited",
+      "attribution": "DDInter data, Computational Biology and Drug Design Group, CC BY-NC-SA 4.0.",
+      "notes": "Use is limited to the noncommercial academic project. Data and derived mappings remain outside the MIT application-code boundary. Interaction lookup and wording are deterministic and clinician-facing."
+    }
+  ],
+  "scope": {
+    "included": ["downloadable drug-drug interaction records"],
+    "excluded": [
+      "website/API content outside the downloadable DDI release",
+      "drug-disease, drug-food, drug-lab, and other non-DDI interaction kinds",
+      "patient-facing safety or treatment claims"
+    ]
+  },
+  "expectedFiles": ["downloadable-ddi-release"],
+  "files": []
+}

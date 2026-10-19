@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 2,
+  "cases": [
+    {
+      "id": "pending-candidate-set-does-not-expand",
+      "kind": "candidate_outside_pending_set",
+      "input": {
+        "caseId": "pending-candidate-set-does-not-expand",
+        "profile": {
+          "medications": [
+            { "id": "med-metformin", "names": ["metformin"], "aliases": [], "active": true },
+            { "id": "med-aspirin", "names": ["aspirin"], "aliases": [], "active": true }
+          ],
+          "doses": [],
+          "symptomConcepts": []
+        },
+        "message": { "id": "message-candidate-answer", "body": "I meant aspirin" },
+        "claims": [
+          {
+            "slot": "correction-1",
+            "kind": "correction",
+            "quote": "I meant aspirin",
+            "polarity": "positive",
+            "experiencer": "patient",
+            "status": "current",
+            "certainty": "certain",
+            "medicationText": "aspirin",
+            "targetText": "aspirin"
+          }
+        ],
+        "state": {
+          "events": [
+            {
+              "id": "event-pending-medication",
+              "kind": "administration",
+              "current": true,
+              "canonical": false,
+              "sourceMessageIds": ["message-original"],
+              "candidateMedicationIds": ["med-metformin"]
+            }
+          ],
+          "needs": [
+            {
+              "id": "need-pending-medication",
+              "eventId": "event-pending-medication",
+              "field": "medication_identity",
+              "state": "asked",
+              "priority": 100
+            }
+          ],
+          "unresolvedReports": [],
+          "appliedCommands": []
+        }
+      },
+      "expectedCandidateMedicationIds": ["med-metformin"],
+      "expectedNeedId": "need-pending-medication",
+      "expectedReason": "candidate_outside_pending_set"
+    },
+    {
+      "id": "prompted-dose-medication-mismatch",
+      "kind": "prompted_dose_medication_mismatch",
+      "input": {
+        "caseId": "prompted-dose-medication-mismatch",
+        "profile": {
+          "medications": [
+            { "id": "med-metformin", "names": ["metformin"], "aliases": [], "active": true },
+            { "id": "med-lisinopril", "names": ["lisinopril"], "aliases": [], "active": true }
+          ],
+          "doses": [
+            {
+              "id": "dose-lisinopril-morning",
+              "medicationId": "med-lisinopril",
+              "label": "10 mg",
+              "localDate": "2026-08-12",
+              "localTime": "08:00"
+            }
+          ],
+          "symptomConcepts": []
+        },
+        "message": { "id": "message-dose-mismatch", "body": "I took metformin 500 mg" },
+        "claims": [
+          {
+            "slot": "administration-1",
+            "kind": "administration",
+            "quote": "I took metformin 500 mg",
+            "polarity": "positive",
+            "experiencer": "patient",
+            "status": "current",
+            "certainty": "certain",
+            "medicationText": "metformin",
+            "doseText": "500 mg",
+            "actionText": "took"
+          }
+        ],
+        "state": { "events": [], "needs": [], "unresolvedReports": [], "appliedCommands": [] },
+        "promptedDoseId": "dose-lisinopril-morning"
+      },
+      "expectedReason": "prompted_dose_medication_mismatch"
+    },
+    {
+      "id": "noncanonical-claim-classes",
+      "kind": "noncanonical_claim_classes",
+      "subfixtures": [
+        {
+          "id": "uncertain-administration",
+          "input": {
+            "caseId": "uncertain-administration",
+            "profile": {
+              "medications": [
+                { "id": "med-metformin", "names": ["metformin"], "aliases": [], "active": true }
+              ],
+              "doses": [],
+              "symptomConcepts": []
+            },
+            "message": { "id": "message-uncertain", "body": "I might have taken metformin" },
+            "claims": [
+              {
+                "slot": "administration-uncertain",
+                "kind": "administration",
+                "quote": "I might have taken metformin",
+                "polarity": "positive",
+                "experiencer": "patient",
+                "status": "current",
+                "certainty": "uncertain",
+                "medicationText": "metformin",
+                "actionText": "taken"
+              }
+            ],
+            "state": { "events": [], "needs": [], "unresolvedReports": [], "appliedCommands": [] }
+          },
+          "expectedReason": "uncertain_administration"
+        },
+        {
+          "id": "resolved-symptom-target-unresolved",
+          "input": {
+            "caseId": "resolved-symptom-target-unresolved",
+            "profile": { "medications": [], "doses": [], "symptomConcepts": ["tingling"] },
+            "message": { "id": "message-resolved-symptom", "body": "tingling stopped" },
+            "claims": [
+              {
+                "slot": "symptom-resolved",
+                "kind": "symptom",
+                "quote": "tingling stopped",
+                "polarity": "positive",
+                "experiencer": "patient",
+                "status": "resolved",
+                "certainty": "certain",
+                "symptomText": "tingling"
+              }
+            ],
+            "state": { "events": [], "needs": [], "unresolvedReports": [], "appliedCommands": [] }
+          },
+          "expectedReason": "resolved_symptom_target_unresolved"
+        }
+      ]
+    },
+    {
+      "id": "refine-symptom-transfers-need",
+      "kind": "refine_symptom_transfers_need",
+      "input": {
+        "caseId": "refine-symptom-transfers-need",
+        "profile": { "medications": [], "doses": [], "symptomConcepts": ["tingling", "nausea"] },
+        "message": { "id": "message-refine", "body": "Actually it was nausea" },
+        "claims": [
+          {
+            "slot": "symptom-correction",
+            "kind": "correction",
+            "quote": "Actually it was nausea",
+            "polarity": "positive",
+            "experiencer": "patient",
+            "status": "current",
+            "certainty": "certain",
+            "symptomText": "nausea",
+            "targetText": "tingling"
+          }
+        ],
+        "state": {
+          "events": [
+            {
+              "id": "event-old-symptom",
+              "kind": "symptom",
+              "current": true,
+              "canonical": true,
+              "sourceMessageIds": ["message-old-symptom"],
+              "rawSymptom": "tingling",
+              "symptomConcept": "tingling",
+              "symptomStatus": "current"
+            }
+          ],
+          "needs": [
+            {
+              "id": "need-old-severity",
+              "eventId": "event-old-symptom",
+              "field": "severity",
+              "state": "asked",
+              "priority": 70
+            }
+          ],
+          "unresolvedReports": [],
+          "appliedCommands": []
+        }
+      },
+      "oldEventId": "event-old-symptom",
+      "oldNeedIds": ["need-old-severity"]
+    },
+    {
+      "id": "partial-command-batch-hash-mismatch",
+      "kind": "command_set_hash_mismatch",
+      "input": {
+        "caseId": "partial-command-batch-hash-mismatch",
+        "profile": {
+          "medications": [
+            { "id": "med-metformin", "names": ["metformin"], "aliases": [], "active": true },
+            { "id": "med-aspirin", "names": ["aspirin"], "aliases": [], "active": true }
+          ],
+          "doses": [],
+          "symptomConcepts": []
+        },
+        "message": { "id": "message-two-administrations", "body": "I took metformin and aspirin" },
+        "claims": [
+          {
+            "slot": "administration-metformin",
+            "kind": "administration",
+            "quote": "metformin",
+            "polarity": "positive",
+            "experiencer": "patient",
+            "status": "current",
+            "certainty": "certain",
+            "medicationText": "metformin",
+            "actionText": "took"
+          },
+          {
+            "slot": "administration-aspirin",
+            "kind": "administration",
+            "quote": "aspirin",
+            "polarity": "positive",
+            "experiencer": "patient",
+            "status": "current",
+            "certainty": "certain",
+            "medicationText": "aspirin",
+            "actionText": "took"
+          }
+        ],
+        "state": {
+          "events": [
+            {
+              "id": "event-partially-applied-metformin",
+              "kind": "administration",
+              "current": true,
+              "canonical": true,
+              "sourceMessageIds": ["message-two-administrations"],
+              "medicationId": "med-metformin",
+              "adherence": "taken"
+            }
+          ],
+          "needs": [],
+          "unresolvedReports": [],
+          "appliedCommands": [
+            {
+              "id": "command-partially-applied-metformin",
+              "hash": "sha256:partial-command-hash",
+              "sourceMessageId": "message-two-administrations",
+              "eventIds": ["event-partially-applied-metformin"]
+            }
+          ]
+        },
+        "replay": {
+          "commandSetHash": "sha256:not-the-complete-two-command-batch",
+          "appliedCommandIds": ["command-partially-applied-metformin"]
+        }
+      },
+      "expectedError": "command set hash mismatch"
+    },
+    {
+      "id": "response-planning-is-replayable",
+      "kind": "response_planning_is_replayable",
+      "profile": { "medications": [], "doses": [], "symptomConcepts": ["nausea"] },
+      "state": {
+        "events": [
+          {
+            "id": "event-response-symptom",
+            "kind": "symptom",
+            "current": true,
+            "canonical": true,
+            "sourceMessageIds": ["message-response-symptom"],
+            "rawSymptom": "nausea",
+            "symptomConcept": "nausea",
+            "symptomStatus": "current"
+          }
+        ],
+        "needs": [
+          {
+            "id": "need-response-severity",
+            "eventId": "event-response-symptom",
+            "field": "severity",
+            "state": "open",
+            "priority": 70
+          }
+        ],
+        "unresolvedReports": [],
+        "appliedCommands": []
+      },
+      "expectedNeedId": "need-response-severity",
+      "expectedEventId": "event-response-symptom"
+    }
+  ]
+}

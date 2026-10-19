@@ -1,0 +1,1468 @@
+{
+  "schemaVersion": "conversation-core-prototype-matrix.v1",
+  "frozenAtUtc": "2026-08-12T22:35:00.000Z",
+  "profiles": {
+    "none": {
+      "medications": [],
+      "doses": [],
+      "symptomConcepts": ["nausea", "headache", "dizziness", "tingling"]
+    },
+    "twoMedications": {
+      "medications": [
+        {
+          "id": "med-metformin",
+          "names": ["metformin", "metformin 500 mg"],
+          "aliases": ["big white pill"],
+          "active": true
+        },
+        {
+          "id": "med-lisinopril",
+          "names": ["lisinopril", "lisinopril 10 mg"],
+          "aliases": [],
+          "active": true
+        }
+      ],
+      "doses": [
+        {
+          "id": "dose-metformin-morning",
+          "medicationId": "med-metformin",
+          "label": "morning",
+          "localDate": "2026-08-12",
+          "localTime": "08:00"
+        },
+        {
+          "id": "dose-metformin-evening",
+          "medicationId": "med-metformin",
+          "label": "evening",
+          "localDate": "2026-08-12",
+          "localTime": "20:00"
+        },
+        {
+          "id": "dose-lisinopril-morning",
+          "medicationId": "med-lisinopril",
+          "label": "morning",
+          "localDate": "2026-08-12",
+          "localTime": "08:00"
+        }
+      ],
+      "symptomConcepts": ["nausea", "headache", "dizziness", "tingling"]
+    },
+    "ambiguousAlias": {
+      "medications": [
+        {
+          "id": "med-metformin",
+          "names": ["metformin", "metformin 500 mg"],
+          "aliases": ["white pill"],
+          "active": true
+        },
+        {
+          "id": "med-lisinopril",
+          "names": ["lisinopril", "lisinopril 10 mg"],
+          "aliases": ["white pill"],
+          "active": true
+        }
+      ],
+      "doses": [],
+      "symptomConcepts": ["nausea", "headache", "dizziness", "tingling"]
+    }
+  },
+  "cases": [
+    {
+      "id": "v45-conv-dev-005-white-pill-stays-unbound",
+      "families": ["v45_failure", "ambiguity", "candidate_narrowing", "information_need"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-v45-005-2", "body": "I mean the white pill from this morning." },
+      "initialEvents": [
+        {
+          "id": "event-v45-005-administration",
+          "kind": "administration",
+          "current": true,
+          "canonical": false,
+          "sourceMessageIds": ["msg-v45-005-1"],
+          "adherence": "taken",
+          "candidateMedicationIds": ["med-lisinopril", "med-metformin"],
+          "candidateDoseIds": ["dose-lisinopril-morning", "dose-metformin-morning"]
+        },
+        {
+          "id": "event-v45-005-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-v45-005-1"],
+          "rawSymptom": "stomach feels strange",
+          "symptomConcept": null,
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-v45-005-medication",
+          "eventId": "event-v45-005-administration",
+          "field": "medication_identity",
+          "state": "asked",
+          "priority": 1
+        },
+        {
+          "id": "need-v45-005-symptom",
+          "eventId": "event-v45-005-symptom",
+          "field": "symptom_identity",
+          "state": "open",
+          "priority": 2
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "need_answer",
+          "quote": "white pill from this morning",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "answerField": "medication_identity",
+          "answerText": "white pill",
+          "timeText": "this morning"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "symptom_identity",
+        "canonicalEventCount": 1,
+        "adherenceCount": 0,
+        "unresolvedReasons": ["medication_unresolved"]
+      }
+    },
+    {
+      "id": "v45-conv-dev-005-nausea-refines-once",
+      "families": ["v45_failure", "clarification", "no_duplicate_occurrence"],
+      "profile": "none",
+      "message": { "id": "msg-v45-005-3", "body": "The feeling is like nausea." },
+      "initialEvents": [
+        {
+          "id": "event-v45-005-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-v45-005-1"],
+          "rawSymptom": "stomach feels strange",
+          "symptomConcept": null,
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-v45-005-symptom",
+          "eventId": "event-v45-005-symptom",
+          "field": "symptom_identity",
+          "state": "asked",
+          "priority": 2
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom",
+          "quote": "nausea",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "symptomText": "nausea"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "severity",
+        "canonicalEventCount": 1,
+        "currentSymptomConcepts": ["nausea"],
+        "supersededEventIds": ["event-v45-005-symptom"]
+      }
+    },
+    {
+      "id": "v45-conv-dev-013-mild-targets-nausea",
+      "families": ["v45_failure", "multi_symptom", "explicit_target"],
+      "profile": "none",
+      "message": { "id": "msg-v45-013-3", "body": "The nausea is mild." },
+      "initialEvents": [
+        {
+          "id": "event-nausea",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-v45-013-1"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "current"
+        },
+        {
+          "id": "event-headache",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-v45-013-1"],
+          "rawSymptom": "headache",
+          "symptomConcept": "headache",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-nausea-severity",
+          "eventId": "event-nausea",
+          "field": "severity",
+          "state": "asked",
+          "priority": 3
+        },
+        {
+          "id": "need-headache-severity",
+          "eventId": "event-headache",
+          "field": "severity",
+          "state": "open",
+          "priority": 3
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom_detail",
+          "quote": "nausea is mild",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "targetText": "nausea",
+          "detailField": "severity",
+          "detailText": "mild"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "severity",
+        "questionEventId": "event-headache",
+        "canonicalEventCount": 2,
+        "currentSymptomSeverities": { "nausea": "mild", "headache": null }
+      }
+    },
+    {
+      "id": "v45-conv-dev-021-duration-keeps-all-sources",
+      "families": ["v45_failure", "clarification", "draft_source_lineage"],
+      "profile": "none",
+      "message": { "id": "msg-v45-021-3", "body": "The nausea lasted about an hour." },
+      "initialEvents": [
+        {
+          "id": "event-v45-021-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-v45-021-1", "msg-v45-021-2"],
+          "rawSymptom": "felt sick",
+          "symptomConcept": null,
+          "symptomStatus": "historical",
+          "doseId": "dose-metformin-evening"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-v45-021-symptom",
+          "eventId": "event-v45-021-symptom",
+          "field": "symptom_identity",
+          "state": "asked",
+          "priority": 2
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom",
+          "quote": "nausea",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "historical",
+          "certainty": "certain",
+          "symptomText": "nausea"
+        },
+        {
+          "slot": "claim-b",
+          "kind": "symptom_detail",
+          "quote": "lasted about an hour",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "historical",
+          "certainty": "certain",
+          "targetClaimSlot": "claim-a",
+          "detailField": "duration",
+          "detailText": "about an hour"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "severity",
+        "canonicalEventCount": 1,
+        "currentSymptomConcepts": ["nausea"],
+        "currentSourceMessageIds": ["msg-v45-021-1", "msg-v45-021-2", "msg-v45-021-3"],
+        "duration": "about an hour"
+      }
+    },
+    {
+      "id": "multi-medication-adherence-is-per-administration",
+      "families": ["multi_claim", "multi_medication", "adherence"],
+      "profile": "twoMedications",
+      "message": {
+        "id": "msg-multi-med",
+        "body": "I took morning metformin but skipped morning lisinopril."
+      },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took morning metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "morning",
+          "actionText": "took"
+        },
+        {
+          "slot": "claim-b",
+          "kind": "administration",
+          "quote": "skipped morning lisinopril",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "lisinopril",
+          "doseText": "morning",
+          "actionText": "skipped"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 2,
+        "adherenceCount": 2,
+        "administrations": [
+          {
+            "medicationId": "med-metformin",
+            "doseId": "dose-metformin-morning",
+            "adherence": "taken"
+          },
+          {
+            "medicationId": "med-lisinopril",
+            "doseId": "dose-lisinopril-morning",
+            "adherence": "missed"
+          }
+        ]
+      }
+    },
+    {
+      "id": "multi-dose-late-needs-exact-time",
+      "families": ["multi_claim", "multi_dose", "coarse_time", "information_need"],
+      "profile": "twoMedications",
+      "message": {
+        "id": "msg-multi-dose",
+        "body": "I took the morning metformin late but skipped the evening metformin."
+      },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took the morning metformin late",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "morning",
+          "timeText": "late",
+          "actionText": "took"
+        },
+        {
+          "slot": "claim-b",
+          "kind": "administration",
+          "quote": "skipped the evening metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "evening",
+          "actionText": "skipped"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "actual_time",
+        "questionDoseId": "dose-metformin-morning",
+        "canonicalEventCount": 2,
+        "adherenceCount": 2
+      }
+    },
+    {
+      "id": "prompted-dose-may-bind-explicit-answer",
+      "families": ["prompted_dose", "adherence"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-prompted", "body": "Yes, I took it." },
+      "promptedDoseId": "dose-lisinopril-morning",
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took it",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "adherenceCount": 1,
+        "administrations": [
+          {
+            "medicationId": "med-lisinopril",
+            "doseId": "dose-lisinopril-morning",
+            "adherence": "taken"
+          }
+        ]
+      }
+    },
+    {
+      "id": "typo-is-candidate-not-binding",
+      "families": ["ambiguity", "typo", "medication_resolution"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-typo", "body": "I took metfornin." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took metfornin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metfornin",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "medication_identity",
+        "canonicalEventCount": 0,
+        "adherenceCount": 0,
+        "candidateMedicationIds": ["med-metformin"],
+        "unresolvedReasons": ["medication_candidate_only"]
+      }
+    },
+    {
+      "id": "confirmed-unique-alias-may-bind",
+      "families": ["alias", "medication_resolution"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-alias-unique", "body": "I took my big white pill." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took my big white pill",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "big white pill",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "dose_identity",
+        "canonicalEventCount": 0,
+        "adherenceCount": 0,
+        "candidateMedicationIds": ["med-metformin"],
+        "candidateDoseIds": ["dose-metformin-evening", "dose-metformin-morning"],
+        "unresolvedReasons": ["dose_ambiguous"]
+      }
+    },
+    {
+      "id": "non-unique-alias-stays-ambiguous",
+      "families": ["alias", "ambiguity", "medication_resolution"],
+      "profile": "ambiguousAlias",
+      "message": { "id": "msg-alias-ambiguous", "body": "I took the white pill." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took the white pill",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "white pill",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "medication_identity",
+        "canonicalEventCount": 0,
+        "adherenceCount": 0,
+        "candidateMedicationIds": ["med-lisinopril", "med-metformin"],
+        "unresolvedReasons": ["medication_ambiguous"]
+      }
+    },
+    {
+      "id": "coarse-time-remains-coarse",
+      "families": ["coarse_time", "adherence"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-coarse-time", "body": "I took metformin this morning." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took metformin this morning",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "morning",
+          "timeText": "this morning",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "adherenceCount": 1,
+        "timeText": "this morning",
+        "exactTime": null
+      }
+    },
+    {
+      "id": "delayed-answer-binds-one-compatible-need",
+      "families": ["delayed_answer", "information_need"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-delayed-unique", "body": "Around 9." },
+      "initialEvents": [
+        {
+          "id": "event-late-dose",
+          "kind": "administration",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-late"],
+          "medicationId": "med-metformin",
+          "doseId": "dose-metformin-morning",
+          "adherence": "taken",
+          "timing": "late"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-late-time",
+          "eventId": "event-late-dose",
+          "field": "actual_time",
+          "state": "asked",
+          "priority": 1
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "need_answer",
+          "quote": "Around 9",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "answerField": "actual_time",
+          "answerText": "Around 9"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "resolvedNeedIds": ["need-late-time"],
+        "exactTime": "Around 9"
+      }
+    },
+    {
+      "id": "delayed-answer-with-two-compatible-needs-stays-unresolved",
+      "families": ["delayed_answer", "ambiguity", "information_need"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-delayed-ambiguous", "body": "Around 9." },
+      "initialEvents": [
+        {
+          "id": "event-late-met",
+          "kind": "administration",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-late-met"],
+          "medicationId": "med-metformin",
+          "doseId": "dose-metformin-morning",
+          "adherence": "taken",
+          "timing": "late"
+        },
+        {
+          "id": "event-late-lis",
+          "kind": "administration",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-late-lis"],
+          "medicationId": "med-lisinopril",
+          "doseId": "dose-lisinopril-morning",
+          "adherence": "taken",
+          "timing": "late"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-time-met",
+          "eventId": "event-late-met",
+          "field": "actual_time",
+          "state": "asked",
+          "priority": 1
+        },
+        {
+          "id": "need-time-lis",
+          "eventId": "event-late-lis",
+          "field": "actual_time",
+          "state": "asked",
+          "priority": 1
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "need_answer",
+          "quote": "Around 9",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "answerField": "actual_time",
+          "answerText": "Around 9"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 2,
+        "resolvedNeedIds": [],
+        "unresolvedReasons": ["pending_target_ambiguous"]
+      }
+    },
+    {
+      "id": "negated-symptom-is-not-positive-fact",
+      "families": ["negation", "symptom"],
+      "profile": "none",
+      "message": { "id": "msg-negated", "body": "I do not have a headache." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom",
+          "quote": "do not have a headache",
+          "polarity": "negative",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "symptomText": "headache"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 0,
+        "positiveSymptomCount": 0,
+        "unresolvedReasons": ["non_positive_symptom"]
+      }
+    },
+    {
+      "id": "third-person-symptom-is-not-patient-fact",
+      "families": ["experiencer", "symptom"],
+      "profile": "none",
+      "message": { "id": "msg-third-person", "body": "My wife feels dizzy." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom",
+          "quote": "wife feels dizzy",
+          "polarity": "positive",
+          "experiencer": "other",
+          "status": "current",
+          "certainty": "certain",
+          "symptomText": "dizzy"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 0,
+        "positiveSymptomCount": 0,
+        "unresolvedReasons": ["non_patient_experiencer"]
+      }
+    },
+    {
+      "id": "hypothetical-symptom-is-not-current-fact",
+      "families": ["hypothetical", "symptom"],
+      "profile": "none",
+      "message": { "id": "msg-hypothetical", "body": "What if I get nausea?" },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom",
+          "quote": "if I get nausea",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "hypothetical",
+          "certainty": "uncertain",
+          "symptomText": "nausea"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 0,
+        "positiveSymptomCount": 0,
+        "unresolvedReasons": ["non_current_symptom"]
+      }
+    },
+    {
+      "id": "resolved-symptom-refines-existing-occurrence",
+      "families": ["resolution", "symptom", "lineage"],
+      "profile": "none",
+      "message": { "id": "msg-resolved", "body": "The nausea stopped." },
+      "initialEvents": [
+        {
+          "id": "event-current-nausea",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-nausea-start"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "current"
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom_detail",
+          "quote": "nausea stopped",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "resolved",
+          "certainty": "certain",
+          "targetText": "nausea",
+          "detailField": "status",
+          "detailText": "stopped"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "currentSymptomStatuses": { "nausea": "resolved" },
+        "supersededEventIds": ["event-current-nausea"]
+      }
+    },
+    {
+      "id": "explicit-recurrence-links-one-resolved-episode",
+      "families": ["recurrence", "symptom", "lineage"],
+      "profile": "none",
+      "message": { "id": "msg-recurrence", "body": "The nausea came back." },
+      "initialEvents": [
+        {
+          "id": "event-resolved-nausea",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-old-nausea"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "resolved"
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "recurrence",
+          "quote": "nausea came back",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "symptomText": "nausea"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "severity",
+        "canonicalEventCount": 2,
+        "recurrenceOfEventId": "event-resolved-nausea",
+        "currentSymptomStatuses": { "nausea": "current" }
+      }
+    },
+    {
+      "id": "recurrence-with-two-prior-episodes-stays-unresolved",
+      "families": ["recurrence", "ambiguity", "lineage"],
+      "profile": "none",
+      "message": { "id": "msg-recurrence-ambiguous", "body": "The nausea came back." },
+      "initialEvents": [
+        {
+          "id": "event-resolved-nausea-a",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-old-a"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "resolved"
+        },
+        {
+          "id": "event-resolved-nausea-b",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-old-b"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "resolved"
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "recurrence",
+          "quote": "nausea came back",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "symptomText": "nausea"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 2,
+        "unresolvedReasons": ["recurrence_target_ambiguous"]
+      }
+    },
+    {
+      "id": "explicit-correction-supersedes-one-current-leaf",
+      "families": ["correction", "adherence", "lineage"],
+      "profile": "twoMedications",
+      "message": {
+        "id": "msg-correction",
+        "body": "Actually, I skipped the evening metformin, not took it."
+      },
+      "initialEvents": [
+        {
+          "id": "event-evening-metformin-taken",
+          "kind": "administration",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-original"],
+          "medicationId": "med-metformin",
+          "doseId": "dose-metformin-evening",
+          "adherence": "taken"
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "correction",
+          "quote": "skipped the evening metformin, not took it",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "historical",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "evening",
+          "actionText": "skipped"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "adherenceCount": 1,
+        "administrations": [
+          {
+            "medicationId": "med-metformin",
+            "doseId": "dose-metformin-evening",
+            "adherence": "missed"
+          }
+        ],
+        "supersededEventIds": ["event-evening-metformin-taken"]
+      }
+    },
+    {
+      "id": "same-message-explicit-correction-has-one-current-result",
+      "families": ["multi_claim", "same_message_conflict", "correction", "lineage"],
+      "profile": "twoMedications",
+      "message": {
+        "id": "msg-same-correction",
+        "body": "I took morning metformin—sorry, I skipped morning metformin."
+      },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took morning metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "morning",
+          "actionText": "took"
+        },
+        {
+          "slot": "claim-b",
+          "kind": "correction",
+          "quote": "sorry, I skipped morning metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "morning",
+          "actionText": "skipped",
+          "targetClaimSlot": "claim-a"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "adherenceCount": 1,
+        "administrations": [
+          {
+            "medicationId": "med-metformin",
+            "doseId": "dose-metformin-morning",
+            "adherence": "missed"
+          }
+        ]
+      }
+    },
+    {
+      "id": "same-message-unmarked-conflict-creates-no-adherence",
+      "families": ["multi_claim", "same_message_conflict", "ambiguity"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-same-ambiguous", "body": "I took metformin and skipped metformin." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "actionText": "took"
+        },
+        {
+          "slot": "claim-b",
+          "kind": "administration",
+          "quote": "skipped metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "actionText": "skipped"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 0,
+        "adherenceCount": 0,
+        "unresolvedReasons": ["same_message_conflict"]
+      }
+    },
+    {
+      "id": "patient-does-not-know-closes-asked-need",
+      "families": ["information_need", "non_repetition"],
+      "profile": "none",
+      "message": { "id": "msg-dont-know", "body": "I don't know." },
+      "initialEvents": [
+        {
+          "id": "event-unknown-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-unknown"],
+          "rawSymptom": "felt odd",
+          "symptomConcept": null,
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-unknown-symptom",
+          "eventId": "event-unknown-symptom",
+          "field": "symptom_identity",
+          "state": "asked",
+          "priority": 2
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "need_answer",
+          "quote": "don't know",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "uncertain",
+          "answerField": "symptom_identity",
+          "answerText": "don't know"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "needStates": { "need-unknown-symptom": "patient_does_not_know" },
+        "questionField": null
+      }
+    },
+    {
+      "id": "patient-decline-closes-asked-need",
+      "families": ["information_need", "non_repetition"],
+      "profile": "none",
+      "message": { "id": "msg-decline", "body": "I'd rather not say." },
+      "initialEvents": [
+        {
+          "id": "event-declined-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-declined"],
+          "rawSymptom": "headache",
+          "symptomConcept": "headache",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-declined-severity",
+          "eventId": "event-declined-symptom",
+          "field": "severity",
+          "state": "asked",
+          "priority": 3
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "need_answer",
+          "quote": "rather not say",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "answerField": "severity",
+          "answerText": "rather not say"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 1,
+        "needStates": { "need-declined-severity": "declined" },
+        "questionField": null
+      }
+    },
+    {
+      "id": "emergency-prefilter-pauses-routine-needs",
+      "families": ["emergency", "information_need", "priority"],
+      "profile": "none",
+      "message": { "id": "msg-emergency", "body": "I can't breathe." },
+      "emergencyPrefilter": true,
+      "initialEvents": [
+        {
+          "id": "event-routine-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-routine"],
+          "rawSymptom": "headache",
+          "symptomConcept": "headache",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-routine-severity",
+          "eventId": "event-routine-symptom",
+          "field": "severity",
+          "state": "open",
+          "priority": 3
+        }
+      ],
+      "claims": [],
+      "expected": {
+        "responseKind": "emergency",
+        "canonicalEventCount": 2,
+        "safetyEventCount": 1,
+        "questionField": null,
+        "needStates": { "need-routine-severity": "open" }
+      }
+    },
+    {
+      "id": "open-emergency-keeps-routine-needs-paused",
+      "families": ["emergency", "information_need", "priority"],
+      "profile": "none",
+      "message": { "id": "msg-after-emergency", "body": "Thanks." },
+      "emergencyOpen": true,
+      "initialEvents": [
+        {
+          "id": "event-open-emergency",
+          "kind": "safety",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-emergency"],
+          "safetyTier": "emergency"
+        },
+        {
+          "id": "event-routine-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-routine"],
+          "rawSymptom": "headache",
+          "symptomConcept": "headache",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-routine-severity",
+          "eventId": "event-routine-symptom",
+          "field": "severity",
+          "state": "open",
+          "priority": 3
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "social",
+          "quote": "Thanks",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain"
+        }
+      ],
+      "expected": {
+        "responseKind": "emergency",
+        "canonicalEventCount": 2,
+        "questionField": null,
+        "needStates": { "need-routine-severity": "open" }
+      }
+    },
+    {
+      "id": "clinician-emergency-closure-resumes-routine-need",
+      "families": ["emergency", "clinician_closure", "information_need"],
+      "profile": "none",
+      "message": { "id": "msg-after-closure", "body": "Thanks." },
+      "emergencyOpen": false,
+      "initialEvents": [
+        {
+          "id": "event-closed-emergency",
+          "kind": "safety",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-emergency"],
+          "safetyTier": "closed"
+        },
+        {
+          "id": "event-routine-symptom",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-routine"],
+          "rawSymptom": "headache",
+          "symptomConcept": "headache",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-routine-severity",
+          "eventId": "event-routine-symptom",
+          "field": "severity",
+          "state": "open",
+          "priority": 3
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "social",
+          "quote": "Thanks",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "severity",
+        "questionEventId": "event-routine-symptom",
+        "canonicalEventCount": 2
+      }
+    },
+    {
+      "id": "unsupported-language-creates-human-review-only",
+      "families": ["language", "human_review", "no_mutation"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-unsupported-language", "body": "Tomé mi medicina." },
+      "languageDisposition": "unsupported",
+      "claims": [],
+      "expected": {
+        "responseKind": "unsupported_language",
+        "canonicalEventCount": 0,
+        "humanReview": true,
+        "adherenceCount": 0
+      }
+    },
+    {
+      "id": "exact-stop-outranks-clinical-processing",
+      "families": ["stop", "priority", "no_mutation"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-stop", "body": "STOP" },
+      "exactControl": "STOP",
+      "emergencyPrefilter": true,
+      "claims": [],
+      "expected": { "responseKind": "stop", "canonicalEventCount": 0, "adherenceCount": 0 }
+    },
+    {
+      "id": "social-acknowledgement-does-not-erase-clinical-claim",
+      "families": ["social", "multi_claim", "adherence"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-social-clinical", "body": "Thanks, I took metformin this morning." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "social",
+          "quote": "Thanks",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain"
+        },
+        {
+          "slot": "claim-b",
+          "kind": "administration",
+          "quote": "took metformin this morning",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "doseText": "morning",
+          "timeText": "this morning",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "socialAcknowledgement": true,
+        "canonicalEventCount": 1,
+        "adherenceCount": 1
+      }
+    },
+    {
+      "id": "raw-symptom-description-does-not-become-diagnosis",
+      "families": ["symptom", "raw_description", "no_diagnosis"],
+      "profile": "none",
+      "message": { "id": "msg-raw-symptom", "body": "My fingers are tingling right now." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom",
+          "quote": "fingers are tingling right now",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "symptomText": "tingling",
+          "bodySiteText": "fingers",
+          "timeText": "right now"
+        }
+      ],
+      "expected": {
+        "responseKind": "question",
+        "questionField": "severity",
+        "canonicalEventCount": 1,
+        "currentSymptomConcepts": ["tingling"],
+        "bodySite": "fingers",
+        "diagnosis": null
+      }
+    },
+    {
+      "id": "multi-symptom-details-keep-explicit-targets",
+      "families": ["multi_claim", "multi_symptom", "explicit_target"],
+      "profile": "none",
+      "message": {
+        "id": "msg-multi-symptom-detail",
+        "body": "My nausea is mild and my headache is severe."
+      },
+      "initialEvents": [
+        {
+          "id": "event-nausea",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-symptoms"],
+          "rawSymptom": "nausea",
+          "symptomConcept": "nausea",
+          "symptomStatus": "current"
+        },
+        {
+          "id": "event-headache",
+          "kind": "symptom",
+          "current": true,
+          "canonical": true,
+          "sourceMessageIds": ["msg-symptoms"],
+          "rawSymptom": "headache",
+          "symptomConcept": "headache",
+          "symptomStatus": "current"
+        }
+      ],
+      "initialNeeds": [
+        {
+          "id": "need-nausea-severity",
+          "eventId": "event-nausea",
+          "field": "severity",
+          "state": "open",
+          "priority": 3
+        },
+        {
+          "id": "need-headache-severity",
+          "eventId": "event-headache",
+          "field": "severity",
+          "state": "open",
+          "priority": 3
+        }
+      ],
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "symptom_detail",
+          "quote": "nausea is mild",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "targetText": "nausea",
+          "detailField": "severity",
+          "detailText": "mild"
+        },
+        {
+          "slot": "claim-b",
+          "kind": "symptom_detail",
+          "quote": "headache is severe",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "targetText": "headache",
+          "detailField": "severity",
+          "detailText": "severe"
+        }
+      ],
+      "expected": {
+        "responseKind": "routine",
+        "canonicalEventCount": 2,
+        "currentSymptomSeverities": { "nausea": "mild", "headache": "severe" }
+      }
+    },
+    {
+      "id": "snapshot-version-drift-writes-nothing",
+      "families": ["concurrency_snapshot", "no_mutation", "replay"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-stale", "body": "I took metformin." },
+      "snapshotVersion": 8,
+      "expectedSnapshotVersion": 7,
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "took metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "stale_snapshot",
+        "canonicalEventCount": 0,
+        "adherenceCount": 0,
+        "commandCount": 0
+      }
+    },
+    {
+      "id": "missing-exact-quote-fails-closed",
+      "families": ["exact_quote", "schema_boundary", "no_mutation"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-missing-quote", "body": "I took metformin." },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "I skipped metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "actionText": "skipped"
+        }
+      ],
+      "expected": {
+        "responseKind": "human_review",
+        "canonicalEventCount": 0,
+        "adherenceCount": 0,
+        "validationErrors": ["quote_not_exact"]
+      }
+    },
+    {
+      "id": "repeated-exact-quote-fails-closed",
+      "families": ["exact_quote", "schema_boundary", "no_mutation"],
+      "profile": "twoMedications",
+      "message": { "id": "msg-repeated-quote", "body": "metformin then metformin" },
+      "claims": [
+        {
+          "slot": "claim-a",
+          "kind": "administration",
+          "quote": "metformin",
+          "polarity": "positive",
+          "experiencer": "patient",
+          "status": "current",
+          "certainty": "certain",
+          "medicationText": "metformin",
+          "actionText": "took"
+        }
+      ],
+      "expected": {
+        "responseKind": "human_review",
+        "canonicalEventCount": 0,
+        "adherenceCount": 0,
+        "validationErrors": ["quote_not_unique"]
+      }
+    }
+  ],
+  "sequenceInvariants": [
+    "clarification answers do not create duplicate administrations or symptom occurrences",
+    "candidate sets never widen without explicit patient support",
+    "input claim order does not change commands or current state",
+    "request-local claim-slot renaming does not change commands or current state",
+    "replaying an already applied command set does not append duplicate events",
+    "full replay and incremental application produce byte-equivalent current state",
+    "current correction leaves are single and lineage is acyclic",
+    "routine information needs remain paused until clinician-owned emergency closure",
+    "failure after extraction and before commit leaves durable clinical state unchanged",
+    "crash after commit reuses idempotent commands and does not duplicate events"
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "manifestVersion": 1,
+  "source": "ccdd",
+  "releaseId": "2026-08-05",
+  "activation": {
+    "status": "active",
+    "reason": null
+  },
+  "provenance": {
+    "publisher": "Health Canada",
+    "sourceUrl": "https://open.canada.ca/data/en/dataset/3e0a7b9e-a5e9-4131-bde4-ac685a1f1a38",
+    "releaseUrl": "https://health-products.canada.ca/ccdd/Release_Notes",
+    "retrievedAt": "2026-08-11T10:20:13Z",
+    "freshUntil": "2026-09-10T10:20:13Z",
+    "transformation": {
+      "status": "applied",
+      "scriptPath": "scripts/import-ccdd-release.ts",
+      "scriptSha256": "19a70196378f90fdf420d75948e89c95b30c07ac03f082e1e420450e61be40ab",
+      "inputLogicalNames": [
+        "mp.csv",
+        "ntp.csv",
+        "tm.csv",
+        "mp-ntp-tm-en.csv",
+        "mp-ntp-tm-fr.csv",
+        "reviewed-identity-bridge.json"
+      ],
+      "notes": "Strictly parses the five reviewed UTF-8 CSV schemas plus the reviewed product-to-ingredient identity map, preserves MP/NTP/TM identities and bilingual relationships, and rejects bridge rows that do not match the frozen CCDD catalog before activation."
+    }
+  },
+  "licences": [
+    {
+      "subject": "Selected Health Canada CCDD release data",
+      "status": "cleared",
+      "licenceId": "OGL-Canada-2.0",
+      "termsUrl": "https://open.canada.ca/en/open-government-licence-canada",
+      "termsSnapshotPath": "third-party-data/ccdd/2026-08-05/REVIEWED_TERMS.md",
+      "termsSnapshotSha256": "345b801b575b8bde3f5539fa622164f9b30b6a9d8a1678b944781faf10d1d0c9",
+      "redistribution": "allowed",
+      "commercialUse": "allowed",
+      "shareAlike": false,
+      "patientFacingUse": "allowed",
+      "modelProcessing": "allowed",
+      "attribution": "Contains information licensed under the Open Government Licence - Canada.",
+      "notes": "Only the five listed CCDD identity resources are included; OGL exclusions remain excluded."
+    }
+  ],
+  "scope": {
+    "included": [
+      "Manufactured Product identities and DIN values",
+      "Non-proprietary Therapeutic Product identities",
+      "Therapeutic Moiety ingredient identities",
+      "English and French MP-NTP-TM relationships",
+      "Reviewed CCDD/DIN-to-RxNorm ingredient identity bridges for the six selected products"
+    ],
+    "excluded": [
+      "Device NTP records",
+      "Special Groupings",
+      "Coded Attributes",
+      "third-party material outside the Open Government Licence - Canada"
+    ]
+  },
+  "expectedFiles": [
+    "mp.csv",
+    "ntp.csv",
+    "tm.csv",
+    "mp-ntp-tm-en.csv",
+    "mp-ntp-tm-fr.csv",
+    "reviewed-identity-bridge.json"
+  ],
+  "files": [
+    {
+      "logicalName": "mp.csv",
+      "path": "third-party-data/ccdd/2026-08-05/raw/mp.csv",
+      "sourceUrl": "https://health-products.canada.ca/ccdd/mp",
+      "kind": "raw",
+      "sha256": "f80107b2ef88b13b8d40760afdd7983cbf57b193d3119374c2b5d56c32d2f697",
+      "bytes": 4271498,
+      "rowCount": 15532,
+      "redistribution": "allowed"
+    },
+    {
+      "logicalName": "ntp.csv",
+      "path": "third-party-data/ccdd/2026-08-05/raw/ntp.csv",
+      "sourceUrl": "https://health-products.canada.ca/ccdd/ntp",
+      "kind": "raw",
+      "sha256": "0ae7f03a079cde69cb467da420a71f2e3a46353cb600d850502a6e30fd068794",
+      "bytes": 907511,
+      "rowCount": 5298,
+      "redistribution": "allowed"
+    },
+    {
+      "logicalName": "tm.csv",
+      "path": "third-party-data/ccdd/2026-08-05/raw/tm.csv",
+      "sourceUrl": "https://health-products.canada.ca/ccdd/tm",
+      "kind": "raw",
+      "sha256": "4ce6b67976e3655754ac714d3e188517623881c96190d452bed6df2469c2342e",
+      "bytes": 128311,
+      "rowCount": 1759,
+      "redistribution": "allowed"
+    },
+    {
+      "logicalName": "mp-ntp-tm-en.csv",
+      "path": "third-party-data/ccdd/2026-08-05/raw/mp-ntp-tm-en.csv",
+      "sourceUrl": "https://health-products.canada.ca/ccdd/mp_ntp_tm_relationship_en",
+      "kind": "raw",
+      "sha256": "0e622f879b3ec08182caeafea4da58e7227db5c62bd08e2c8e2f094605a47cfa",
+      "bytes": 3130049,
+      "rowCount": 15516,
+      "redistribution": "allowed"
+    },
+    {
+      "logicalName": "mp-ntp-tm-fr.csv",
+      "path": "third-party-data/ccdd/2026-08-05/raw/mp-ntp-tm-fr.csv",
+      "sourceUrl": "https://health-products.canada.ca/ccdd/mp_ntp_tm_relationship_fr",
+      "kind": "raw",
+      "sha256": "9fcdbb95e3cb604c74a505665d9e64a0501af0838ef7708ede9db22f5a5124dc",
+      "bytes": 3298880,
+      "rowCount": 15516,
+      "redistribution": "allowed"
+    },
+    {
+      "logicalName": "reviewed-identity-bridge.json",
+      "path": "third-party-data/ccdd/2026-08-05/reviewed-identity-bridge.json",
+      "sourceUrl": "https://www.nlm.nih.gov/research/umls/rxnorm/overview.html",
+      "kind": "derived",
+      "sha256": "a5e2955970b92c07a7f31f42c291e04fbc255f2d168efdbdbe3750fd1dd6090f",
+      "bytes": 1650,
+      "rowCount": 6,
+      "redistribution": "allowed"
+    }
+  ]
+}

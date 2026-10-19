@@ -1,0 +1,53 @@
+{
+  "manifestVersion": 1,
+  "source": "openfda",
+  "releaseId": "release-pending",
+  "activation": {
+    "status": "inactive",
+    "reason": "Superseded by reviewed-labels-2026-08-11; this placeholder never represented an activatable release."
+  },
+  "provenance": {
+    "publisher": "U.S. Food and Drug Administration",
+    "sourceUrl": "https://open.fda.gov/apis/drug/label/",
+    "releaseUrl": "https://open.fda.gov/apis/downloads/",
+    "retrievedAt": null,
+    "freshUntil": null,
+    "transformation": {
+      "status": "planned",
+      "scriptPath": null,
+      "scriptSha256": null,
+      "inputLogicalNames": [],
+      "notes": "The offline rights-cleared label-evidence import is planned for 08-03 and has not run."
+    }
+  },
+  "licences": [
+    {
+      "subject": "Specific openFDA drug-label passages selected for evidence records",
+      "status": "review_required",
+      "licenceId": null,
+      "termsUrl": "https://open.fda.gov/terms/",
+      "termsSnapshotPath": null,
+      "termsSnapshotSha256": null,
+      "redistribution": "review_required",
+      "commercialUse": "review_required",
+      "shareAlike": null,
+      "patientFacingUse": "review_required",
+      "modelProcessing": "review_required",
+      "attribution": "Data provided by the U.S. Food and Drug Administration (https://open.fda.gov).",
+      "notes": "openFDA is generally CC0 unless otherwise noted, but its terms identify possible private third-party works. Each selected dataset/passage needs direct rights clearance; a blanket CC0 claim is forbidden."
+    }
+  ],
+  "scope": {
+    "included": [
+      "direct drug-label evidence passages only after field- and dataset-specific rights clearance",
+      "label source URL, version/date, and openFDA identifiers"
+    ],
+    "excluded": [
+      "content marked as not public domain or subject to third-party copyright",
+      "GMDN content",
+      "unreviewed label passages and free-form patient-facing paraphrases"
+    ]
+  },
+  "expectedFiles": ["drug-label-release-inventory"],
+  "files": []
+}

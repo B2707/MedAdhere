@@ -1,0 +1,19 @@
+{
+  "app": "npx tsx bin/medadhere.ts",
+  "watch": {
+    "include": ["**"],
+    "exclude": ["README.md", "cdk*.json", "**/*.d.ts", "**/*.js", "node_modules", "test"]
+  },
+  "context": {
+    "region": "us-east-1",
+    "instanceClass": "t4g.micro",
+    "allocatedStorageGb": 20,
+    "backupRetentionDays": 7,
+    "validationWindow": false,
+    "gatewayReservedConcurrency": 0,
+    "clinicalComposerModel": "claude-sonnet-5",
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:target-partitions": ["aws", "aws-cn"]
+  }
+}

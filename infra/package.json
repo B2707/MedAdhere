@@ -1,0 +1,27 @@
+{
+  "name": "@medadhere/infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MedAdhere CDK v2 infrastructure — the single Phase-1 FoundationStack (D-07)",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "synth": "cdk synth --quiet",
+    "cdk": "cdk",
+    "create-admin": "tsx scripts/create-admin-user.ts"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-amplify-alpha": "2.259.0-alpha.0",
+    "@medadhere/shared": "*",
+    "aws-cdk-lib": "^2.259.0",
+    "constructs": "^10.6.0"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.1073.0",
+    "aws-cdk": "^2.1127.0",
+    "cdk-nag": "^2.38.2",
+    "tsx": "^4.22.4"
+  }
+}

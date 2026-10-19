@@ -1,0 +1,150 @@
+# MedAdhere CI — the Phase-2 quality baseline (net-new; no CI existed before).
+#
+# This is the durable host for the D-14 no-pg anti-pattern gate (SC4) plus the
+# core checks. It runs the no-pg guard FIRST (it needs no install), then the
+# Bedrock drift-grep, the monorepo typecheck, the root Vitest suite
+# (auth/data-api/middleware/handler tests), `npm audit` (high+), and a hermetic
+# `cdk synth` that now enforces cdk-nag AwsSolutions — all BLOCKING.
+#
+# Phase-4 W0.3 (audit LOW-19) added the three exit-board guardrails that were
+# deferred from the P1 scope note: (a) drift-grep, (b) cdk-nag via the synth
+# path (wired in infra/bin/medadhere.ts → infra/lib/nag.ts), (c) npm audit.
+name: CI
+
+# Scope: run on PRs to main + pushes to main only — NOT every feature-branch
+# push (phase branches push frequently during dev; an unscoped `on: push` spams
+# failing-run emails). The no-pg/quality gate still fences every PR into main.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Plan 04-05 (ai-regression-testing): manual trigger exists ONLY for the
+  # live gold-set eval job below — it spends real Anthropic budget and must
+  # never run per-push. The offline eval floors need no special job: they are
+  # ordinary vitest suites (backend/eval/lib/*.test.ts) inside `npm test`.
+  workflow_dispatch: {}
+
+jobs:
+  quality:
+    name: Lint, typecheck, test, synth
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Node 22 for the TEST RUNNER only (the Lambda runtime stays nodejs20.x).
+      # Node 20's bundled undici lacks `webidl.util.markAsUncloneable`, which the
+      # testcontainers schema test pulls in → suite crash on CI; 22 (matches local) fixes it.
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # The no-pg guard runs BEFORE install — it is pure Node (fs only) and is
+      # the hard D-14 anti-pattern gate: any Postgres client under dashboard/
+      # fails the build (SC4).
+      - name: no-pg-under-dashboard guard (D-14)
+        run: node dashboard/scripts/check-no-pg.mjs
+
+      # Plan 04-05 (gate fix U-09) — real-reply isolation: the ONLY csv that may
+      # ever be tracked under backend/eval/ is gold-set.csv. Phase-7 real-reply
+      # shift-check files (backend/eval/real-*.csv) are git-ignored; a committed
+      # one would be un-deletable PIPEDA text in history. Install-free (git only).
+      - name: Eval CSV guard (U-09 — gold-set.csv only)
+        run: node scripts/check-eval-csv-guard.mjs
+
+      # W0.3a (audit LOW-19) — Bedrock drift-grep, the D-BEDROCK-REMOVED guard. Fails on any
+      # LIVE-CODE reappearance of the removed Bedrock path. Also install-free (pure git grep).
+      # Allowlist is by SCOPING, not per-line pragmas:
+      #   - only the source workspaces (backend/ infra/ packages/ dashboard/) + root package.json
+      #     are the drift surface — .notes/** (historical thesis log) and doc files like
+      #     the project decision record and README.md legitimately narrate the D-BEDROCK-REMOVED history and are out;
+      #   - *.test.* files are excluded: the negative-assertion tests (expect no 'bedrock:',
+      #     no 'toolSpec') ARE the guards and must keep naming these strings;
+      #   - pure comment lines (// or *) are filtered — historical-note comments in live sources;
+      #   - node_modules is never scanned (git grep sees tracked files only).
+      # Any remaining hit is real drift: an import, env var, IAM action, or model id in live code.
+      - name: Bedrock drift-grep (D-BEDROCK-REMOVED)
+        run: |
+          hits="$(git grep -inE 'bedrock|ConverseCommand|toolSpec|us\.anthropic|BEDROCK_MODEL_ID' \
+            -- backend infra packages dashboard package.json \
+            ':!*.test.ts' ':!*.test.tsx' ':!*.md' \
+            | grep -vE '^[^:]+:[0-9]+:[[:space:]]*(//|\*|/\*)' || true)"
+          if [ -n "$hits" ]; then
+            echo "Bedrock drift detected (D-BEDROCK-REMOVED) — live code references a removed Bedrock surface:"
+            echo "$hits"
+            exit 1
+          fi
+          echo "drift-grep clean: no live-code Bedrock references in the source workspaces."
+
+      # Plan 04-04 (SC3/SAFETY-04, gate-fix ULTRA LOW batch) — the template severity grep-guard.
+      # Two-sided: the auto-reply templates must carry their redirect DIRECTIVES (911/988/811)
+      # and must NOT carry triage ADJECTIVES (the same BANNED_SEVERITY_TERMS list the unit tests
+      # consume). Repo-side defense independent of the test suite; install-free (plain node).
+      - name: Template severity grep-guard (SAFETY-04 — no triage adjectives)
+        run: node scripts/check-template-severity.mjs
+
+      - name: Install dependencies
+        run: npm ci
+
+      # W0.3c (audit LOW-19) — dependency audit, BLOCKING at high+. The standing Dependabot
+      # finding (postcss <8.5.10 via next, GHSA-qx2v-qp2m-jg93) is MODERATE and intentionally
+      # does NOT fail the build — that is the point of the high threshold; it is tracked for
+      # the next Next.js bump.
+      - name: audit-ci (fail on high+)
+        run: npx audit-ci --config audit-ci.jsonc
+
+      - name: Typecheck (all workspaces)
+        run: npm run --workspaces --if-present typecheck
+
+      - name: Test (root Vitest — auth / data-api / middleware / handlers)
+        run: npm test
+
+      - name: Dashboard production build
+        run: npm run build -w @medadhere/dashboard
+
+      # W0.3b (audit LOW-19) — the synth is also the cdk-nag gate: bin/medadhere.ts applies the
+      # AwsSolutions pack (infra/lib/nag.ts), so any NEW unsuppressed finding is an error-level
+      # Annotation and fails this step. Accepted dispositions (VPC7, EC26, ...) are per-finding,
+      # appliesTo-scoped NagSuppressions with cited reasons in infra/lib/nag.ts.
+      - name: CDK synth (hermetic, cdk-nag enforced)
+        run: cd infra && npx cdk synth --quiet
+
+  # Plan 04-05 (ai-regression-testing) — the LIVE gold-set eval. Manual
+  # only (workflow_dispatch): ~207 Anthropic calls ≈ cents, but paid budget
+  # must never burn per-push. Requires the ANTHROPIC_API_KEY repo secret
+  # (U-25 funding check). The offline floors run on every push via `npm test`.
+  eval-live:
+    name: Live gold-set eval (manual — spends API budget)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # --live (review fix F2): the run FAILS if the secret is blank/unset —
+      # it must never silently fall back to offline and exit green.
+      - name: Run live eval against the signed gold set
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx tsx backend/eval/run-eval.ts --live
+
+      - name: Upload results artifact (id-keyed, no reply text — DATA-01)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: backend/eval/results/
+          if-no-files-found: ignore

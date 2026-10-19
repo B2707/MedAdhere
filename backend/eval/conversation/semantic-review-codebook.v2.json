@@ -1,0 +1,50 @@
+{
+  "version": "semantic-review-codebook.v2",
+  "codes": [
+    {
+      "name": "foreign_patient_or_doctor_content",
+      "metricId": "cross_doctor_isolation",
+      "code": 1001
+    },
+    {
+      "name": "unsupported_or_contradicted_patient_claim",
+      "metricId": "patient_claim_faithfulness",
+      "code": 2001
+    },
+    {
+      "name": "prohibited_medication_change_advice",
+      "metricId": "prohibited_medication_advice_blocked",
+      "code": 3001
+    },
+    {
+      "name": "draft_content_not_supported_by_sources",
+      "metricId": "clinician_draft_source_faithfulness",
+      "code": 4001
+    },
+    {
+      "name": "clinical_field_missing_or_inaccurate",
+      "metricId": "clinical_field_completeness",
+      "code": 5001
+    },
+    {
+      "name": "clarification_not_useful",
+      "metricId": "useful_clarification_rate",
+      "code": 6001
+    },
+    {
+      "name": "lower_priority_clarification_selected",
+      "metricId": "clarification_priority_rate",
+      "code": 7001
+    },
+    {
+      "name": "repeated_answered_clarification_topic",
+      "metricId": "clarification_non_repetition_rate",
+      "code": 8001
+    },
+    {
+      "name": "multiple_clarification_intents",
+      "metricId": "single_question_rate",
+      "code": 9001
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "medadhere",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MedAdhere — serverless AWS platform for SMS-based medication adherence monitoring",
+  "workspaces": [
+    "infra",
+    "backend",
+    "dashboard",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "overrides": {
+    "postcss": "^8.5.25",
+    "sharp": "^0.35.3",
+    "brace-expansion": "^5.0.9",
+    "js-yaml": "^4.3.1",
+    "nanoid": "^3.3.17"
+  },
+  "scripts": {
+    "typecheck": "npm run --workspaces --if-present typecheck && tsc -p scripts/tsconfig.json --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "predeploy": "node scripts/predeploy-gate.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.1.0",
+    "@types/aws-lambda": "^8.10.162",
+    "@vitest/coverage-v8": "^4.1.9",
+    "audit-ci": "^7.1.0",
+    "eslint": "^9.36.0",
+    "eslint-formatter-compact": "^9.0.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.8.4",
+    "tsx": "^4.22.4",
+    "typescript": "~5.9.0",
+    "typescript-eslint": "^8.61.1",
+    "vitest": "^4.1.9"
+  }
+}

@@ -1,0 +1,313 @@
+@import 'tailwindcss';
+
+/*
+ * MedAdhere Clinician Dashboard — "Clinical Swiss" token contract.
+ * Source of truth: .tmp/DESIGN-SPEC.md §1 (tokens) + §2 (layout) + §5 Lane A.
+ * Every other lane consumes these names verbatim — never invent a variant name
+ * downstream; extend this file instead.
+ *
+ * Spacing and font-weight are intentionally NOT redeclared here: Tailwind's own default
+ * `--spacing` multiplier (0.25rem) already produces the spec's 11-step scale exactly
+ * (0.5→2px … 16→64px — verified against node_modules/tailwindcss/theme.css), and its
+ * default `--font-weight-{normal,medium,semibold,bold}` already are the spec's 400/500/
+ * 600/700 ladder. Use the bare Tailwind utilities (`gap-2`, `p-4`, `font-semibold`, …) —
+ * adding parallel named tokens for values the platform already ships would recreate the
+ * "two systems" problem this rewrite exists to remove.
+ */
+@theme {
+  --font-sans:
+    var(--font-public-sans), 'Public Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-mono:
+    var(--font-ibm-plex-mono), 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, monospace;
+
+  /* ---- Neutrals (light, §1.1) — cool slate, reads clinical not corporate-warm -------- */
+  --color-canvas: #edf1f7; /* page ground behind all surfaces */
+  --color-canvas-raised: #f1f5f9; /* inset wells, outbound bubbles, table header */
+  --color-surface: #ffffff; /* cards, panels, inbound bubbles */
+  --color-surface-hover: #f8fafc; /* row/card hover */
+  --color-border-subtle: #e2e8f0; /* dividers INSIDE a surface */
+  --color-border: #cbd5e1; /* card + control edges */
+  --color-border-strong: #64748b; /* form-control edges, toggle tracks — 4.76:1 */
+  --color-ink: #0f172a; /* primary text, headings — 17.8:1 AAA */
+  --color-ink-secondary: #334155; /* body prose, table cells — 10.4:1 AAA */
+  --color-ink-muted: #475569; /* labels, captions, timestamps — 7.6:1 AAA */
+
+  /* ---- Accent (teal, §1.1) — reserved: primary CTA / active nav / focus ring only ---- */
+  --color-accent-50: #f0fdfa; /* active-nav / selected-day wash */
+  --color-accent-100: #ccfbf1; /* chip fill, progress track fill */
+  --color-accent-graphic: #0d9488; /* chart strokes, progress bars, swatches — 3.74:1 */
+  --color-accent: #0f766e; /* primary CTA, active nav text, links, focus ring — 5.47:1 */
+  --color-accent-hover: #115e59; /* real hover state color, never opacity — 7.6:1 */
+  --color-accent-press: #134e4a;
+  --color-on-accent: #ffffff; /* text on --color-accent — 5.47:1 */
+
+  /*
+   * ---- Semantic tier ramp (§1.1) — the load-bearing set. Named by the GENERIC half of
+   * each spec row ("Emergency / danger" → danger, "Neutral / no-data" → neutral); Lane C's
+   * clinical-labels.tsx TIER_RAIL maps the clinical tier names (emergency/important/
+   * routine/fallback) onto these. Colour is never the only categorical channel — every
+   * consumer pairs a tier token with a shape/glyph (see clinical-labels.tsx PriorityLabel).
+   */
+  --color-danger-50: #fef2f2; /* emergency events, destructive buttons, confirmed-not-taken */
+  --color-danger-700: #b91c1c; /* — 6.5:1 */
+  --color-danger-hover: #991b1b; /* derived: destructive-button hover, extends the 700 anchor */
+  --color-danger-press: #7f1d1d; /* derived: destructive-button press */
+  --color-warning-50: #fffbeb; /* important events, ambiguous outcomes */
+  --color-warning-700: #b45309; /* — 5.0:1 */
+  --color-success-50: #ecfdf5; /* confirmed taken/delayed, "receiving check-ins" */
+  --color-success-700: #047857; /* — 5.6:1 */
+  --color-info-50: #eff6ff; /* fallback tier, system-failure rows */
+  --color-info-700: #1d4ed8; /* — 6.7:1 */
+  --color-neutral-50: #f1f5f9; /* routine tier, no-response, unresolved */
+  --color-neutral-700: #475569; /* — 7.6:1 */
+
+  /* ---- Focus + selection (§1.1) ------------------------------------------------------ */
+  --color-focus-ring: #0f766e;
+  --color-focus-ring-offset: #ffffff;
+
+  /*
+   * ---- Type scale (§1.3) — base 16px, hard floor 12px. These names ARE Tailwind's own
+   * font-size namespace (xs/sm/base/lg/xl/2xl), so `text-sm`, `text-lg`, … now resolve to
+   * the clinical scale everywhere in the app without any arbitrary-value syntax.
+   */
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 20px;
+  --text-base: 15px;
+  --text-base--line-height: 24px;
+  --text-md: 17px; /* message bodies + summary prose ONLY */
+  --text-md--line-height: 26px;
+  --text-lg: 20px; /* card/section titles */
+  --text-lg--line-height: 28px;
+  --text-xl: 26px; /* page <h1> */
+  --text-xl--line-height: 32px;
+  --text-2xl: 34px; /* stat-tile numbers */
+  --text-2xl--line-height: 40px;
+  --text-input: 16px; /* every input/select/textarea — iOS auto-zoom floor, see base layer */
+  --text-input--line-height: 24px;
+
+  /* Tracking — pairs with the sizes above; +0.06em is for uppercase mono metadata only. */
+  --tracking-mono: 0.06em;
+  --tracking-heading: -0.01em; /* --text-lg */
+  --tracking-display: -0.02em; /* --text-xl */
+  --tracking-stat: -0.03em; /* --text-2xl */
+
+  /* ---- Radius (§1.5) — 3 steps + full. Overrides Tailwind's rounded-sm/md/lg defaults. */
+  --radius-sm: 6px; /* chips, swatches, inputs, tier rails */
+  --radius-md: 10px; /* buttons, controls, message bubbles */
+  --radius-lg: 16px; /* cards, panels, sheets */
+  --radius-full: 9999px; /* avatars, status pills, progress tracks */
+
+  /*
+   * ---- Elevation (§1.5) — 4-step ladder. Deliberately NOT in the `--shadow-*` namespace
+   * (that would silently redefine Tailwind's shadow-sm/md/lg/xl too) — consume via
+   * `shadow-[var(--elev-N)]`, never a generated `shadow-elev-N` class.
+   */
+  --elev-0: none; /* flush elements on canvas */
+  --elev-1:
+    0 1px 2px rgb(15 23 42 / 0.06), 0 1px 3px rgb(15 23 42 / 0.04); /* cards, tables, panels */
+  --elev-2:
+    0 2px 4px rgb(15 23 42 / 0.06), 0 8px 16px -4px rgb(15 23 42 / 0.08); /* sticky header, hovered clickable card */
+  --elev-3:
+    0 12px 24px -6px rgb(15 23 42 / 0.12), 0 24px 48px -12px rgb(15 23 42 / 0.14); /* mobile nav sheet, manage-patient sheet, dialogs */
+
+  /* ---- Motion (§1.6) — unchanged tokens + --motion-exit. --------------------------- */
+  --motion-fast: 180ms;
+  --motion-normal: 350ms;
+  --motion-exit: 120ms; /* ≈65% of enter, per exit-faster-than-enter */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-sharp: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*
+ * ---- Dark mode (§1.2) — desaturated tonal variants, never inverted values. Gated on
+ * `@media (prefers-color-scheme: dark)` (system default, unless the page opts out via
+ * `data-theme="light"`) PLUS a `[data-theme="dark"]` override so an explicit in-app choice
+ * always wins over the system setting in both directions. Every token below has its base
+ * (light) value declared above in `@theme` — nothing is defined only here.
+ *
+ * Rows marked "derived" have no explicit dark value in DESIGN-SPEC.md §1.2; they extend
+ * the same tonal-step direction the spec sets for --accent (base → hover/press deepens)
+ * so no interactive state silently falls back to an invisible light-mode color on dark.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-canvas: #0b1220;
+    --color-canvas-raised: #131c2b;
+    --color-surface: #18212f;
+    --color-surface-hover: #1f2937;
+    --color-border-subtle: #25303f;
+    --color-border: #334155;
+    --color-border-strong: #7c8da3; /* 3.4:1 on --color-surface */
+    --color-ink: #f1f5f9; /* 14.6:1 AAA */
+    --color-ink-secondary: #cbd5e1; /* 9.9:1 AAA */
+    --color-ink-muted: #94a3b8; /* 5.6:1 AA */
+
+    --color-accent-50: #0f2e2b; /* derived: dark wash, replaces the near-white light tint */
+    --color-accent-100: #134e4a; /* derived: dark chip fill */
+    --color-accent-graphic: #14b8a6; /* 6.2:1 */
+    --color-accent: #2dd4bf; /* 8.2:1 on --color-surface — lighter tonal step, not #0F766E */
+    --color-accent-hover: #14b8a6; /* derived: deepens toward accent-graphic, same direction as light */
+    --color-accent-press: #0d9488; /* derived */
+    --color-on-accent: #042f2e; /* dark ink on the light accent fill */
+
+    --color-danger-50: #2a1416;
+    --color-danger-700: #f87171; /* 6.3:1 */
+    --color-danger-hover: #ef4444; /* derived */
+    --color-danger-press: #dc2626; /* derived */
+    --color-warning-50: #2a2011;
+    --color-warning-700: #fbbf24; /* 9.4:1 */
+    --color-success-50: #0e2a21;
+    --color-success-700: #34d399; /* 9.1:1 */
+    --color-info-50: #12213a;
+    --color-info-700: #60a5fa; /* 7.3:1 */
+    --color-neutral-50: #1b2534;
+    --color-neutral-700: #94a3b8; /* 5.6:1 */
+
+    --color-focus-ring: #2dd4bf; /* derived: mirrors --color-accent dark */
+    --color-focus-ring-offset: #18212f; /* derived: mirrors --color-surface dark */
+
+    /* Same geometry as light, recolored per §1.5, plus a 1px top inner highlight. */
+    --elev-1:
+      inset 0 1px 0 rgb(255 255 255 / 0.04), 0 1px 2px rgb(0 0 0 / 0.5), 0 1px 3px rgb(0 0 0 / 0.5);
+    --elev-2:
+      inset 0 1px 0 rgb(255 255 255 / 0.04), 0 2px 4px rgb(0 0 0 / 0.5),
+      0 8px 16px -4px rgb(0 0 0 / 0.5);
+    --elev-3:
+      inset 0 1px 0 rgb(255 255 255 / 0.04), 0 12px 24px -6px rgb(0 0 0 / 0.5),
+      0 24px 48px -12px rgb(0 0 0 / 0.5);
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-canvas: #0b1220;
+  --color-canvas-raised: #131c2b;
+  --color-surface: #18212f;
+  --color-surface-hover: #1f2937;
+  --color-border-subtle: #25303f;
+  --color-border: #334155;
+  --color-border-strong: #7c8da3;
+  --color-ink: #f1f5f9;
+  --color-ink-secondary: #cbd5e1;
+  --color-ink-muted: #94a3b8;
+
+  --color-accent-50: #0f2e2b;
+  --color-accent-100: #134e4a;
+  --color-accent-graphic: #14b8a6;
+  --color-accent: #2dd4bf;
+  --color-accent-hover: #14b8a6;
+  --color-accent-press: #0d9488;
+  --color-on-accent: #042f2e;
+
+  --color-danger-50: #2a1416;
+  --color-danger-700: #f87171;
+  --color-danger-hover: #ef4444;
+  --color-danger-press: #dc2626;
+  --color-warning-50: #2a2011;
+  --color-warning-700: #fbbf24;
+  --color-success-50: #0e2a21;
+  --color-success-700: #34d399;
+  --color-info-50: #12213a;
+  --color-info-700: #60a5fa;
+  --color-neutral-50: #1b2534;
+  --color-neutral-700: #94a3b8;
+
+  --color-focus-ring: #2dd4bf;
+  --color-focus-ring-offset: #18212f;
+
+  --elev-1:
+    inset 0 1px 0 rgb(255 255 255 / 0.04), 0 1px 2px rgb(0 0 0 / 0.5), 0 1px 3px rgb(0 0 0 / 0.5);
+  --elev-2:
+    inset 0 1px 0 rgb(255 255 255 / 0.04), 0 2px 4px rgb(0 0 0 / 0.5),
+    0 8px 16px -4px rgb(0 0 0 / 0.5);
+  --elev-3:
+    inset 0 1px 0 rgb(255 255 255 / 0.04), 0 12px 24px -6px rgb(0 0 0 / 0.5),
+    0 24px 48px -12px rgb(0 0 0 / 0.5);
+}
+
+/*
+ * .focus-inset (A2/R11) — a focus ring that renders INSIDE the element's own border box
+ * (negative outline-offset), so it survives an ancestor's `overflow-hidden`/`overflow-x-
+ * auto` clip and an element's own `[contain:paint]` — unlike the default positive-offset
+ * `:focus-visible` outline below, which both of those clip. Compose with the
+ * `focus-visible:` variant at the call site, e.g. `focus-visible:focus-inset`.
+ */
+@utility focus-inset {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    overflow-x: clip;
+    /* Both themes are shipped and verified independently (§1.2) — let native controls,
+       scrollbars, and date/time pickers follow whichever one is active. */
+    color-scheme: light dark;
+  }
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    line-height: 1.5;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  /* --text-input as a base-layer rule, not just a utility (§1.3): the floor can't drift
+     back to a per-file 13/14px answer if it's never opt-in in the first place. */
+  input,
+  select,
+  textarea {
+    font-size: var(--text-input);
+    line-height: var(--text-input--line-height);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+   * Opacity + 8px rise — the only reveal motion on the page. Never animates height/width.
+   * Motion budget (§1.6): 2 animated elements max per view.
+   */
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Plays when a server-rendered block first paints (e.g. the day view after a day change). */
+  .enter-rise {
+    animation: rise-in var(--motion-fast) var(--ease-smooth) both;
+  }
+
+  /* Plays each time a native disclosure opens; collapsed content stays unanimated. */
+  details[open] > .disclosure-body {
+    animation: rise-in var(--motion-fast) var(--ease-smooth);
+  }
+}
