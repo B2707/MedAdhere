@@ -50,8 +50,8 @@ It runs on serverless AWS, sends real SMS through Twilio, and calls Claude throu
 ## See it working
 
 <p align="center">
-  <img src="assets/chat.gif" alt="Animated example: a patient opens a notification and texts about a headache while the extracted facts and the clinician's day thread and symptom chart update in the panels beside the phone" width="100%"><br>
-  <i>Follow each reply from the phone, through the extracted facts, to the clinician's day thread, symptom details and severity chart. Illustrated example with a synthetic patient. <a href="assets/chat.gif">View full size</a>.</i>
+  <img src="assets/chat.gif" alt="Animated walkthrough: lock-screen notification, SMS replies and extracted facts, followed by Alice Chen's patient record, history, charts and clinician controls" width="100%"><br>
+  <i>Follow each reply from the phone, through the extracted facts, to the clinician's day thread, symptom details and severity chart. After the chat, open Alice's record from the patient list and explore her history, charts, evidence and clinician controls. All patient and cohort data are synthetic. <a href="assets/chat.mp4">Watch the full walkthrough (MP4)</a> · <a href="assets/chat.gif">Full-size GIF</a>.</i>
 </p>
 
 <p align="center">

@@ -1,5 +1,5 @@
 'use strict';
-// Renders the README GIFs (chat.gif, dashboard-tour.gif) from chat.html and tour.html.
+// Renders chat.gif and chat.mp4 from chat.html, plus dashboard-tour.gif from tour.html.
 // Run: NODE_PATH=<dir with playwright> node assets/src/gif.cjs   (needs ffmpeg on PATH)
 const { chromium } = require('playwright');
 const { execFileSync } = require('child_process');
@@ -27,23 +27,36 @@ async function render(browser, html, states, size, gif, width, fps = FPS, device
   const page = await browser.newPage({ viewport: size, deviceScaleFactor });
   await page.goto('file://' + path.join(__dirname, html));
   await page.waitForTimeout(400);
-  let last = null, lastBuf = null;
+  let last = null, lastBuf = null, lastRendered = null;
   for (let i = 0; i < states.length; i++) {
     const key = JSON.stringify(states[i]);
-    if (key !== last) { await page.evaluate(s => ('t' in s ? window.render(s.t) : window.setState(s)), states[i]); lastBuf = await page.screenshot({ type: 'png' }); last = key; }
+    if (key !== last) {
+      const rendered = await page.evaluate(s => ('i' in s ? window.setState(s) : window.render(s.t)), states[i]);
+      const renderedKey = typeof rendered === 'string' ? rendered : key;
+      if (renderedKey !== lastRendered) lastBuf = await page.screenshot({ type: 'png' });
+      lastRendered = renderedKey; last = key;
+    }
     fs.writeFileSync(path.join(dir, `f${String(i).padStart(4, '0')}.png`), lastBuf);
   }
   await page.close();
   const out = path.join(__dirname, '..', gif);
+  const gifScale = html === 'chat.html' ? 1500 : width;
+  const sampling = html === 'chat.html' ? "select='if(lt(t,21.6),1,not(mod(n,2)))'," : '';
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(fps), '-i', path.join(dir, 'f%04d.png'),
-    '-vf', `scale=${width}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle`,
-    '-loop', '0', out]);
+    '-vf', `${sampling}scale=${gifScale}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle`,
+    '-fps_mode', 'vfr', '-loop', '0', out]);
+  if (html === 'chat.html') {
+    const mp4 = out.replace(/\.gif$/, '.mp4');
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(fps), '-i', path.join(dir, 'f%04d.png'),
+      '-vf', `scale=${width}:-2:flags=lanczos`, '-c:v', 'libx264', '-preset', 'fast', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', mp4]);
+    console.log('rendered', path.basename(mp4), (fs.statSync(mp4).size / 1e6).toFixed(2) + ' MB');
+  }
   fs.rmSync(dir, { recursive: true });
   console.log('rendered', gif, (fs.statSync(out).size / 1e6).toFixed(2) + ' MB', states.length + ' frames');
 }
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, args: ['--allow-file-access-from-files'] });
   const probe = await browser.newPage();
   await probe.goto('file://' + path.join(__dirname, 'chat.html'));
   const end = await probe.evaluate(() => window.END);

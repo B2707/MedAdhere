@@ -142,6 +142,11 @@
   .field .send { position: absolute; right: 3px; top: 50%; width: 29px; height: 29px; margin-top: -14.5px; border-radius: 50%; background: #007DFE;
     display: flex; align-items: center; justify-content: center; transform: scale(0); }
   .b { z-index: 8; }
+
+  #walkthrough { position: absolute; inset: 0; background: #070f1c; z-index: 80; opacity: 0; visibility: hidden; pointer-events: none; }
+  #walkthrough .tour-window { position: absolute; left: 160px; top: 86px; width: 1850px; height: 868px; overflow: hidden; border: 1px solid #334155; border-radius: 17px; box-shadow: 0 28px 70px rgba(0,0,0,.4); }
+  #walkthrough iframe { width: 1600px; height: 750px; border: 0; transform: scale(1.15625); transform-origin: 0 0; }
+  #tour-caption { position: absolute; right: 160px; top: 40px; font-size: 21px; font-weight: 500; color: #b9c6d8; }
 </style>
 <link rel="stylesheet" href="lock-screen.css">
 <script src="lock-screen.js"></script>
@@ -224,6 +229,7 @@
 </div>
 
 <div class="pk" id="pk"></div>
+<section id="walkthrough"><div class="label" style="left:160px;top:42px">CLINICIAN WORKSPACE</div><div id="tour-caption"></div><div class="tour-window"><iframe id="clinician-tour" src="clinician-tour.html" title="Alice Chen clinician dashboard walkthrough"></iframe></div></section>
 
 <script>
 // iOS Messages motion: type into the field, send, the bubble lifts out of the field into the thread.
@@ -416,7 +422,21 @@ window.render = t => {
   [...ticks.children].forEach((d, i) => d.style.background = i < shown ? '#2dd4a7' : '#1f3550');
   renderDashboard(t, times);
 };
-window.END = END;
-if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % END); requestAnimationFrame(loop); }; loop(); }
+// Preserve the conversation, then freeze it while the clinician walkthrough continues.
+const CHAT_END = END, renderConversation = window.render;
+window.render = t => {
+  renderConversation(Math.min(t, CHAT_END - .04));
+  const local = t - CHAT_END, stage = $('#walkthrough');
+  const opening = ease(local / .7), frame = $('#clinician-tour').contentWindow;
+  stage.style.visibility = local < 0 ? 'hidden' : 'visible';
+  stage.style.opacity = opening.toFixed(3);
+  stage.style.transform = `translateY(${((1-opening)*28).toFixed(2)}px) scale(${(.97+.03*opening).toFixed(3)})`;
+  const state = typeof frame.render === 'function' ? frame.render(Math.max(0,local)) : {key:'loading',title:''};
+  $('#tour-caption').textContent = state.title;
+  return local < 0 ? `chat:${t}` : `tour:${opening.toFixed(3)}:${state.key}`;
+};
+window.CHAT_END = CHAT_END;
+window.END = CHAT_END + 60;
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % window.END); requestAnimationFrame(loop); }; loop(); }
 else render(0);
 </script></body></html>
