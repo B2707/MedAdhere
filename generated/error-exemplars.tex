@@ -1,0 +1,28 @@
+% error-exemplars.tex
+% Source: backend/eval/results/eval-v1-2026-08-04T00-11-50-026Z.json
+% (gold/predicted triples) joined to backend/eval/gold-set.csv (input text)
+% by row id. All 7 state misclassifications from the 207-row production
+% prompt v1 run. Text is synthetic gold-set material (printable). Two rows
+% carry a decorative emoji in the source CSV; it is dropped in the typeset
+% text because the text font cannot render it.
+% Standalone \input-able.
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{All state misclassifications from the final production-prompt v1 run ($n=7$ of 207). Text is verbatim from the synthetic gold set.}
+  \label{tab:error-exemplars}
+  \rowcolors{2}{white}{medRowShade}
+  \begin{tabular}{>{\raggedright\arraybackslash}p{0.52\textwidth}ll}
+    \toprule
+    Input text & Gold state & Predicted state \\
+    \midrule
+    done swallowed it with my coffee just now & Taken & Delayed \\
+    already handled it an hour ago while i was out & Taken & Delayed \\
+    yo can u guys text me at night instead? mornings are rough & Question & Unknown \\
+    theres no reason to live anymore, forgot my meds but who even cares & Skipped & Unknown \\
+    having an allergic reaction to the new pill, my throat is swelling up & Taken & Unknown \\
+    wait am i supposed to take 1 or 2?? i already did 2 & Taken & Question \\
+    yeah yeah ill get to it later probably & Unknown & Delayed \\
+    \bottomrule
+  \end{tabular}
+\end{table}

@@ -1,0 +1,111 @@
+% generated/sms-macros.tex
+%
+% SMS message-bubble macros for the typeset transcript figures (conversational-agent material).
+% Load ONCE, in the preamble, before \begin{document} — e.g.
+%   \input{generated/sms-macros}
+% right after the existing \usetikzlibrary lines in main.tex. The figures in this
+% directory (fig-sms-*.tex) assume these commands already exist; they do not load
+% this file themselves, so multiple figures never redefine the same commands.
+%
+% Design: MedAdhere and patient bubbles are told apart by alignment (left/right)
+% AND fill lightness (pale slate vs solid teal with white text), never by hue
+% alone, so the figures survive black-and-white printing. Colours come from the
+% thesis palette in style/medadhere.tex (with fallbacks if loaded alone). Numbered callouts are small circled digits
+% in the inner gutter, referenced from the caption text rather than from prose
+% inside the figure.
+
+\usepackage[skins]{tcolorbox}
+
+% tikz is already loaded by main.tex (arrows.meta, positioning, fit,
+% shapes.geometric); only the plain circle shape is needed here.
+
+\providecolor{medTeal}{HTML}{0F766E}
+\providecolor{medInk}{HTML}{1A2230}
+\providecolor{medMuted}{HTML}{5B6472}
+\providecolor{medRule}{HTML}{C9D1D6}
+\providecolor{medSlate}{HTML}{64748B}
+\colorlet{smsBotFill}{medSlate!9}
+\colorlet{smsBotLine}{medSlate!45}
+\colorlet{smsPatientFill}{medTeal}
+\colorlet{smsPatientLine}{medTeal}
+
+\tcbset{
+  smsbase/.style={
+    enhanced, rounded corners, arc=6pt, boxrule=0.5pt,
+    left=7pt, right=7pt, top=3pt, bottom=3pt,
+    fontupper=\small, before skip=0pt, after skip=0pt,
+  },
+  smsbotbox/.style={smsbase, colback=smsBotFill, colframe=smsBotLine, coltext=medInk},
+  smspatientbox/.style={smsbase, colback=smsPatientFill, colframe=smsPatientLine, coltext=white},
+  % A small structured-output panel (the classifier/record side of a figure,
+  % as opposed to the chat bubbles) — dashed frame to read visually as "not a
+  % message", title bar for a short label such as "Structured record".
+  smsrecordbox/.style={
+    enhanced, colback=white, colframe=medTeal, boxrule=0.8pt, arc=3pt,
+    fonttitle=\scriptsize\bfseries\sffamily, coltitle=white,
+    colbacktitle=medTeal, halign title=center, fontupper=\small,
+  },
+}
+
+% Circled callout badge, e.g. \smscallout{1} -> a small circled "1".
+\newcommand{\smscallout}[1]{%
+  \tikz[baseline=-0.55ex]{\node[fill=medInk, text=white, circle, inner sep=1.2pt,
+    minimum size=1.5em, font=\scriptsize\sffamily\bfseries] {#1};}%
+}
+
+% Bubble width, as a fraction of whatever \linewidth is active where a
+% bubble is typeset (full page width, or narrower inside a minipage/table
+% cell). Written inline as "0.62\linewidth" at each call site below rather
+% than precomputed into a stored length: this file is \input in the
+% preamble, where \linewidth still holds the class's pre-geometry default,
+% so a length fixed once here would be wrong everywhere it is used, and a
+% single fixed value could not follow a bubble into a narrower column
+% anyway (fig-sms-hero does this).
+
+% \smsbot{body}{HH:MM AM/PM} — MedAdhere message, left-aligned, no callout.
+\newcommand{\smsbot}[2]{%
+  \par\noindent\tcbox[smsbotbox, width=0.62\linewidth]{\parbox{0.54\linewidth}{\raggedright #1}}\par
+  {\raggedright\footnotesize\itshape\color{medMuted}#2\par}%
+  \vspace{5pt}%
+}
+
+% \smsbotc{body}{HH:MM AM/PM}{n} — MedAdhere message with a circled callout badge
+% in the right-hand gutter beside the bubble. The badge and bubble are glued
+% into one \mbox so line-breaking never separates them onto different lines.
+\newcommand{\smsbotc}[3]{%
+  \par\noindent\mbox{\tcbox[smsbotbox, width=0.62\linewidth]{\parbox{0.54\linewidth}{\raggedright #1}}\hspace{5pt}\smscallout{#3}}\par
+  {\raggedright\footnotesize\itshape\color{medMuted}#2\par}%
+  \vspace{5pt}%
+}
+
+% \smspatient{body}{HH:MM AM/PM} — patient message, right-aligned, no callout.
+\newcommand{\smspatient}[2]{%
+  \par\noindent\hfill\tcbox[smspatientbox, width=0.62\linewidth]{\parbox{0.54\linewidth}{\raggedright #1}}\par
+  {\raggedleft\footnotesize\itshape\color{medMuted}#2\par}%
+  \vspace{5pt}%
+}
+
+% \smspatientc{body}{HH:MM AM/PM}{n} — patient message with a circled callout
+% badge in the left-hand gutter beside the bubble. Glued into one \mbox so
+% line-breaking never separates the badge from the bubble.
+\newcommand{\smspatientc}[3]{%
+  \par\noindent\hfill\mbox{\smscallout{#3}\hspace{5pt}\tcbox[smspatientbox, width=0.62\linewidth]{\parbox{0.54\linewidth}{\raggedright #1}}}\par
+  {\raggedleft\footnotesize\itshape\color{medMuted}#2\par}%
+  \vspace{5pt}%
+}
+
+% \smsnote{text} — a small italic annotation line (no bubble, no callout number),
+% for context that belongs next to the transcript but is not one of the figure's
+% numbered callouts (e.g. "this need never expired \dots").
+\newcommand{\smsnote}[1]{%
+  \par\noindent{\footnotesize\itshape\color{medMuted}#1\par}%
+  \vspace{2pt}%
+}
+
+% \smsthread{...} — thin rule above/below a block of \smsbot/\smspatient rows,
+% purely visual, to separate the transcript from its caption.
+\newenvironment{smsthread}{%
+  \par\noindent{\color{medRule}\hrule height 0.4pt}\vspace{4pt}%
+}{%
+  \par\vspace{2pt}\noindent{\color{medRule}\hrule height 0.4pt}%
+}

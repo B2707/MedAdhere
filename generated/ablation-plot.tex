@@ -1,0 +1,50 @@
+% ablation-plot.tex
+% Source: backend/eval/results/ablation-v1-2026-08-04T00-14-43-385Z.json
+% (the final, HOLD-decision, drug-label-context ablation: Arm A = no drug
+% context block, Arm B = drug context block appended). n=207 gold rows for
+% both arms. Life-safety denominator (33) is a fixed gold-set property
+% (20 acute_physical + 13 crisis rows in backend/eval/gold-set.csv),
+% independent of the ablation arm; cross-checked against
+% chapters/results.tex's reported 33-row life-safety tier. CIs are 95%
+% Clopper-Pearson exact intervals (scipy.stats.beta). Requires pgfplots
+% (\usepackage{pgfplots} + \pgfplotsset{compat=1.18}) in the preamble.
+% Standalone \input-able.
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.95\textwidth, height=6.5cm,
+      xtick={0,1,2,3}, xticklabels={{State\\accuracy},{Life-safety\\recall},{Side-effect\\precision},{Reason-code\\completeness}},
+      x tick label style={align=center, font=\small},
+      ymin=0.55, ymax=1.03, ylabel={Rate (95\% CI)},
+      ymajorgrids, grid style={medRule!70},
+      axis line style={medInk!60}, tick style={medInk!60},
+      tick label style={font=\small}, label style={font=\small},
+      legend style={at={(0.5,1.12)}, anchor=south, legend columns=2,
+        font=\small, draw=none, /tikz/every even column/.append style={column sep=12pt}},
+    ]
+      \addplot+[only marks, mark=*, color=medTeal, mark options={fill=medTeal, scale=1.2},
+        error bars/y dir=both, error bars/y explicit,
+        error bars/error bar style={medTeal, thick}]
+        coordinates {
+          (-0.08,0.9662) += (0,0.0201) -= (0,0.0346)
+          (0.92,1.0000) += (0,0.0000) -= (0,0.1058)
+          (1.92,0.9762) += (0,0.0232) -= (0,0.1018)
+          (2.92,0.8025) += (0,0.0802) -= (0,0.1033)
+        };
+      \addlegendentry{Arm A (no drug context)}
+      \addplot+[only marks, mark=square*, color=medCoral, mark options={fill=medCoral, scale=1.1},
+        error bars/y dir=both, error bars/y explicit,
+        error bars/error bar style={medCoral, thick}]
+        coordinates {
+          (0.08,0.9662) += (0,0.0201) -= (0,0.0346)
+          (1.08,1.0000) += (0,0.0000) -= (0,0.1058)
+          (2.08,0.9762) += (0,0.0232) -= (0,0.1018)
+          (3.08,0.7654) += (0,0.0870) -= (0,0.1073)
+        };
+      \addlegendentry{Arm B (drug context appended)}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Medication-context ablation, final run: arm A vs. arm B on the four metrics reported in the text, with 95\% Clopper--Pearson exact intervals. Accuracy, life-safety recall, and side-effect precision are unchanged between arms; reason-code completeness is the only metric that moves, and it decreases in arm B (65/81 $\to$ 62/81) --- the basis for keeping the baseline v1 prompt in production.}
+  \label{fig:ablation-plot}
+\end{figure}

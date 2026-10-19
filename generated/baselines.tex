@@ -1,0 +1,30 @@
+% baselines.tex
+% Source: backend/eval/results/eval-v1-2026-08-04T00-11-50-026Z.json (gold
+% adherence_state/safety_flag per row) + backend/eval/gold-set.csv (input
+% text). Majority-class and keyword baselines are computed by this script
+% over the identical 207 rows the v1 model was scored on; the v1 numbers
+% are restated from the result file, not recomputed. Standalone \input-able.
+%
+% Keyword/regex matcher rules (deterministic, no API calls), checked in
+% this priority order against the lower-cased reply text:
+%   1. stopped  : /stop(ping|ped)?|quit(ting)?|discontinu.../
+%   2. skipped  : /skip(ping|ped)?|missed|didn't take|no dose.../
+%   3. delayed  : /late|behind|blanked|taking it now|gonna take.../
+%   4. question : contains a literal '?'
+%   5. taken    : /took|taken|swallowed|done|had it|down the hatch.../
+%   6. otherwise: unknown (default)
+\begin{table}[htbp]
+  \centering
+  \caption{Baseline comparison on the 207-row gold set. The keyword matcher is a deterministic regex classifier over reply text (rules in the source comment above; no model calls). Intervals are 95\% Clopper--Pearson exact intervals.}
+  \label{tab:baselines}
+  \small
+  \begin{tabular}{lrlr>{\raggedright\arraybackslash}p{2.5cm}}
+    \toprule
+    Method & Accuracy & 95\% CI & Life-safety recall & Note \\
+    \midrule
+    Majority class (always `Taken') & 0.319 & [0.256, 0.387] & 0.000 & never predicts a safety flag \\
+    Keyword/regex matcher & 0.705 & [0.638, 0.766] & 0.000 & never predicts a safety flag \\
+    Production prompt v1 (LLM) & 0.966 & [0.932, 0.986] & 1.000 & forced-tool classifier \\
+    \bottomrule
+  \end{tabular}
+\end{table}

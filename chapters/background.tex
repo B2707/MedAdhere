@@ -1,0 +1,92 @@
+\chapter{Background and Related Work}
+\label{ch:background}
+
+\section{Medication Adherence and the ABC Taxonomy}
+
+The ABC taxonomy divides medication adherence into initiation,
+implementation, and discontinuation, with persistence as the time between the
+first and last dose~\cite{vrijens2012taxonomy}. For software, this means ``did
+not take the medication'' can describe several different events. MedAdhere maps
+the distinction onto six operational states (Figure~\ref{fig:abc-mapping}).
+The states \texttt{taken}, \texttt{delayed}, and \texttt{skipped} describe
+implementation around one scheduled dose, and \texttt{stopped} records a
+discontinuation statement. The states \texttt{question} and \texttt{unknown}
+sit off the phase axis: they describe the kind of reply received, not where the
+patient stands in treatment. A second, independent axis records the stated
+reason, so ``skipped because I ran out'' needs no combined class for each
+state--reason pair. Building on a published conceptual frame instead of an
+invented binary label set also follows the EMERGE reporting
+guideline~\cite{degeest2018emerge}.
+
+\input{generated/fig-abc-mapping}
+
+\section{SMS-Based Adherence Interventions}
+
+Text messaging suits adherence work because delivery is asynchronous, the
+interface is familiar, and no smartphone application is needed. A
+meta-analysis of chronic-disease SMS interventions found improved adherence,
+with heterogeneity in interventions and measurement~\cite{thakkar2016sms}. That
+supports SMS as a channel without establishing any one reminder design as
+clinically effective. Two-way texting is already deployed at service
+scale~\cite{feldacker2024twoway}, but human staff triage the replies. The
+closest published analogue used unsupervised methods to recover
+medication-related intents from free-text messages on a bidirectional
+hypertension-management platform~\cite{davoudi2022intents}. That work finds
+intent structure after the fact and without a fixed label contract. MedAdhere
+classifies prospectively into a predeclared schema shared by the database, the
+dashboard, and the evaluation harness.
+
+\section{LLM Classification of Short Text}
+
+Short SMS replies defeat exact keyword matching because meaning arrives as
+slang, abbreviation, negation, or indirect phrasing. Large language models
+handle that variation~\cite{singhal2023clinical}, but an unconstrained model
+can return any text, which makes it a poor system boundary. MedAdhere therefore
+pins a small model to one forced tool schema. This places the classifier in the
+family of \emph{constrained} generation, which restricts the output space at
+decoding time so that only well-formed outputs are reachable. Published methods
+decode against a target grammar~\cite{scholak2021picard,geng2023grammar} or run
+a finite-state machine over the vocabulary~\cite{willard2023guided}; a
+provider's forced tool call is the hosted form of the same idea. Format
+restriction has reduced task performance on some
+benchmarks~\cite{tam2024format}, which is one reason this project measures the
+contract it ships. Constrained decoding is also not trusted alone. Every
+response is parsed through a strict shared schema at the boundary, the
+discipline King calls ``parse, don't validate''~\cite{king2019parse}.
+
+The inbound text is also untrusted input that may carry instructions. This is
+the indirect prompt-injection setting, in which attacker-controlled content
+reaches the model through a data channel instead of the operator's
+instruction~\cite{abdelnabi2023indirect}; it has since been formalized and
+benchmarked~\cite{liu2024promptinjection}. MedAdhere separates instructions
+from data in the way Hines et al.\ call
+\emph{spotlighting}~\cite{hines2024spotlighting}. The reply is delimited and
+marked as content to classify, not instructions to follow. The input is
+truncated, and only the forced tool is permitted. These measures reduce the
+opportunity for injection without proving the model immune, so the gold set
+includes an adversarial slice and ambiguous replies can resolve to
+\texttt{unknown}.
+
+\section{Drug Side-Effect Reference Data}
+
+Medication context comes from four sources. RxNorm normalizes product names to
+ingredient identifiers~\cite{rxnorm}. openFDA exposes structured product
+labeling, including warnings and adverse reactions~\cite{openfda}. Health
+Canada's Drug Product Database provides a market check and the
+DIN~\cite{dpd}. OnSIDES extracts adverse-event terms from drug labels and links
+them to normalized drug concepts~\cite{tanaka2025onsides}. MedAdhere freezes
+these facts at enrollment and uses them as reference data, never as a source of
+causal claims.
+
+\section{Serverless Architectures for Event-Driven Systems}
+
+The workload is low-volume and event-shaped, so it maps onto managed services:
+API Gateway, EventBridge Scheduler for one-time dose and timeout events, a
+patient-keyed FIFO queue, and a Lambda for each narrow handler. These services
+deliver \emph{at least once}, not exactly once. A carrier can retry a webhook
+and a queue can redeliver a message, so every handler must be
+idempotent~\cite{helland2012idempotence}. The design uses two stability
+patterns from Nygard by name: \emph{bulkhead} isolation and the \emph{circuit
+breaker}~\cite{nygard2018releaseit}. Not every component scales to zero. The
+database and NAT gateway stay provisioned while the stack is live, so on-demand
+deployment and verified teardown are part of the architecture.

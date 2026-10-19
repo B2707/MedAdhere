@@ -1,0 +1,117 @@
+% fig-pipeline-conversational.tex — the bounded-authority conversational pipeline.
+% Stage names and order verified against backend/src/conversation/ (turn-processor.ts,
+% queue-worker.ts, gateway-contract.ts/gateway-handler.ts, clinical-memory/{resolver,reducer,
+% composer,composer-validators}.ts, compose-plumbing.ts).
+% Models: extraction = claude-sonnet-5 (turn-processor.ts:68-69), composition =
+% claude-haiku-4-5-20251001 (clinical-memory/composer.ts:35). Never-composed set verbatim
+% from compose-plumbing.ts isComposeEligibleTurn/isNeverComposed doc comment. Standalone
+% \input-able.
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+    font=\small,
+    external/.style={draw, rounded corners, align=center, text width=3.2cm,
+      fill=medExtFill, draw=medExtLine, inner sep=5pt},
+    box/.style={draw, rounded corners, align=center, text width=3.8cm,
+      fill=medDetFill, draw=medDetLine, inner sep=5pt},
+    untrusted/.style={draw, dashed, very thick, rounded corners, align=center,
+      text width=3.8cm, fill=medAlertFill, draw=medAlertLine, inner sep=5pt},
+    gate/.style={draw, rounded corners, align=center, text width=3.0cm,
+      fill=medNeutralFill, draw=medNeutralLine, inner sep=5pt, font=\small\bfseries},
+    store/.style={draw, cylinder, shape border rotate=90, aspect=0.18,
+      align=center, text width=3.4cm, fill=medStoreFill, draw=medStoreLine, inner sep=6pt},
+    note/.style={draw, dashed, rounded corners, align=left, fill=medNoteFill, draw=medNoteLine,
+      font=\footnotesize, text width=4.6cm, inner sep=6pt},
+    flow/.style={-{Latex[length=2.2mm]}, thick, medInk},
+    async/.style={flow, dashed}
+  ]
+    % ================= ROW 0 (y=10.5): intake, left to right =================
+    \node[external] (reply) at (0,10.5) {Patient SMS\\reply};
+    \node[box] (inboundlambda) at (4.8,10.5)
+      {Inbound Lambda\\HMAC verify, dedupe\\STOP/HELP inline\\persist \texttt{inbound\_reply}};
+    \node[box] (sqs) at (9.6,10.5)
+      {SQS FIFO queue\\\footnotesize\texttt{MessageGroupId}\\= patient\_id};
+    \node[box] (worker) at (14.4,10.5)
+      {Queue worker\\\texttt{queue-worker.ts}\\\texttt{turn\_job} row};
+    \node[untrusted] (extractor) at (19.2,10.5)
+      {Sonnet claim extraction\\\texttt{claude-sonnet-5}\\gateway\\\texttt{'interpretation'} stage};
+
+    \draw[flow] (reply) -- (inboundlambda);
+    \draw[flow] (inboundlambda) -- (sqs);
+    \draw[async] (sqs) -- (worker);
+    \draw[flow] (worker) -- (extractor);
+
+    % ================= ROW 1 (y=6.0): resolution core, right to left =================
+    \node[gate] (gate1) at (19.2,6.0) {schema-validate\\\footnotesize\texttt{.parse()}\\trust boundary};
+    \node[box] (resolver) at (14.4,6.0)
+      {Deterministic resolution\\\texttt{resolver.ts}\\temporal + correction\\identity};
+    \node[box] (reducer) at (9.6,6.0)
+      {Append-only reducer\\\texttt{reducer.ts}\\\footnotesize$\rightarrow$\texttt{clinical\_event}\\(\texttt{supersedes\_id})};
+    \node[store] (needs) at (4.8,6.0) {\texttt{information\_need}\\durable, one open\\question per turn};
+    \node[box] (policy) at (0,6.0)
+      {Deterministic\\policy tier\\routine\,\textbar\,important\\emergency\,\textbar\,stop};
+
+    \draw[flow] (extractor) -- (gate1);
+    \draw[flow] (gate1) -- (resolver);
+    \draw[flow] (resolver) -- (reducer);
+    \draw[flow] (reducer) -- (needs);
+    \draw[flow] (needs) -- (policy);
+
+    % ================= ROW 2 (y=1.5): composition core, left to right =================
+    \node[box] (template) at (0,1.5)
+      {Fixed template\\(never-composed set)};
+    \node[untrusted] (composer) at (4.8,1.5)
+      {Haiku composer\\\texttt{claude-haiku-4-5}\\gateway\\\texttt{'composition'} stage};
+    \node[box] (validators) at (9.6,1.5)
+      {10 pure-code\\validators\\grounding, coverage,\\advice, injection, GSM-7};
+    \node[box] (floor) at (14.4,1.5)
+      {retry exhausted\\$\rightarrow$ template floor\\(fail-closed)};
+    \node[store] (checkpoint) at (19.2,1.5)
+      {compose checkpoint\\one-shot UPDATE\\\texttt{composed\_body}};
+
+    \draw[flow] (policy.south) -- ++(0,-1.3) -| (template.north);
+    \draw[flow] (policy.south) -- ++(0,-1.3) -| (composer.north);
+    \draw[flow] (composer) -- (validators);
+    \draw[flow] (validators) -- node[above, font=\footnotesize]{fail} (floor);
+    \draw[flow] (validators.north) .. controls +(1.2,1.6) and +(-3.0,1.6) .. (checkpoint.north)
+      node[pos=0.88, above, font=\footnotesize]{pass};
+
+    % ================= ROW 3 (y=-3.0): send =================
+    \node[box] (outbound) at (9.6,-3.0)
+      {Outbound Lambda\\send \texttt{composed\_body},\\else template \texttt{body}\\send-time re-validation\\(full validator re-run)};
+    \node[external] (deliver) at (14.4,-3.0) {Twilio $\rightarrow$\\patient delivery};
+
+    \draw[flow] (template.south) -- ++(0,-1.5) -| (outbound.north);
+    \draw[flow] (floor.south) -- ++(0,-1.3) -| (outbound.north);
+    \draw[flow] (checkpoint.south) -- ++(0,-1.3) -| (outbound.north);
+    \draw[flow] (outbound) -- (deliver);
+
+    % ================= Annotations =================
+    \node[note, text width=5.0cm] (legend) at (19.2,-3.0)
+      {\textbf{Trust boundary.} Solid border, teal = deterministic code.
+       Dashed thick border, coral = untrusted model output -- schema- or
+       validator-gated before anything durable happens.};
+
+    \node[note, text width=8.6cm] (nevercomposed) at (2.4,-6.0)
+      {\textbf{Never-composed set} (structurally excluded from
+       composition -- \texttt{compose-plumbing.ts}): emergency, STOP,
+       important, human-review, unsupported-language, safety-event,
+       unresolved-report, review-reason, runtime-failure, record-only,
+       clarifications-paused. Only clean routine/question replies may
+       reach the composer.};
+
+    \node[note, text width=6.6cm] (bulkhead) at (12.0,-6.0)
+      {\textbf{Bulkhead isolation.} The composer runs on its own provider
+       circuit and its own token-budget buckets
+       (\texttt{writer-input}/\texttt{-output}) -- a chatty compose day
+       cannot starve the clinical extractor into fallback templates.};
+  \end{tikzpicture}}
+  \caption{The bounded-authority conversational pipeline. The LLM only ever
+  \emph{proposes} (claim extraction, reply composition); deterministic code
+  \emph{disposes} (resolution, the append-only reducer, the ten validators, and
+  send). Every model stage is schema- or validator-gated before its output can
+  become durable or reach the patient, and emergency/STOP/important turns are
+  structurally excluded from composition entirely.}
+  \label{fig:pipeline-conversational}
+\end{figure}

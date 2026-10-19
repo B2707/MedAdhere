@@ -1,0 +1,295 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Animated example conversation for the README (chat.gif). Wording follows phones.html and the
+     live day in chapters/conversational-agent.tex. Driven by window.render(t) so every frame is exact;
+     open with ?play to watch it live in a browser. -->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1240px; height: 1000px; overflow: hidden; position: relative; background: #070f1c;
+    font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif; color: #e8eef7; }
+  .bg1 { position: absolute; width: 900px; height: 900px; left: -260px; top: -300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,212,167,.16), transparent 62%); }
+  .bg2 { position: absolute; width: 900px; height: 900px; right: -300px; bottom: -340px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(72,128,255,.14), transparent 62%); }
+  .label { position: absolute; font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 16px;
+    letter-spacing: 3px; font-weight: 700; color: #2dd4a7; display: flex; align-items: center; gap: 10px; }
+  .label::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #2dd4a7; box-shadow: 0 0 12px #2dd4a7; }
+
+  .phone { position: absolute; left: 70px; top: 86px; width: 418px; height: 872px; border-radius: 66px; padding: 14px;
+    background: linear-gradient(145deg, #3a4150, #1a1e26 40%, #2a303c);
+    box-shadow: 0 0 0 2px #0b0e14, 0 40px 80px rgba(0,0,0,.55), 0 0 70px rgba(45,212,167,.10); }
+  .screen { width: 390px; height: 844px; border-radius: 52px; overflow: hidden; position: relative; background: #000; }
+  .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 122px; height: 35px; border-radius: 20px; background: #000; z-index: 20; }
+  .status { height: 54px; display: flex; justify-content: space-between; align-items: center; padding: 6px 34px 0 44px;
+    font-size: 16px; font-weight: 600; color: #fff; position: relative; z-index: 5; }
+  .hdr { text-align: center; padding: 2px 0 10px; border-bottom: 1px solid #1c1c1e; background: rgba(18,18,20,.96); position: relative; }
+  .hdr .back { position: absolute; left: 14px; top: 20px; color: #2dd4a7; font-size: 30px; font-weight: 300; }
+  .avatar { width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 5px; background: linear-gradient(140deg, #1f8f74, #2dd4a7);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px; color: #04120e; }
+  .hdr .name { font-size: 12.5px; color: #e5e5ea; }
+  .thread { padding: 10px 14px 0; display: flex; flex-direction: column; gap: 6px; }
+  .meta { text-align: center; font-size: 11.5px; color: #8e8e93; margin: 6px 0 4px; }
+  .meta b { color: #aeaeb2; font-weight: 600; }
+  .b { max-width: 76%; padding: 8px 13px; border-radius: 19px; font-size: 15.5px; line-height: 1.3; display: none; will-change: transform; }
+  .in { align-self: flex-start; background: #26262a; color: #f2f2f7; border-bottom-left-radius: 6px; transform-origin: 0% 100%; }
+  .out { align-self: flex-end; background: linear-gradient(160deg, #22c49a, #179a79); color: #fff; border-bottom-right-radius: 6px; transform-origin: 100% 100%; }
+  .delivered { align-self: flex-end; font-size: 11px; color: #8e8e93; margin: -2px 4px 2px 0; display: none; }
+  .typing { align-self: flex-start; background: #26262a; border-radius: 19px; border-bottom-left-radius: 6px; padding: 12px 15px;
+    display: none; gap: 5px; transform-origin: 0% 100%; }
+  .typing i { width: 8px; height: 8px; border-radius: 50%; background: #8e8e93; display: block; }
+  .compose { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 14px 34px; background: #000; display: flex; gap: 10px; align-items: center; }
+  .plus { width: 34px; height: 34px; border-radius: 50%; background: #1c1c1e; color: #8e8e93; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  .field { flex: 1; height: 36px; border-radius: 18px; border: 1px solid #3a3a3c; color: #636366; font-size: 15px; display: flex; align-items: center; padding-left: 14px; }
+  .home { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: #fff; z-index: 6; }
+
+  .node { position: absolute; top: 120px; width: 196px; height: 92px; border-radius: 18px; background: #0d1a2b; border: 1px solid #1d3550;
+    font-family: "Avenir Next", "Helvetica Neue", sans-serif; padding: 14px 16px; }
+  .node .k { font-size: 12px; letter-spacing: 2px; color: #6f86a3; font-weight: 700; }
+  .node .v { font-size: 19px; font-weight: 600; margin-top: 6px; color: #e8eef7; display: flex; align-items: center; gap: 8px; }
+  .node .glow { position: absolute; inset: -1px; border-radius: 18px; border: 2px solid #2dd4a7; box-shadow: 0 0 26px rgba(45,212,167,.55), inset 0 0 18px rgba(45,212,167,.18); opacity: 0; }
+  .wire { position: absolute; top: 165px; height: 2px; background: repeating-linear-gradient(90deg, #24405f 0 8px, transparent 8px 14px); }
+  .ticks { display: flex; gap: 3px; margin-top: 9px; }
+  .ticks i { width: 13px; height: 5px; border-radius: 3px; background: #1f3550; display: block; }
+
+  .card { position: absolute; left: 600px; width: 600px; height: 92px; border-radius: 18px; border: 1px solid #1f3a4f; background: #0f1d2e;
+    font-family: "Avenir Next", "Helvetica Neue", sans-serif; display: flex; gap: 18px; align-items: center; padding: 0 22px; opacity: 0; transform-origin: 0% 50%; }
+  .card .dot { width: 46px; height: 46px; border-radius: 14px; background: rgba(45,212,167,.15); color: #2dd4a7; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 21px; flex: none; }
+  .card .k { font-size: 12.5px; letter-spacing: 2px; color: #7f93ad; font-weight: 700; }
+  .card .v { font-size: 23px; font-weight: 600; margin-top: 2px; }
+  .card .src { margin-left: auto; font-size: 13px; color: #6f86a3; font-family: -apple-system, "Helvetica Neue", sans-serif; text-align: right; }
+  .card .ring { position: absolute; inset: -2px; border-radius: 20px; border: 2px solid #2dd4a7; opacity: 0; }
+  .card.final { border-color: #2dd4a7; background: linear-gradient(100deg, rgba(45,212,167,.18), rgba(45,212,167,.05)); height: 104px; }
+  .card.final .v { font-size: 21px; }
+  .card.final .dot { background: #2dd4a7; color: #04120e; }
+
+  .slot { position: absolute; left: 600px; width: 600px; height: 92px; border-radius: 18px; border: 1.5px dashed #1a2d44; }
+  .pk { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #b9fff0; z-index: 50;
+    box-shadow: 0 0 10px 3px #2dd4a7, 0 0 30px 8px rgba(45,212,167,.5); opacity: 0; }
+  .tr { position: absolute; border-radius: 50%; background: #2dd4a7; z-index: 49; opacity: 0; }
+  .burst { position: absolute; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #7cf5d4; z-index: 48; opacity: 0; }
+  /* iOS Messages, light mode. Colors sampled from the UI Ants iMessage iOS UI Kit (dribbble.com/shots/23863815):
+     sent #007DFE, received #E9E9EB, header #F9F4F8, toned to #F7F6F8 */
+  .screen, .screen.dark { background: #fff !important; font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif; }
+  .status { color: #000 !important; background: transparent !important; }
+  .status svg rect[fill="#fff"] { fill: #000; } .status svg rect[stroke] { stroke: #000; }
+  .hdr { background: #F7F6F8 !important; border-bottom: 1px solid #dcdce0 !important; }
+  .hdr .back { color: #007DFE !important; font-size: 40px !important; top: 14px !important; }
+  .avatar { background: linear-gradient(180deg, #a5abb8, #858994) !important; color: #fff !important; font-weight: 500 !important; font-size: 21px !important; }
+  .hdr .name { color: #000 !important; font-size: 12px !important; }
+  .meta, .meta b { color: #8e8e93 !important; } .meta { line-height: 1.35; font-size: 11.5px !important; } .meta b { font-weight: 600; }
+  .b { position: relative; border-radius: 19px !important; padding: 7px 13px !important; font-size: 17px !important; line-height: 22px !important; letter-spacing: -0.2px; }
+  .in { background: #E9E9EB !important; color: #000 !important; }
+  .out { background: #007DFE !important; color: #fff !important; }
+  .b::before, .b::after { content: ""; position: absolute; bottom: 0; height: 20px; }
+  .out::before { right: -7px; width: 20px; background: #007DFE; border-bottom-left-radius: 16px 14px; }
+  .out::after { right: -26px; width: 26px; background: #fff; border-bottom-left-radius: 10px; }
+  .in::before { left: -7px; width: 20px; background: #E9E9EB; border-bottom-right-radius: 16px 14px; }
+  .in::after { left: -26px; width: 26px; background: #fff; border-bottom-right-radius: 10px; }
+  .typing { position: relative; background: #E9E9EB !important; border-radius: 19px !important; }
+  .typing::after { content: ""; position: absolute; left: -3px; bottom: -3px; width: 11px; height: 11px; border-radius: 50%; background: #E9E9EB; }
+  .typing i { background: #8e8e93; }
+  .delivered { color: #8e8e93 !important; }
+  .compose { background: #fff !important; }
+  .plus { background: #E9E9EB !important; color: #8e8e93 !important; }
+  .field { border-color: #d1d1d6 !important; color: #b8b8be !important; }
+  .home { background: #000 !important; }
+  /* iOS compose + send motion */
+  .field { position: relative; white-space: nowrap; overflow: hidden; padding-right: 38px !important; }
+  .field .tx { color: #000; font-size: 16px; }
+  .field .caret { width: 2px; height: 20px; background: #007DFE; margin-left: 1px; border-radius: 1px; opacity: 0; flex: none; }
+  .field .send { position: absolute; right: 3px; top: 50%; width: 29px; height: 29px; margin-top: -14.5px; border-radius: 50%; background: #007DFE;
+    display: flex; align-items: center; justify-content: center; transform: scale(0); }
+  .b { z-index: 8; }
+</style>
+<link rel="stylesheet" href="lock-screen.css">
+<script src="lock-screen.js"></script>
+</head>
+<body>
+<div class="bg1"></div><div class="bg2"></div>
+<div class="label" style="left:150px; top:42px">PATIENT'S PHONE</div>
+<div class="label" style="left:600px; top:42px">AI PIPELINE · EVERY REPLY</div>
+
+<div class="phone"><div class="screen">
+  <div class="island"></div>
+  <div class="messages">
+  <div class="status"><span>9:00</span><span style="display:flex;gap:6px;align-items:center">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#fff"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+    <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.3c2.3 0 4.4.9 6 2.4l1.2-1.2C13.8 1.7 11.3.6 8.5.6S3.2 1.7 1.3 3.5l1.2 1.2c1.6-1.5 3.7-2.4 6-2.4zm0 3.4c1.4 0 2.6.5 3.6 1.4l1.2-1.2C12 4.7 10.3 4 8.5 4S5 4.7 3.7 5.9l1.2 1.2c1-.9 2.2-1.4 3.6-1.4zm0 3.4c.5 0 1 .2 1.3.5L8.5 11 7.2 9.6c.3-.3.8-.5 1.3-.5z" fill="#000"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2.5" y="2.5" width="17" height="8" rx="2" fill="#fff"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="#fff" fill-opacity=".5"/></svg>
+  </span></div>
+  <div class="hdr"><span class="back">&#8249;</span><div class="avatar">M</div><div class="name">MedAdhere &#8250;</div></div>
+  <div class="thread" id="thread">
+    <div class="meta"><b>iMessage</b><br>Today 9:00 AM</div>
+    <div class="b in">Hi, how are you feeling today? Have you taken your Metformin today?</div>
+    <div class="b out">Pretty good, a bit of a headache.</div>
+    <div class="b in">Sorry to hear about the headache. On a scale of 1 to 10, what number would you give it?</div>
+    <div class="b out">8</div>
+    <div class="b in">Thanks. When did the headache start?</div>
+    <div class="b out">Around lunch</div>
+    <div class="b in">What does the headache feel like?</div>
+    <div class="b out">Like pressure behind my eyes</div>
+    <div class="delivered" id="delivered">Delivered</div>
+    <div class="typing" id="typing"><i></i><i></i><i></i></div>
+  </div>
+  <div class="compose"><div class="plus">+</div><div class="field">iMessage</div></div>
+  <div class="home"></div>
+  </div>
+</div></div>
+
+<div class="wire" style="left:796px; width:12px"></div><div class="wire" style="left:1000px; width:12px"></div>
+<div class="node" id="n0" style="left:600px"><div class="glow"></div><div class="k">1 · EXTRACTS</div><div class="v">Claude Sonnet</div></div>
+<div class="node" id="n1" style="left:804px"><div class="glow"></div><div class="k">2 · CODE CHECKS</div><div class="v"><span><span id="vc">0</span>/10 validators</span></div><div class="ticks" id="ticks"></div></div>
+<div class="node" id="n2" style="left:1008px"><div class="glow"></div><div class="k">3 · COMMITS</div><div class="v">PostgreSQL</div></div>
+
+<div class="slot" style="top:262px"></div><div class="slot" style="top:370px"></div><div class="slot" style="top:478px"></div><div class="slot" style="top:586px"></div><div class="slot" style="top:712px; height:104px"></div>
+<div class="card" style="top:262px"><div class="ring"></div><div class="dot">+</div><div><div class="k">SYMPTOM</div><div class="v">Headache</div></div><div class="src">clinical event</div></div>
+<div class="card" style="top:370px"><div class="ring"></div><div class="dot">8</div><div><div class="k">SEVERITY</div><div class="v">8 / 10</div></div><div class="src">clinical event</div></div>
+<div class="card" style="top:478px"><div class="ring"></div><div class="dot">&#9719;</div><div><div class="k">ONSET</div><div class="v">Around lunch</div></div><div class="src">clinical event</div></div>
+<div class="card" style="top:586px"><div class="ring"></div><div class="dot">~</div><div><div class="k">CHARACTER</div><div class="v">Pressure behind the eyes</div></div><div class="src">clinical event</div></div>
+<div class="card final" style="top:712px"><div class="ring"></div>
+  <div class="dot"><svg width="26" height="26" viewBox="0 0 26 26"><path id="chk" d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#04120e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="30" stroke-dashoffset="30"/></svg></div>
+  <div><div class="k">CLINICIAN DASHBOARD</div><div class="v">Severity on the symptom chart the same day</div></div></div>
+
+<div class="pk" id="pk"></div>
+
+<script>
+// iOS Messages motion: type into the field, send, the bubble lifts out of the field into the thread.
+const IOS = {
+  sp: p => p <= 0 ? 0 : 1 - Math.exp(-7 * p) * Math.cos(9 * p),
+  init(screen) {
+    screen.querySelector('.field').innerHTML = '<span class="ph">iMessage</span><span class="tx"></span><span class="caret"></span>' +
+      '<span class="send"><svg width="13" height="15" viewBox="0 0 13 15"><path d="M6.5 14V2M1.5 6.5L6.5 1.5l5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+  },
+  // outs: [{el, at}] sent bubbles with their send times; maxType caps how long typing takes
+  compose(screen, outs, t, maxType = 1.2) {
+    const f = screen.querySelector('.field'); let text = '', since = -1;
+    for (const o of outs) { const s = o.el.textContent, dur = Math.min(maxType, .35 + s.length * .03);
+      if (t > o.at - dur && t < o.at) { since = t - (o.at - dur); text = s.slice(0, Math.ceil((since / (dur - .15)) * s.length)); } }
+    f.querySelector('.tx').textContent = text;
+    f.querySelector('.ph').style.display = text ? 'none' : '';
+    f.querySelector('.caret').style.opacity = text ? 1 : 0;
+    f.querySelector('.send').style.transform = `scale(${text ? Math.max(0, IOS.sp((since - .1) / .5)) : 0})`;
+  },
+  send(el, p) { // p = seconds since send
+    const screen = el.closest('.screen'), c = screen.querySelector('.compose'), f = c.querySelector('.field');
+    const dy0 = c.offsetTop + f.offsetTop + 1 - el.offsetTop, dx0 = c.offsetLeft + f.offsetLeft + 4 - el.offsetLeft;
+    const q = p / .42, k = q < 1 ? Math.pow(1 - q, 3) : 0;           // smooth deceleration
+    const settle = q > .75 && q < 1.6 ? -4 * Math.sin(Math.PI * (q - .75) / .85) : 0; // tiny overshoot, then rest
+    el.style.opacity = 1;
+    el.style.transform = `translate(${dx0 * k}px, ${dy0 * k + settle}px)`;
+  },
+  recv(el, p) { // received bubble springs out of where the typing bubble sat
+    const s = IOS.sp(p / .5); el.style.opacity = Math.min(1, p * 8); el.style.transform = `scale(${.55 + .45 * s})`;
+  },
+  dots(ty, tt) { // pulsing dots, left to right
+    [...ty.querySelectorAll('i')].forEach((d, i) => { const v = .5 + .5 * Math.sin(tt * 7 - i * 1.1);
+      d.style.transform = `scale(${.88 + .2 * v})`; d.style.opacity = .35 + .65 * v; d.style.background = '#7c7c80'; });
+  },
+};
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const bubbles = $$('#thread .b'), cards = $$('.card'), nodes = $$('.node');
+IOS.init(document.querySelector('.screen'));
+const lockScreen = createLockScreen(document.querySelector('.screen'));
+const ticks = $('#ticks'); for (let i = 0; i < 10; i++) ticks.appendChild(document.createElement('i'));
+const TR = 7; const trail = []; for (let i = 0; i < TR; i++) { const d = document.createElement('div'); d.className = 'tr'; document.body.appendChild(d); trail.push(d); }
+const BN = 10; const burst = []; for (let i = 0; i < BN; i++) { const d = document.createElement('div'); d.className = 'burst'; document.body.appendChild(d); burst.push(d); }
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const spring = p => p <= 0 ? 0 : 1 - Math.exp(-6.5 * p) * Math.cos(10.5 * p);
+const ease = p => { p = clamp(p); return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
+
+// Timeline (seconds)
+const delay = lockScreen.end - 2.4;
+const Q = [2.4, 5.6, 8.8, 12.0].map(t => t + delay);               // agent questions
+const R = Q.map((q, i) => (i === 0 ? q + 1.4 : q + 1.4)); // patient replies
+const TYPE = [null, ...R.slice(0, 3).map(r => [r + 0.8, r + 1.8])];
+const PK = R.map(r => r + 0.35);               // packet launch per reply
+const END = 20 + delay;
+const LEGS = [0.55, 0.45, 0.35, 0.35, 0.35, 0.3, 0.5]; // fly, read, fly, check, fly, commit, fly-to-card
+
+function center(el, side) { const r = el.getBoundingClientRect(); return { x: side === 'r' ? r.right : side === 'l' ? r.left : r.left + r.width / 2, y: side === 'b' ? r.bottom : r.top + r.height / 2 }; }
+function arc(a, b, p, lift) { const cx = (a.x + b.x) / 2, cy = Math.min(a.y, b.y) - lift; const u = 1 - p;
+  return { x: u * u * a.x + 2 * u * p * cx + p * p * b.x, y: u * u * a.y + 2 * u * p * cy + p * p * b.y }; }
+
+function packetAt(k, t) { // position of packet k at time t, or null
+  let s = t - PK[k]; if (s < 0) return null;
+  const pts = [center(bubbles[2 * k + 1], 'r'), center(nodes[0], 'b'), center(nodes[1], 'b'), center(nodes[2], 'b'), center(cards[k], 'l')];
+  const lifts = [120, 0, 0, 40];
+  let seg = 0;
+  for (let i = 0; i < LEGS.length; i++) {
+    if (s < LEGS[i]) {
+      const p = s / LEGS[i];
+      if (i % 2 === 0) { const a = pts[seg], b = pts[seg + 1]; return { ...arc(a, b, ease(p), lifts[seg]), phase: 'fly', i, p }; }
+      return { ...pts[seg], phase: 'at', node: seg - 1 + 1 - 1 + 0, i, p, seg };
+    }
+    s -= LEGS[i]; if (i % 2 === 0) seg++;
+  }
+  return null;
+}
+function packetDone(k) { return PK[k] + LEGS.reduce((a, b) => a + b, 0); }
+const FINAL = packetDone(3) + 0.5;
+
+function popStyle(el, p, dy = 18, base = .35) {
+  const s = spring(p / 0.75);
+  el.style.opacity = clamp(p * 6);
+  el.style.transform = `translateY(${(1 - Math.min(1, s)) * dy}px) scale(${base + (1 - base) * s})`;
+}
+
+window.render = t => {
+  lockScreen.render(t);
+
+  // bubbles
+  const times = []; Q.forEach((q, i) => { times.push(q, R[i]); });
+  bubbles.forEach((el, i) => { const p = t - times[i]; el.style.display = p > 0 ? 'block' : 'none'; if (p > 0) (el.classList.contains('out') ? IOS.send(el, p) : IOS.recv(el, p)); });
+  IOS.compose(document.querySelector('.screen'), bubbles.map((el, i) => ({ el, at: times[i] })).filter(o => o.el.classList.contains('out')), t, 1.15);
+  const dl = $('#delivered'); const lastOut = [...R].reverse().find(r => t > r); const dp = lastOut ? t - lastOut - 0.5 : -1;
+  dl.style.display = dp > 0 ? 'block' : 'none'; dl.style.opacity = clamp(dp * 4);
+  // keep Delivered right after its bubble
+  if (lastOut) bubbles[2 * R.indexOf(lastOut) + 1].after(dl);
+
+  // typing indicator
+  const ty = $('#typing'); const win = TYPE.find(w => w && t > w[0] && t < w[1]);
+  ty.style.display = win ? 'flex' : 'none';
+  if (win) { IOS.recv(ty, t - win[0]); IOS.dots(ty, t - win[0]); }
+  ty.parentNode.appendChild(ty);
+
+  // nodes, packets, cards
+  let glow = [0, 0, 0], vcount = null;
+  const pk = $('#pk'); pk.style.opacity = 0; trail.forEach(d => d.style.opacity = 0);
+  for (let k = 0; k < 4; k++) {
+    const P = packetAt(k, t);
+    if (P) {
+      pk.style.opacity = 1; pk.style.left = P.x + 'px'; pk.style.top = P.y + 'px';
+      const pulse = 1 + 0.25 * Math.sin(t * 30); pk.style.transform = `scale(${P.phase === 'at' ? pulse : 1})`;
+      if (P.phase === 'fly') trail.forEach((d, i) => { const Q2 = packetAt(k, t - (i + 1) * 0.022); if (!Q2 || Q2.phase !== 'fly') return;
+        const sz = 12 - i * 1.4; d.style.width = d.style.height = sz + 'px'; d.style.left = Q2.x - sz / 2 + 'px'; d.style.top = Q2.y - sz / 2 + 'px'; d.style.opacity = 0.5 - i * 0.065; });
+      if (P.phase === 'at') { const n = (P.i - 1) / 2; glow[n] = Math.max(glow[n], Math.sin(Math.PI * P.p) * 0.6 + 0.4); if (n === 1) vcount = Math.min(10, Math.floor(P.p * 11)); }
+    }
+    // nodes stay softly lit right after a pass
+    const c = cards[k], d = t - packetDone(k);
+    if (d > 0) { popStyle(c, d, 0, .6); c.style.transform = `translateX(${(1 - Math.min(1, spring(d / .75))) * -40}px) scale(${.85 + .15 * spring(d / .75)})`;
+      const ring = c.querySelector('.ring'); const rp = clamp(d / 0.7); ring.style.opacity = (1 - rp) * 0.9; ring.style.transform = `scale(${1 + rp * 0.08}, ${1 + rp * 0.35})`;
+    } else { c.style.opacity = 0; }
+  }
+  // final card
+  const fc = cards[4], fd = t - FINAL;
+  if (fd > 0) { fc.style.opacity = clamp(fd * 5); const s = spring(fd / .8); fc.style.transform = `translateY(${(1 - Math.min(1, s)) * 30}px) scale(${.8 + .2 * s})`;
+    const ring = fc.querySelector('.ring'); const rp = clamp(fd / 0.9); ring.style.opacity = (1 - rp); ring.style.transform = `scale(${1 + rp * 0.06}, ${1 + rp * 0.3})`;
+    $('#chk').style.strokeDashoffset = 30 * (1 - ease((fd - 0.35) / 0.45));
+  } else fc.style.opacity = 0;
+  // burst of sparks when the final card lands
+  burst.forEach((b, i) => { const bp = (t - FINAL - 0.3) / 0.8; if (bp <= 0 || bp >= 1) { b.style.opacity = 0; return; }
+    const r = fc.getBoundingClientRect(), cx = r.left + 45, cy = r.top + r.height / 2, a = i / BN * Math.PI * 2, dist = 20 + ease(bp) * 70;
+    b.style.left = cx + Math.cos(a) * dist + 'px'; b.style.top = cy + Math.sin(a) * dist + 'px'; b.style.opacity = 1 - bp; });
+
+  nodes.forEach((n, i) => n.querySelector('.glow').style.opacity = glow[i]);
+  // validators counter: counts up while the packet sits on node 2, otherwise shows 10/10 after the first pass
+  const shown = vcount ?? (t > PK[0] + LEGS.slice(0, 4).reduce((a, b) => a + b, 0) ? 10 : 0);
+  $('#vc').textContent = shown;
+  [...ticks.children].forEach((d, i) => d.style.background = i < shown ? '#2dd4a7' : '#1f3550');
+};
+window.END = END;
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % END); requestAnimationFrame(loop); }; loop(); }
+else render(0);
+</script></body></html>

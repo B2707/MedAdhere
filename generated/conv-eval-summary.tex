@@ -1,0 +1,22 @@
+% conv-eval-summary.tex
+% Source: backend/eval/conversation/manifest.v2.json (locked corpus) and
+% backend/eval/conversation/dev.v12.json + holdout.v2.json (scenario and turn
+% counts, metric-family definitions). Standalone \input-able.
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Conversation-evaluation corpus. The corpus is version-locked and content-hashed, and every run is persisted as its own artifact carrying the corpus, prompt, and output-schema hashes.}
+  \label{tab:conv-eval-summary}
+  \begin{tabular}{ll}
+    \toprule
+    Quantity & Value \\
+    \midrule
+    Corpus version (locked) & eval-set v2, dev v12, holdout v2 \\
+    Dev-partition scenarios & 48 \\
+    Holdout-partition scenarios & 24 \\
+    Dev patient turns (transcript entries) & 144 (246 total incl.\ system/context) \\
+    Scenario categories (dev) & 16 categories, 3--4 scenarios each \\
+    Primary languages (dev) & ar (12), en (12), es (12), fr (12) \\
+    \bottomrule
+  \end{tabular}
+\end{table}

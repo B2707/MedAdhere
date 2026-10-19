@@ -1,0 +1,24 @@
+% reason-completeness.tex
+% Source: backend/eval/results/eval-v1-2026-08-04T00-11-50-026Z.json
+% Per-reason-code completeness = P(predicted.reason_code == gold.reason_code
+% | gold.reason_code == code), as defined in the eval harness (assemble.ts),
+% restricted to non-'none' gold reason codes. 95%% CI: Clopper-Pearson exact
+% (scipy.stats.beta). Standalone \input-able.
+\begin{table}[htbp]
+  \centering
+  \caption{Per-reason-code completeness for the final production-prompt v1 run. Completeness is the proportion of gold rows carrying that reason code whose predicted reason code matched exactly. Intervals are 95\% Clopper--Pearson exact intervals.}
+  \label{tab:reason-completeness}
+  \rowcolors{2}{white}{medRowShade}
+  \begin{tabular}{lrrrl}
+    \toprule
+    Reason code & Support & Correct & Completeness & 95\% CI \\
+    \midrule
+    side\_effect & 46 & 41 & 0.891 & [0.764, 0.964] \\
+    ran\_out & 5 & 5 & 1.000 & [0.478, 1.000] \\
+    forgot & 6 & 6 & 1.000 & [0.541, 1.000] \\
+    other & 24 & 13 & 0.542 & [0.328, 0.744] \\
+    \midrule
+    \textbf{All non-none} & 81 & 65 & 0.802 & [0.699, 0.883] \\
+    \bottomrule
+  \end{tabular}
+\end{table}

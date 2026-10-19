@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Example conversation for the README. Wording follows the cover image and the
+     live day described in chapters/conversational-agent.tex (severity, then onset,
+     then character, one question per message). Not a verbatim log. -->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 1080px; overflow: hidden; position: relative;
+    font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: radial-gradient(1100px 800px at 70% 15%, #10263c 0%, #0a1322 55%, #070d18 100%);
+    color: #e8eef7;
+  }
+  .grid { position: absolute; inset: 0;
+    background-image: radial-gradient(circle, #223350 1.3px, transparent 1.3px);
+    background-size: 44px 44px; opacity: .35; }
+  .glow { position: absolute; width: 800px; height: 800px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,212,167,.20) 0%, transparent 60%);
+    top: -200px; left: -200px; }
+  .glow2 { position: absolute; width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,132,255,.14) 0%, transparent 60%);
+    bottom: -260px; right: -180px; }
+  .stage { position: relative; z-index: 2; display: flex; justify-content: center; gap: 120px; padding-top: 48px; }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .label { font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+    font-size: 17px; letter-spacing: 3px; font-weight: 700; color: #2dd4a7; margin-bottom: 26px;
+    display: inline-flex; align-items: center; gap: 10px; }
+  .label::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #2dd4a7; box-shadow: 0 0 12px #2dd4a7; }
+
+  /* iPhone frame */
+  .phone { width: 418px; height: 872px; border-radius: 66px; padding: 14px; position: relative;
+    background: linear-gradient(145deg, #3a4150, #1a1e26 40%, #2a303c);
+    box-shadow: 0 0 0 2px #0b0e14, 0 40px 80px rgba(0,0,0,.55), 0 0 60px rgba(45,212,167,.08); }
+  .screen { width: 390px; height: 844px; border-radius: 52px; overflow: hidden; position: relative; background: #000; }
+  .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+    width: 122px; height: 35px; border-radius: 20px; background: #000; z-index: 10; }
+  .status { height: 54px; display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 34px 0 44px; font-size: 16px; font-weight: 600; position: relative; z-index: 5; }
+  .status .icons { display: flex; gap: 6px; align-items: center; }
+  .dark .status { color: #fff; }
+  .light .status { color: #111; background: #fff; }
+
+  /* Messages (dark mode) */
+  .dark { background: #000; }
+  .hdr { text-align: center; padding: 2px 0 10px; border-bottom: 1px solid #1c1c1e; background: rgba(18,18,20,.96); position: relative; }
+  .hdr .back { position: absolute; left: 14px; top: 20px; color: #2dd4a7; font-size: 30px; font-weight: 300; }
+  .avatar { width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 5px;
+    background: linear-gradient(140deg, #1f8f74, #2dd4a7); display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 22px; color: #04120e; }
+  .hdr .name { font-size: 12.5px; color: #e5e5ea; }
+  .hdr .name::after { content: " \203A"; color: #8e8e93; }
+  .thread { padding: 10px 14px 0; display: flex; flex-direction: column; gap: 6px; }
+  .meta { text-align: center; font-size: 11.5px; color: #8e8e93; margin: 6px 0 4px; }
+  .meta b { color: #aeaeb2; font-weight: 600; }
+  .b { max-width: 76%; padding: 8px 13px; border-radius: 19px; font-size: 15.5px; line-height: 1.3; }
+  .in { align-self: flex-start; background: #26262a; color: #f2f2f7; border-bottom-left-radius: 6px; }
+  .out { align-self: flex-end; background: linear-gradient(160deg, #22c49a, #179a79); color: #fff; border-bottom-right-radius: 6px; }
+  .gap { height: 6px; }
+  .compose { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 14px 34px; background: #000; display: flex; gap: 10px; align-items: center; }
+  .plus { width: 34px; height: 34px; border-radius: 50%; background: #1c1c1e; color: #8e8e93; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  .field { flex: 1; height: 36px; border-radius: 18px; border: 1px solid #3a3a3c; color: #636366; font-size: 15px; display: flex; align-items: center; padding-left: 14px; }
+  .home { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: #fff; z-index: 6; }
+  .light .home { background: #111; }
+
+  /* Dashboard screen */
+  .light { background: #f6f7f9; }
+  .light img { display: block; width: 390px; }
+  .caption { margin-top: 22px; font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 19px; color: #9aa7ba; text-align: center; max-width: 420px; line-height: 1.4; }
+  .caption b { color: #e8eef7; font-weight: 600; }
+  /* iOS Messages, light mode. Colors sampled from the UI Ants iMessage iOS UI Kit (dribbble.com/shots/23863815):
+     sent #007DFE, received #E9E9EB, header #F9F4F8, toned to #F7F6F8 */
+  .screen, .screen.dark { background: #fff !important; font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif; }
+  .status { color: #000 !important; background: transparent !important; }
+  .status svg rect[fill="#fff"] { fill: #000; } .status svg rect[stroke] { stroke: #000; }
+  .hdr { background: #F7F6F8 !important; border-bottom: 1px solid #dcdce0 !important; }
+  .hdr .back { color: #007DFE !important; font-size: 40px !important; top: 14px !important; }
+  .avatar { background: linear-gradient(180deg, #a5abb8, #858994) !important; color: #fff !important; font-weight: 500 !important; font-size: 21px !important; }
+  .hdr .name { color: #000 !important; font-size: 12px !important; }
+  .meta, .meta b { color: #8e8e93 !important; } .meta { line-height: 1.35; font-size: 11.5px !important; } .meta b { font-weight: 600; }
+  .b { position: relative; border-radius: 19px !important; padding: 7px 13px !important; font-size: 17px !important; line-height: 22px !important; letter-spacing: -0.2px; }
+  .in { background: #E9E9EB !important; color: #000 !important; }
+  .out { background: #007DFE !important; color: #fff !important; }
+  .b::before, .b::after { content: ""; position: absolute; bottom: 0; height: 20px; }
+  .out::before { right: -7px; width: 20px; background: #007DFE; border-bottom-left-radius: 16px 14px; }
+  .out::after { right: -26px; width: 26px; background: #fff; border-bottom-left-radius: 10px; }
+  .in::before { left: -7px; width: 20px; background: #E9E9EB; border-bottom-right-radius: 16px 14px; }
+  .in::after { left: -26px; width: 26px; background: #fff; border-bottom-right-radius: 10px; }
+  .typing { position: relative; background: #E9E9EB !important; border-radius: 19px !important; }
+  .typing::after { content: ""; position: absolute; left: -3px; bottom: -3px; width: 11px; height: 11px; border-radius: 50%; background: #E9E9EB; }
+  .typing i { background: #8e8e93; }
+  .delivered { color: #8e8e93 !important; }
+  .compose { background: #fff !important; }
+  .plus { background: #E9E9EB !important; color: #8e8e93 !important; }
+  .field { border-color: #d1d1d6 !important; color: #b8b8be !important; }
+  .home { background: #000 !important; }
+  .banner { background: rgba(246,246,248,.97) !important; color: #000; box-shadow: 0 10px 30px rgba(0,0,0,.25) !important; }
+  .banner .t span { color: #6e6e73 !important; } .banner .m { color: #1c1c1e !important; }
+</style>
+</head>
+<body>
+  <div class="grid"></div><div class="glow"></div><div class="glow2"></div>
+  <div class="stage">
+    <div class="col">
+      <div class="label">PATIENT'S PHONE</div>
+      <div class="phone"><div class="screen dark">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span class="icons">
+          <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#fff"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.3c2.3 0 4.4.9 6 2.4l1.2-1.2C13.8 1.7 11.3.6 8.5.6S3.2 1.7 1.3 3.5l1.2 1.2c1.6-1.5 3.7-2.4 6-2.4zm0 3.4c1.4 0 2.6.5 3.6 1.4l1.2-1.2C12 4.7 10.3 4 8.5 4S5 4.7 3.7 5.9l1.2 1.2c1-.9 2.2-1.4 3.6-1.4zm0 3.4c.5 0 1 .2 1.3.5L8.5 11 7.2 9.6c.3-.3.8-.5 1.3-.5z" fill="#000"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2.5" y="2.5" width="17" height="8" rx="2" fill="#fff"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="#fff" fill-opacity=".5"/></svg>
+        </span></div>
+        <div class="hdr"><span class="back">&#8249;</span><div class="avatar">M</div><div class="name">MedAdhere</div></div>
+        <div class="thread">
+          <div class="meta"><b>iMessage</b><br>Today 9:00 AM</div>
+          <div class="b in">Hi, how are you feeling today? Have you taken your Metformin today?</div>
+          <div class="b out">Pretty good, a bit of a headache.</div>
+          <div class="gap"></div>
+          <div class="b in">Sorry to hear about the headache. On a scale of 1 to 10, what number would you give it?</div>
+          <div class="b out">8</div>
+          <div class="gap"></div>
+          <div class="b in">Thanks. When did the headache start?</div>
+          <div class="b out">Around lunch</div>
+          <div class="gap"></div>
+          <div class="b in">What does the headache feel like?</div>
+          <div class="b out">Like pressure behind my eyes</div>
+        </div>
+        <div class="compose"><div class="plus">+</div><div class="field">iMessage</div></div>
+        <div class="home"></div>
+      </div></div>
+      <div class="caption">One question per message. Each answer becomes <b>its own clinical event</b>.</div>
+    </div>
+
+    <div class="col">
+      <div class="label">CLINICIAN · DASHBOARD</div>
+      <div class="phone"><div class="screen light">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span class="icons">
+          <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#111"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#111"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#111"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#111"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.3c2.3 0 4.4.9 6 2.4l1.2-1.2C13.8 1.7 11.3.6 8.5.6S3.2 1.7 1.3 3.5l1.2 1.2c1.6-1.5 3.7-2.4 6-2.4zm0 3.4c1.4 0 2.6.5 3.6 1.4l1.2-1.2C12 4.7 10.3 4 8.5 4S5 4.7 3.7 5.9l1.2 1.2c1-.9 2.2-1.4 3.6-1.4zm0 3.4c.5 0 1 .2 1.3.5L8.5 11 7.2 9.6c.3-.3.8-.5 1.3-.5z" fill="#000"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#111" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="17" height="8" rx="2" fill="#111"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="#111" fill-opacity=".4"/></svg>
+        </span></div>
+        <img src="mobile-overview-crop.png" alt="">
+        <div class="home"></div>
+      </div></div>
+      <div class="caption">The <b>Next.js dashboard</b> on a phone: cohort adherence, reply rate and open alerts.</div>
+    </div>
+  </div>
+</body>
+</html>

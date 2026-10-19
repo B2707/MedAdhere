@@ -1,0 +1,388 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- MedAdhere launch video (motion graphics). 1920x1080, driven by window.render(t).
+     Open with ?play to watch it live. Rendered to launch.mp4 / launch.gif by video.cjs.
+     Every claim matches README.md and the thesis chapters. The SMS exchange is an example. -->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1920px; height: 1080px; overflow: hidden; position: relative; background: #060d19; color: #eef3fa;
+    font-family: -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif; }
+  .bg { position: absolute; inset: 0;
+    background: radial-gradient(1200px 900px at 15% 10%, rgba(45,212,167,.16), transparent 60%),
+                radial-gradient(1100px 900px at 90% 100%, rgba(80,120,255,.15), transparent 60%), #060d19; }
+  .grid { position: absolute; inset: 0; opacity: .22;
+    background-image: linear-gradient(#1b2a40 1px, transparent 1px), linear-gradient(90deg, #1b2a40 1px, transparent 1px);
+    background-size: 80px 80px; mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%); }
+  .sc { position: absolute; inset: 0; opacity: 0; will-change: transform, opacity, filter; }
+  .kt { font-weight: 800; letter-spacing: -0.035em; line-height: 1.02; }
+  .kt .w { display: inline-block; margin-right: .24em; will-change: transform, opacity, filter; }
+  .hl { background: linear-gradient(95deg, #2dd4a7, #67e8f9 60%, #7aa2ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .eyebrow { font-size: 22px; font-weight: 700; letter-spacing: .32em; color: #2dd4a7; text-transform: uppercase; }
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+  /* logo */
+  .logo { width: 150px; height: 150px; border-radius: 40px; background: linear-gradient(140deg, #14806a, #2dd4a7 60%, #7cf5d4);
+    display: flex; align-items: center; justify-content: center; font-size: 92px; font-weight: 800; color: #04120e;
+    box-shadow: 0 30px 80px rgba(45,212,167,.35), inset 0 2px 0 rgba(255,255,255,.35); }
+  .shock { position: absolute; width: 150px; height: 150px; border-radius: 50%; border: 3px solid #2dd4a7; opacity: 0; }
+  .wordmark { font-size: 150px; font-weight: 800; letter-spacing: -0.045em; margin-top: 36px; }
+  .wordmark span { display: inline-block; }
+
+  /* phone */
+  .phone { position: absolute; left: 260px; top: 104px; width: 418px; height: 872px; border-radius: 66px; padding: 14px;
+    background: linear-gradient(145deg, #3a4150, #1a1e26 40%, #2a303c); box-shadow: 0 0 0 2px #0b0e14, 0 60px 120px rgba(0,0,0,.6), 0 0 90px rgba(45,212,167,.14); }
+  .screen { width: 390px; height: 844px; border-radius: 52px; overflow: hidden; position: relative; background: #000; }
+  .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 122px; height: 35px; border-radius: 20px; background: #000; z-index: 20; }
+  .status { height: 54px; display: flex; justify-content: space-between; align-items: center; padding: 6px 34px 0 44px; font-size: 16px; font-weight: 600; }
+  .hdr { text-align: center; padding: 2px 0 10px; border-bottom: 1px solid #1c1c1e; background: #121214; }
+  .avatar { width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 5px; background: linear-gradient(140deg, #1f8f74, #2dd4a7);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px; color: #04120e; }
+  .hdr .name { font-size: 12.5px; color: #e5e5ea; }
+  .thread { padding: 12px 14px 0; display: flex; flex-direction: column; gap: 7px; }
+  .meta { text-align: center; font-size: 11.5px; color: #8e8e93; margin: 4px 0 4px; }
+  .b { max-width: 78%; padding: 9px 14px; border-radius: 20px; font-size: 16.5px; line-height: 1.3; display: none; }
+  .in { align-self: flex-start; background: #26262a; color: #f2f2f7; border-bottom-left-radius: 6px; transform-origin: 0% 100%; }
+  .out { align-self: flex-end; background: linear-gradient(160deg, #22c49a, #179a79); color: #fff; border-bottom-right-radius: 6px; transform-origin: 100% 100%; }
+  .typing { align-self: flex-start; background: #26262a; border-radius: 20px; border-bottom-left-radius: 6px; padding: 13px 16px; display: none; gap: 5px; transform-origin: 0% 100%; }
+  .typing i { width: 9px; height: 9px; border-radius: 50%; background: #8e8e93; display: block; }
+  .compose { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 14px 34px; display: flex; gap: 10px; align-items: center; }
+  .plus { width: 34px; height: 34px; border-radius: 50%; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  .field { flex: 1; height: 36px; border-radius: 18px; border: 1px solid; font-size: 15px; display: flex; align-items: center; padding-left: 14px; }
+  .home { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: #fff; }
+
+  .chip { position: absolute; display: flex; align-items: center; gap: 20px; padding: 22px 30px; border-radius: 24px; background: #0e1b2d; border: 1px solid #22405e; opacity: 0; }
+  .chip .ic { width: 58px; height: 58px; border-radius: 16px; background: rgba(45,212,167,.16); color: #2dd4a7; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 28px; }
+  .chip .k { font-size: 16px; font-weight: 700; letter-spacing: .2em; color: #7f93ad; }
+  .chip .v { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; }
+  .ring { position: absolute; inset: -2px; border-radius: 26px; border: 2px solid #2dd4a7; opacity: 0; pointer-events: none; }
+
+  /* model + validators */
+  .mcard { position: absolute; width: 400px; padding: 26px 30px; border-radius: 24px; background: linear-gradient(160deg, #1d1410, #0f1420); border: 1px solid #5a3a2c; opacity: 0; }
+  .mcard .k { font-size: 15px; font-weight: 700; letter-spacing: .2em; color: #e3a487; }
+  .mcard .v { font-size: 34px; font-weight: 700; margin-top: 6px; }
+  .mcard .d { font-size: 20px; color: #a9b6c8; margin-top: 6px; }
+  .vchip { position: absolute; width: 400px; height: 68px; border-radius: 18px; background: #0e1b2d; border: 1px solid #22405e; display: flex; align-items: center; gap: 16px; padding: 0 20px; font-size: 22px; font-weight: 600; opacity: 0; }
+  .vchip .ck { width: 34px; height: 34px; border-radius: 10px; background: #2dd4a7; display: flex; align-items: center; justify-content: center; flex: none; }
+  .vchip .n { color: #6f86a3; font-size: 16px; font-weight: 700; width: 22px; }
+
+  /* stats */
+  .tile { position: absolute; top: 400px; width: 395px; height: 360px; border-radius: 30px; background: linear-gradient(170deg, #0f1f33, #0a1424); border: 1px solid #1f3a58; padding: 40px 36px; opacity: 0; overflow: hidden; }
+  .tile .num { font-size: 116px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tile .lab { font-size: 26px; font-weight: 700; margin-top: 22px; }
+  .tile .sub { font-size: 19px; color: #8ea2bc; margin-top: 10px; line-height: 1.35; }
+  .tile .bar { position: absolute; left: 36px; right: 36px; bottom: 34px; height: 6px; border-radius: 3px; background: #1a2d45; }
+  .tile .bar i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #2dd4a7, #67e8f9); transform-origin: 0 50%; transform: scaleX(0); }
+
+  /* architecture */
+  .anode { position: absolute; top: 470px; width: 236px; height: 168px; border-radius: 26px; background: #0e1b2d; border: 1px solid #22405e; padding: 26px 24px; opacity: 0; }
+  .anode .k { font-size: 14px; font-weight: 700; letter-spacing: .18em; color: #7f93ad; }
+  .anode .v { font-size: 29px; font-weight: 700; margin-top: 10px; line-height: 1.1; }
+  .anode .glow { position: absolute; inset: -1px; border-radius: 26px; border: 2px solid #2dd4a7; box-shadow: 0 0 40px rgba(45,212,167,.55), inset 0 0 24px rgba(45,212,167,.15); opacity: 0; }
+  .wire { position: absolute; top: 553px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #2dd4a7, #3b82f6); transform-origin: 0 50%; transform: scaleX(0); opacity: .8; }
+  .pills { position: absolute; left: 110px; top: 760px; display: flex; gap: 22px; }
+  .pill { position: relative; padding: 16px 26px; border-radius: 999px; border: 1px solid #2a4a6c; background: #0c1828; font-size: 24px; font-weight: 600; color: #cfe0f5; opacity: 0; }
+
+  /* dashboard */
+  .shot { position: absolute; left: 780px; top: 120px; width: 1060px; border-radius: 18px; overflow: hidden; box-shadow: 0 60px 140px rgba(0,0,0,.6), 0 0 0 1px #2a3f5c; opacity: 0; transform-origin: 30% 50%; }
+  .shot .bar { height: 40px; background: #e9ecf1; display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+  .shot .bar i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .shot img { display: block; width: 100%; }
+  .shine { position: absolute; top: 0; bottom: 0; width: 260px; background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent); transform: skewX(-18deg); }
+
+  .pk { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: #d8fff5; z-index: 9;
+    box-shadow: 0 0 14px 4px #2dd4a7, 0 0 46px 14px rgba(45,212,167,.45); opacity: 0; }
+  .flash { position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(45,212,167,.35), transparent 60%); opacity: 0; pointer-events: none; }
+  /* iOS Messages, light mode. Colors sampled from the UI Ants iMessage iOS UI Kit (dribbble.com/shots/23863815):
+     sent #007DFE, received #E9E9EB, header #F9F4F8, toned to #F7F6F8 */
+  .screen, .screen.dark { background: #fff !important; font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif; }
+  .status { color: #000 !important; background: transparent !important; }
+  .status svg rect[fill="#fff"] { fill: #000; } .status svg rect[stroke] { stroke: #000; }
+  .hdr { background: #F7F6F8 !important; border-bottom: 1px solid #dcdce0 !important; }
+  .hdr .back { color: #007DFE !important; font-size: 40px !important; top: 14px !important; }
+  .avatar { background: linear-gradient(180deg, #a5abb8, #858994) !important; color: #fff !important; font-weight: 500 !important; font-size: 21px !important; }
+  .hdr .name { color: #000 !important; font-size: 12px !important; }
+  .meta, .meta b { color: #8e8e93 !important; } .meta { line-height: 1.35; font-size: 11.5px !important; } .meta b { font-weight: 600; }
+  .b { position: relative; border-radius: 19px !important; padding: 7px 13px !important; font-size: 17px !important; line-height: 22px !important; letter-spacing: -0.2px; }
+  .in { background: #E9E9EB !important; color: #000 !important; }
+  .out { background: #007DFE !important; color: #fff !important; }
+  .b::before, .b::after { content: ""; position: absolute; bottom: 0; height: 20px; }
+  .out::before { right: -7px; width: 20px; background: #007DFE; border-bottom-left-radius: 16px 14px; }
+  .out::after { right: -26px; width: 26px; background: #fff; border-bottom-left-radius: 10px; }
+  .in::before { left: -7px; width: 20px; background: #E9E9EB; border-bottom-right-radius: 16px 14px; }
+  .in::after { left: -26px; width: 26px; background: #fff; border-bottom-right-radius: 10px; }
+  .typing { position: relative; background: #E9E9EB !important; border-radius: 19px !important; }
+  .typing::after { content: ""; position: absolute; left: -3px; bottom: -3px; width: 11px; height: 11px; border-radius: 50%; background: #E9E9EB; }
+  .typing i { background: #8e8e93; }
+  .delivered { color: #8e8e93 !important; }
+  .compose { background: #fff !important; }
+  .plus { background: #E9E9EB !important; color: #8e8e93 !important; }
+  .field { border-color: #d1d1d6 !important; color: #b8b8be !important; }
+  .home { background: #000 !important; }
+  /* iOS compose + send motion */
+  .field { position: relative; white-space: nowrap; overflow: hidden; padding-right: 38px !important; }
+  .field .tx { color: #000; font-size: 16px; }
+  .field .caret { width: 2px; height: 20px; background: #007DFE; margin-left: 1px; border-radius: 1px; opacity: 0; flex: none; }
+  .field .send { position: absolute; right: 3px; top: 50%; width: 29px; height: 29px; margin-top: -14.5px; border-radius: 50%; background: #007DFE;
+    display: flex; align-items: center; justify-content: center; transform: scale(0); }
+  .b { z-index: 8; }
+</style>
+<link rel="stylesheet" href="lock-screen.css">
+<script src="lock-screen.js"></script>
+</head>
+<body>
+<div class="bg"></div><div class="grid"></div>
+
+<!-- 1 · brand -->
+<section class="sc" id="s1"><div class="center">
+  <div style="position:relative; display:flex; align-items:center; justify-content:center">
+    <div class="shock" id="shock1"></div><div class="shock" id="shock2"></div>
+    <div class="logo" id="logo">M</div>
+  </div>
+  <div class="wordmark" id="wordmark">MedAdhere</div>
+  <div class="kt" data-at="1.5" data-st="0.06" style="font-size:44px; font-weight:600; letter-spacing:-0.01em; color:#a9b8cc; margin-top:18px" data-text="A clinical AI agent that lives in *plain_SMS.*"></div>
+</div></section>
+
+<!-- 2 · hook -->
+<section class="sc" id="s2"><div class="center">
+  <div class="kt" data-at="0.15" style="font-size:150px" data-text="No app. No portal."></div>
+  <div class="kt" data-at="1.25" style="font-size:150px; margin-top:20px" data-text="Patients just *text_back.*"></div>
+</div></section>
+
+<!-- 3 · conversation -->
+<section class="sc" id="s3" style="perspective: 1800px">
+  <div class="phone" id="phone"><div class="screen">
+    <div class="island"></div>
+  <div class="messages">
+    <div class="status"><span>9:00</span><span style="display:flex;gap:6px;align-items:center">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#fff"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+    <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.3c2.3 0 4.4.9 6 2.4l1.2-1.2C13.8 1.7 11.3.6 8.5.6S3.2 1.7 1.3 3.5l1.2 1.2c1.6-1.5 3.7-2.4 6-2.4zm0 3.4c1.4 0 2.6.5 3.6 1.4l1.2-1.2C12 4.7 10.3 4 8.5 4S5 4.7 3.7 5.9l1.2 1.2c1-.9 2.2-1.4 3.6-1.4zm0 3.4c.5 0 1 .2 1.3.5L8.5 11 7.2 9.6c.3-.3.8-.5 1.3-.5z" fill="#000"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2.5" y="2.5" width="17" height="8" rx="2" fill="#fff"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="#fff" fill-opacity=".5"/></svg>
+  </span></div>
+    <div class="hdr" style="position:relative"><span class="back" style="position:absolute;left:14px">&#8249;</span><div class="avatar">M</div><div class="name">MedAdhere &#8250;</div></div>
+    <div class="thread" id="thread">
+      <div class="meta"><b>iMessage</b><br>Today 9:00 AM</div>
+      <div class="b in">Hi, how are you feeling today? Have you taken your Metformin today?</div>
+      <div class="b out">Pretty good, a bit of a headache.</div>
+      <div class="b in">Sorry to hear about the headache. On a scale of 1 to 10, what number would you give it?</div>
+      <div class="b out">8</div>
+      <div class="b in">Thanks. When did the headache start?</div>
+      <div class="b out">Around lunch</div>
+      <div class="typing" id="typing"><i></i><i></i><i></i></div>
+    </div>
+    <div class="compose"><div class="plus">+</div><div class="field">iMessage</div></div>
+    <div class="home"></div>
+  </div>
+  </div></div>
+  <div class="eyebrow" style="position:absolute; left:820px; top:190px" id="s3eb">Example conversation</div>
+  <div class="kt" data-at="0.7" style="position:absolute; left:820px; top:240px; font-size:88px; width:1060px" data-text="Every answer becomes a *clinical_event.*"></div>
+  <div class="chip" style="left:820px; top:560px"><div class="ring"></div><div class="ic">+</div><div><div class="k">SYMPTOM</div><div class="v">Headache</div></div></div>
+  <div class="chip" style="left:820px; top:700px"><div class="ring"></div><div class="ic">8</div><div><div class="k">SEVERITY</div><div class="v">8 / 10</div></div></div>
+  <div class="chip" style="left:820px; top:840px"><div class="ring"></div><div class="ic">&#9719;</div><div><div class="k">ONSET</div><div class="v">Around lunch</div></div></div>
+</section>
+
+<!-- 4 · bounded authority -->
+<section class="sc" id="s4">
+  <div class="kt" data-at="0.1" style="position:absolute; left:130px; top:150px; font-size:104px; width:760px" data-text="The model *proposes.*"></div>
+  <div class="mcard" style="left:130px; top:400px"><div class="k">CLAUDE SONNET</div><div class="v">Extracts claims</div><div class="d">from the patient's own words</div></div>
+  <div class="mcard" style="left:130px; top:600px"><div class="k">CLAUDE HAIKU 4.5</div><div class="v">Drafts the reply</div><div class="d">one question at a time</div></div>
+  <div class="kt" data-at="2.0" style="position:absolute; left:640px; top:150px; font-size:104px; width:1200px; text-align:right" data-text="Code *disposes.*"></div>
+  <div id="vgrid"></div>
+</section>
+
+<!-- 5 · numbers -->
+<section class="sc" id="s5">
+  <div class="eyebrow" style="position:absolute; left:130px; top:170px" id="s5eb">Pre-registered evaluation</div>
+  <div class="kt" data-at="0.15" style="position:absolute; left:130px; top:220px; font-size:96px" data-text="Measured, not *promised.*"></div>
+  <div class="tile" style="left:130px"><div class="num" data-to="1" data-dec="3">0</div><div class="lab">Life-safety recall</div><div class="sub">33 of 33 crisis and acute messages caught</div><div class="bar"><i></i></div></div>
+  <div class="tile" style="left:553px"><div class="num" data-to="0.966" data-dec="3">0</div><div class="lab">Adherence accuracy</div><div class="sub">vs 0.705 for a keyword and regex matcher</div><div class="bar"><i></i></div></div>
+  <div class="tile" style="left:976px"><div class="num" data-to="3483" data-dec="0" data-comma="1">0</div><div class="lab">Passing tests</div><div class="sub">against a real PostgreSQL instance</div><div class="bar"><i></i></div></div>
+  <div class="tile" style="left:1399px"><div class="num" data-to="16" data-dec="0" data-suffix=" s">0</div><div class="lab">Text to reply</div><div class="sub">end to end on real carrier infrastructure</div><div class="bar"><i></i></div></div>
+</section>
+
+<!-- 6 · serverless -->
+<section class="sc" id="s6">
+  <div class="eyebrow" style="position:absolute; left:110px; top:170px" id="s6eb">Event-driven · one cdk deploy</div>
+  <div class="kt" data-at="0.15" style="position:absolute; left:110px; top:220px; font-size:104px" data-text="Fully serverless on *AWS.*"></div>
+  <div id="chain"></div>
+  <div class="pk" id="pk"></div>
+</section>
+
+<!-- 7 · dashboard -->
+<section class="sc" id="s7" style="perspective: 2200px">
+  <div class="eyebrow" style="position:absolute; left:130px; top:360px" id="s7eb">Next.js · Cognito · Vercel</div>
+  <div class="kt" data-at="0.5" style="position:absolute; left:130px; top:410px; font-size:96px; width:640px" data-text="A live dashboard for the *clinician.*"></div>
+  <div class="shot" id="shot"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+    <img src="../dashboard-overview.png"><div class="shine" id="shine"></div></div>
+</section>
+
+<!-- 8 · end card -->
+<section class="sc" id="s8"><div class="center">
+  <div class="logo" id="logo2" style="width:120px;height:120px;border-radius:32px;font-size:72px">M</div>
+  <div class="kt" data-at="0.4" style="font-size:132px; margin-top:34px" data-text="MedAdhere"></div>
+  <div class="kt" data-at="1.0" data-st="0.09" style="font-size:52px; font-weight:700; letter-spacing:-0.015em; margin-top:22px; color:#b9c6d8" data-text="The model proposes. *Code_disposes.*"></div>
+  <div id="url" style="margin-top:56px; font-size:28px; font-family: 'SF Mono', Menlo, monospace; color:#7f93ad; opacity:0">github.com/B2707/medadhere-thesis</div>
+</div></section>
+<div class="flash" id="flash"></div>
+
+<script>
+// iOS Messages motion: type into the field, send, the bubble lifts out of the field into the thread.
+const IOS = {
+  sp: p => p <= 0 ? 0 : 1 - Math.exp(-7 * p) * Math.cos(9 * p),
+  init(screen) {
+    screen.querySelector('.field').innerHTML = '<span class="ph">iMessage</span><span class="tx"></span><span class="caret"></span>' +
+      '<span class="send"><svg width="13" height="15" viewBox="0 0 13 15"><path d="M6.5 14V2M1.5 6.5L6.5 1.5l5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+  },
+  // outs: [{el, at}] sent bubbles with their send times; maxType caps how long typing takes
+  compose(screen, outs, t, maxType = 1.2) {
+    const f = screen.querySelector('.field'); let text = '', since = -1;
+    for (const o of outs) { const s = o.el.textContent, dur = Math.min(maxType, .35 + s.length * .03);
+      if (t > o.at - dur && t < o.at) { since = t - (o.at - dur); text = s.slice(0, Math.ceil((since / (dur - .15)) * s.length)); } }
+    f.querySelector('.tx').textContent = text;
+    f.querySelector('.ph').style.display = text ? 'none' : '';
+    f.querySelector('.caret').style.opacity = text ? 1 : 0;
+    f.querySelector('.send').style.transform = `scale(${text ? Math.max(0, IOS.sp((since - .1) / .5)) : 0})`;
+  },
+  send(el, p) { // p = seconds since send
+    const screen = el.closest('.screen'), c = screen.querySelector('.compose'), f = c.querySelector('.field');
+    const dy0 = c.offsetTop + f.offsetTop + 1 - el.offsetTop, dx0 = c.offsetLeft + f.offsetLeft + 4 - el.offsetLeft;
+    const q = p / .42, k = q < 1 ? Math.pow(1 - q, 3) : 0;           // smooth deceleration
+    const settle = q > .75 && q < 1.6 ? -4 * Math.sin(Math.PI * (q - .75) / .85) : 0; // tiny overshoot, then rest
+    el.style.opacity = 1;
+    el.style.transform = `translate(${dx0 * k}px, ${dy0 * k + settle}px)`;
+  },
+  recv(el, p) { // received bubble springs out of where the typing bubble sat
+    const s = IOS.sp(p / .5); el.style.opacity = Math.min(1, p * 8); el.style.transform = `scale(${.55 + .45 * s})`;
+  },
+  dots(ty, tt) { // pulsing dots, left to right
+    [...ty.querySelectorAll('i')].forEach((d, i) => { const v = .5 + .5 * Math.sin(tt * 7 - i * 1.1);
+      d.style.transform = `scale(${.88 + .2 * v})`; d.style.opacity = .35 + .65 * v; d.style.background = '#7c7c80'; });
+  },
+};
+
+const $ = s => document.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const spring = p => p <= 0 ? 0 : 1 - Math.exp(-6 * p) * Math.cos(10 * p);
+const expo = p => (p = clamp(p), p === 1 ? 1 : 1 - Math.pow(2, -10 * p));
+const inout = p => (p = clamp(p), p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const CHECK = '<svg width="20" height="20" viewBox="0 0 26 26"><path d="M5 13.5l5.5 5.5L21 7.5" fill="none" stroke="#04120e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+// Kinetic text: split into words; *word* or *two_words* gets the gradient.
+$$('.kt').forEach(el => {
+  el.innerHTML = el.dataset.text.split(' ').map(w => {
+    const hl = w.includes('*'); w = w.replace(/\*/g, '').replace(/_/g, ' ');
+    return `<span class="w${hl ? ' hl' : ''}">${w}</span>`; }).join('');
+});
+IOS.init($('#s3 .screen'));
+const lockScreen = createLockScreen($('#s3 .screen'));
+const phoneDelay = lockScreen.end - .9;
+const wm = $('#wordmark'); wm.innerHTML = [...wm.textContent].map(c => `<span>${c}</span>`).join('');
+
+// Validators (chapters/conversational-agent.tex, table of the ten runtime validators)
+const V = ['Structured output', 'Entity grounding', 'Coverage', 'Question identity', 'No medication advice',
+           'No advice verbs or doses', 'No reassurance', 'No severity labels', 'Injection markers', 'GSM-7 and length'];
+$('#vgrid').innerHTML = V.map((v, i) => `<div class="vchip" style="left:${600 + (i % 2) * 420 + 240}px; top:${330 + Math.floor(i / 2) * 84 + 70}px"><span class="n">${i + 1}</span><span class="ck">${CHECK}</span>${v}</div>`).join('');
+
+// Architecture chain (README "How it works")
+const A = [['SMS', 'Twilio'], ['WEBHOOK', 'API Gateway'], ['VERIFY + STORE', 'Inbound Lambda'], ['IN ORDER', 'SQS FIFO'], ['AGENT', 'Turn worker + Claude'], ['RECORD', 'RDS PostgreSQL']];
+const NX = i => 110 + i * 290;
+$('#chain').innerHTML = A.map(([k, v], i) => `<div class="anode" style="left:${NX(i)}px"><div class="glow"></div><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')
+  + A.slice(1).map((_, i) => `<div class="wire" style="left:${NX(i) + 236}px; width:54px"></div>`).join('')
+  + '<div class="pills">' + ['AWS CDK', 'EventBridge Scheduler', 'Cognito', 'Secrets Manager', 'CloudWatch'].map(p => `<div class="pill">${p}</div>`).join('') + '</div>';
+
+const S = [['#s1', 0, 3.6], ['#s2', 3.6, 6.8], ['#s3', 6.8, 15.8], ['#s4', 15.8, 22.2], ['#s5', 22.2, 27.4], ['#s6', 27.4, 33.0], ['#s7', 33.0, 37.6], ['#s8', 37.6, 43]];
+S.forEach((scene, i) => { if (i >= 2) scene[2] += phoneDelay; if (i >= 3) scene[1] += phoneDelay; });
+const END = 43 + phoneDelay;
+
+function pop(el, p, { dy = 30, base = .5, dx = 0 } = {}) {
+  const s = spring(p / .8);
+  el.style.opacity = clamp(p * 5);
+  el.style.transform = `translate(${(1 - s) * dx}px, ${(1 - s) * dy}px) scale(${base + (1 - base) * s})`;
+}
+function ringPulse(el, p) { const r = el.querySelector('.ring'); if (!r) return; const q = clamp(p / .7); r.style.opacity = p > 0 ? (1 - q) : 0; r.style.transform = `scale(${1 + q * .06}, ${1 + q * .3})`; }
+function kinetic(sc, lt) {
+  $$('.kt', sc).forEach(el => { const at = +el.dataset.at, st = +(el.dataset.st || .085);
+    $$('.w', el).forEach((w, i) => { const e = expo((lt - at - i * st) / .7);
+      w.style.opacity = e; w.style.transform = `translateY(${(1 - e) * 0.55}em) scale(${.92 + .08 * e})`; w.style.filter = `blur(${(1 - e) * 16}px)`; }); });
+}
+
+const scene = {
+  '#s1'(lt, sc) {
+    pop($('#logo'), lt - .15, { dy: 60, base: .2 }); $('#logo').style.transform += ` rotate(${(1 - Math.min(1, spring((lt - .15) / .8))) * -25}deg)`;
+    [['#shock1', .3], ['#shock2', .5]].forEach(([id, at]) => { const q = clamp((lt - at) / 1.0); const el = $(id); el.style.opacity = lt > at ? (1 - q) * .9 : 0; el.style.transform = `scale(${1 + expo(q) * 3.2})`; });
+    $$('span', $('#wordmark')).forEach((c, i) => { const p = lt - .6 - i * .045; const s = spring(p / .7);
+      c.style.opacity = clamp(p * 6); c.style.transform = `translateY(${(1 - Math.min(1.2, s)) * 80}px) rotate(${(1 - Math.min(1, s)) * 12}deg)`; });
+  },
+  '#s3'(lt, sc) {
+    const ph = $('#phone'), e = spring((lt - .05) / 1.1);
+    ph.style.opacity = clamp(lt * 4);
+    ph.style.transform = `translateY(${(1 - e) * 700}px) rotateX(${(1 - Math.min(1, e)) * 40}deg) rotateY(${(1 - Math.min(1, e)) * -18 + 8 - lt * .9}deg) scale(${1 + lt * .006})`;
+    lockScreen.render(lt);
+    const times = [0.9, 2.3, 3.6, 4.8, 6.0, 7.2].map(t => t + phoneDelay);
+    $$('.b', sc).forEach((b, i) => { const p = lt - times[i]; b.style.display = p > 0 ? 'block' : 'none'; if (p > 0) (b.classList.contains('out') ? IOS.send(b, p) : IOS.recv(b, p)); });
+    IOS.compose($('#s3 .screen'), $$('.b', sc).map((el, i) => ({ el, at: times[i] })).filter(o => o.el.classList.contains('out')), lt, .8);
+    const ty = $('#typing'), win = [[2.85, 3.6], [5.25, 6.0]].map(w => w.map(t => t + phoneDelay)).find(w => lt > w[0] && lt < w[1]);
+    ty.style.display = win ? 'flex' : 'none';
+    if (win) { IOS.recv(ty, lt - win[0]); IOS.dots(ty, lt - win[0]); }
+    ty.parentNode.appendChild(ty);
+    $$('.chip', sc).forEach((c, i) => { const p = lt - (times[2 * i + 1] + .45); if (p <= 0) { c.style.opacity = 0; return; } pop(c, p, { dx: -120, dy: 0, base: .7 }); ringPulse(c, p); });
+    $('#s3eb').style.opacity = clamp((lt - .5) * 3);
+  },
+  '#s4'(lt, sc) {
+    $$('.mcard', sc).forEach((c, i) => pop(c, lt - (.8 + i * .25), { dy: 40, base: .8 }));
+    $$('.vchip', sc).forEach((c, i) => { const p = lt - (2.6 + i * .13); if (p <= 0) { c.style.opacity = 0; return; } pop(c, p, { dy: 30, base: .6 });
+      const ck = c.querySelector('.ck'); const q = spring((p - .2) / .6); ck.style.transform = `scale(${Math.max(0, q)})`; });
+  },
+  '#s5'(lt, sc) {
+    $('#s5eb').style.opacity = clamp(lt * 3);
+    $$('.tile', sc).forEach((t, i) => { const p = lt - (.7 + i * .16); if (p <= 0) { t.style.opacity = 0; return; } pop(t, p, { dy: 120, base: .9 });
+      const n = t.querySelector('.num'), to = +n.dataset.to, dec = +n.dataset.dec, q = expo((p - .1) / 1.6);
+      let v = (to * q).toFixed(dec); if (n.dataset.comma) v = (+v).toLocaleString('en-US'); n.textContent = v + (n.dataset.suffix || '');
+      t.querySelector('.bar i').style.transform = `scaleX(${q})`; });
+  },
+  '#s6'(lt, sc) {
+    $('#s6eb').style.opacity = clamp(lt * 3);
+    const nodes = $$('.anode', sc), wires = $$('.wire', sc), pills = $$('.pill', sc);
+    nodes.forEach((n, i) => pop(n, lt - (.8 + i * .12), { dy: 50, base: .7 }));
+    wires.forEach((w, i) => w.style.transform = `scaleX(${inout((lt - (1.3 + i * .12)) / .4)})`);
+    pills.forEach((p, i) => pop(p, lt - (3.9 + i * .1), { dy: 30, base: .7 }));
+    // packet runs the chain once, lighting each service
+    const pk = $('#pk'), T0 = 2.0, per = .32, total = per * (A.length - 1), q = (lt - T0) / total;
+    const glows = nodes.map(() => 0);
+    if (q >= 0 && q <= 1) { const x = NX(0) + 118 + inout(q) * (NX(A.length - 1) - NX(0)); pk.style.opacity = 1; pk.style.left = x + 'px'; pk.style.top = '554px';
+      nodes.forEach((n, i) => { const cx = NX(i) + 118; glows[i] = Math.max(0, 1 - Math.abs(x - cx) / 200); }); } else pk.style.opacity = 0;
+    if (lt > T0 + total) glows.forEach((_, i) => glows[i] = Math.max(0, .5 - (lt - T0 - total) * .3) * (i === A.length - 1 ? 2 : .6));
+    nodes.forEach((n, i) => n.querySelector('.glow').style.opacity = glows[i]);
+  },
+  '#s7'(lt, sc) {
+    $('#s7eb').style.opacity = clamp((lt - .3) * 3);
+    const sh = $('#shot'), e = spring((lt - .1) / 1.2), m = Math.min(1, e);
+    sh.style.opacity = clamp(lt * 3);
+    sh.style.transform = `translateX(${(1 - e) * 500}px) rotateY(${-34 + 22 * m + lt * 1.2}deg) rotateX(${12 - 6 * m}deg) scale(${.82 + .1 * m})`;
+    $('#shine').style.left = (-300 + inout((lt - 1.3) / 1.2) * 1500) + 'px';
+  },
+  '#s8'(lt, sc) {
+    pop($('#logo2'), lt - .1, { dy: 40, base: .2 });
+    $('#url').style.opacity = clamp((lt - 1.9) * 2);
+  },
+};
+
+window.render = t => {
+  S.forEach(([id, a, b]) => {
+    const sc = $(id), lt = t - a, dur = b - a;
+    if (t < a - .01 || t > b + .01) { sc.style.opacity = 0; sc.style.visibility = 'hidden'; return; }
+    sc.style.visibility = 'visible';
+    const i = id === '#s1' ? 1 : expo(lt / .45), o = id === '#s8' ? 0 : inout((lt - (dur - .45)) / .45);
+    sc.style.opacity = i * (1 - o);
+    sc.style.transform = `scale(${(.96 + .04 * i) * (1 + .1 * o)})`;
+    sc.style.filter = (i < 1 || o > 0) ? `blur(${(1 - i) * 12 + o * 18}px)` : 'none';
+    kinetic(sc, lt);
+    if (scene[id]) scene[id](lt, sc);
+  });
+  // flash on each cut
+  const cut = S.slice(1).map(s => s[1]).find(c => Math.abs(t - c) < .35);
+  $('#flash').style.opacity = cut !== undefined ? (1 - Math.abs(t - cut) / .35) * .7 : 0;
+};
+window.END = END;
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { render(((performance.now() - t0) / 1000) % END); requestAnimationFrame(loop); }; loop(); }
+else render(0);
+</script></body></html>

@@ -1,0 +1,33 @@
+.messages { position: absolute; inset: 0; background: #fff; transform-origin: 50% 45%; }
+.lock-screen { position: absolute; inset: 0; z-index: 12; overflow: hidden; color: #fff;
+  background: radial-gradient(ellipse at 80% 8%, #a7d6ef 0, transparent 49%),
+    radial-gradient(ellipse at 5% 75%, #164b66 0, transparent 58%),
+    linear-gradient(150deg, #5595b8, #183347 58%, #0c1d30); }
+.lock-screen::before { content: ""; position: absolute; width: 640px; height: 640px; left: -370px; top: 230px;
+  border-radius: 50%; border: 70px solid rgba(124,220,204,.23); box-shadow: 0 0 0 65px rgba(139,201,222,.12); }
+.lock-screen .status { color: #fff !important; }
+.lock-screen .status > span:first-child { visibility: hidden; }
+.lock-screen .status svg [fill]:not([fill="none"]) { fill: #fff; }
+.lock-screen .status svg [stroke] { stroke: #fff; }
+.lock-clock { position: absolute; top: 84px; left: 0; right: 0; text-align: center; color: #e7f4ff; }
+.lock-padlock { display: block; margin: 0 auto 13px; }
+.lock-date { font-size: 21px; font-weight: 500; letter-spacing: -.4px; }
+.lock-time { font-size: 96px; font-weight: 600; line-height: 1.08; letter-spacing: -5px; }
+.notification { position: absolute; top: 370px; left: 10px; right: 10px; display: flex; align-items: center; gap: 12px;
+  padding: 15px 14px; border-radius: 24px; color: #111820; background: rgba(237,246,251,.91);
+  border: 1px solid rgba(255,255,255,.45); box-shadow: 0 9px 30px rgba(0,0,0,.16); }
+.notification-icon { width: 40px; height: 40px; border-radius: 10px; flex: none; background: linear-gradient(#5ae477, #20b442);
+  display: flex; align-items: center; justify-content: center; }
+.notification-body { flex: 1; min-width: 0; }
+.notification-app { display: flex; justify-content: space-between; font-size: 10px; font-weight: 500; letter-spacing: .5px; color: #49515b; }
+.notification-app span { font-size: 12px; letter-spacing: 0; }
+.notification-name { margin-top: 3px; font-size: 15px; font-weight: 600; }
+.notification-text { margin-top: 2px; font-size: 14px; line-height: 18px; letter-spacing: -.15px; }
+.lock-tools { position: absolute; left: 44px; right: 44px; bottom: 55px; display: flex; justify-content: space-between; }
+.lock-tools > span { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px;
+  background: rgba(13,26,40,.38); border-radius: 50%; }
+.lock-hint { position: absolute; bottom: 28px; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 500; }
+.lock-screen .home { background: #fff !important; }
+.touch { position: absolute; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.8);
+  border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.3); z-index: 2; pointer-events: none; }
+.touch-ring { position: absolute; width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; pointer-events: none; }

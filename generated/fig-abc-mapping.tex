@@ -1,0 +1,64 @@
+% fig-abc-mapping.tex — ABC taxonomy phases mapped onto the six MedAdhere adherence states.
+% Source: chapters/background.tex, Section "Medication Adherence and the ABC Taxonomy"
+% (lines 4-23), citing vrijens2012taxonomy and degeest2018emerge. Standalone \input-able.
+% Needs the decorations.pathreplacing TikZ library (for the persistence brace) in addition
+% to the arrows.meta/positioning/fit/shapes.geometric already loaded by main.tex.
+\usetikzlibrary{decorations.pathreplacing,calc}
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+    font=\small,
+    phase/.style={draw, rounded corners, align=center, minimum width=4.4cm,
+      minimum height=1cm, fill=medDetFill, draw=medDetLine, font=\bfseries\small},
+    state/.style={draw, rounded corners, align=center, text width=4.2cm,
+      fill=medStoreFill, draw=medStoreLine, inner sep=6pt},
+    crosscut/.style={draw, dashed, rounded corners, align=center,
+      text width=4.6cm, fill=medExtFill, draw=medExtLine, inner sep=6pt},
+    note/.style={draw, dashed, rounded corners, align=left, fill=medNoteFill, draw=medNoteLine,
+      text width=6.4cm, inner sep=6pt},
+    txt/.style={align=left, text width=4.6cm, font=\small},
+    flow/.style={-{Latex[length=2.2mm]}, thick, medInk},
+    link/.style={-{Latex[length=1.8mm]}, thin, medSlate}
+  ]
+    % --- ABC taxonomy timeline: initiation -> implementation -> discontinuation ---
+    \node[phase] (init) at (0,0) {Initiation};
+    \node[phase] (impl) at (5.4,0) {Implementation};
+    \node[phase] (disc) at (10.8,0) {Discontinuation};
+
+    \draw[flow] (init) -- (impl);
+    \draw[flow] (impl) -- (disc);
+
+    \draw[decorate, decoration={brace, amplitude=6pt, raise=5pt}, thick]
+      (init.north west) -- (disc.north east)
+      node[midway, above=11pt, font=\small\itshape]
+      {Persistence -- time from initiation to discontinuation};
+
+    % --- Three implementation states, one discontinuation state, no initiation state ---
+    \node[crosscut, below=15mm of init] (noinit) {(no operational state\\currently maps here)};
+    \node[state, below=15mm of impl] (implstates)
+      {\texttt{taken} -- on time\\\texttt{delayed} -- late, with timing\\\texttt{skipped} -- no dose at all};
+    \node[state, below=15mm of disc] (discstates) {\texttt{stopped} -- a discontinuation statement};
+
+    \draw[link] (noinit.north) -- (init.south);
+    \draw[link] (implstates.north) -- (impl.south);
+    \draw[link] (discstates.north) -- (disc.south);
+
+    % --- Cross-cutting states and the second axis, one row below ---
+    \node[crosscut, align=left, text width=9.6cm, anchor=north west]
+      (crosscutstates) at ($(noinit.south west |- implstates.south)+(0.1,-0.5)$)
+      {\textbf{Not phase-mapped.} These states describe the kind of reply, not
+       where the patient stands in treatment.\\[3pt]
+       \texttt{question} -- medical guidance, not an adherence claim\\
+       \texttt{unknown} -- genuine ambiguity, never a forced guess};
+    \node[note, align=left, text width=4.2cm, anchor=north east]
+      (reasoncode) at ($(discstates.south east |- implstates.south)+(-0.1,-0.5)$)
+      {\textbf{Second axis.} \texttt{reason\_code} records \emph{why}:
+       \texttt{ran\_out}, \texttt{side\_effect}, \texttt{forgot}.};
+  \end{tikzpicture}}
+  \caption{The ESPACOMP ABC adherence taxonomy~\cite{vrijens2012taxonomy,degeest2018emerge}
+  mapped onto MedAdhere's six operational adherence states. Three states describe
+  implementation around one scheduled dose, one records discontinuation, and two
+  (\texttt{question}, \texttt{unknown}) are deliberately left unmapped to any single phase.}
+  \label{fig:abc-mapping}
+\end{figure}

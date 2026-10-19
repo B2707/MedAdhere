@@ -1,0 +1,44 @@
+% fig-sms-hero.tex — Chapter-1 hero figure: one check-in, a free-text reply, and
+% the structured triple the classifier produces from it.
+% Source: backend/eval/gold-set.csv, row g188 (delayed + side_effect, standard
+% register, ade_match slice) — quoted verbatim below, chosen as the closest gold
+% row to "took it late and it made me queasy":
+%   g188,ade_match,standard,synthetic,
+%   "gonna take it in a bit, felt too queasy to right now, waiting for it to
+%   settle first",,delayed,side_effect,none,agreed,,y,,,,
+% The final v1 run (backend/eval/results/eval-v1-2026-08-04T00-11-50-026Z.json)
+% predicted exactly the gold triple for g188 (adherence_state=delayed,
+% reason_code=side_effect, safety_flag=none).
+% The check-in prompt shown is illustrative of the system's message cadence —
+% it is NOT a verbatim database quote (unlike the patient reply and the
+% structured triple, which are both exact). Needs generated/sms-macros loaded
+% in the preamble. Standalone \input-able.
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.58\textwidth}
+    \vspace{0pt}
+    \begin{smsthread}
+      \smsbot{Hi, this is your 8:00\,AM Metformin check-in --- how did it go today?}{8:00 AM}
+      \smspatient{gonna take it in a bit, felt too queasy to right now, waiting for it to settle first}{8:14 AM}
+    \end{smsthread}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.36\textwidth}
+    \vspace{18pt}
+    \begin{tcolorbox}[smsrecordbox, title=Structured record]
+      \texttt{adherence\_state}: \textbf{delayed}\\[2pt]
+      \texttt{reason\_code}: \textbf{side\_effect}\\[2pt]
+      \texttt{safety\_flag}: \textbf{none}
+    \end{tcolorbox}
+  \end{minipage}
+  \caption{A free-text reply becomes a structured, two-axis adherence record.
+  The patient's reply and the structured triple are quoted verbatim from
+  gold-set row \texttt{g188} (Chapter~\ref{ch:evaluation}); the
+  production classifier prompt reproduced this label without error. The
+  check-in prompt is illustrative of the system's message cadence rather than
+  a database quote. A keyword or button-press system would have captured only
+  a binary taken/not-taken signal here, discarding both the timing (\emph{gonna
+  take it in a bit}) and the reason (\emph{felt too queasy}) that the free-text
+  channel preserves.}
+  \label{fig:sms-hero}
+\end{figure}

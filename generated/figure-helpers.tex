@@ -1,0 +1,47 @@
+% generated/figure-helpers.tex — defensive include helpers for figures.
+%
+% Some figures need preamble packages (tcolorbox via generated/sms-macros,
+% xcolor's `table` option for \cellcolor, pgfplots) or external image files.
+% Rather than let a missing package or file abort the build, those figures are
+% included through the three commands below, which fall back to a log warning
+% (or, in draft mode, a framed placeholder). All three use \providecommand, so
+% defining them earlier in the preamble redefines nothing.
+
+% Missing figures never print in the final PDF: the fallback writes a LaTeX
+% warning to the log ("MedAdhere figure missing") and typesets nothing.
+% Put \def\medaDraft{} before this file is loaded to see a framed placeholder
+% in the PDF instead.
+\providecommand{\medaTodoBox}[1]{%
+  \GenericWarning{}{MedAdhere figure missing: \detokenize{#1}}%
+  \ifdefined\medaDraft
+    \par\begin{center}%
+    \fbox{\parbox{0.88\linewidth}{\small\textbf{Placeholder --- figure not
+      rendered at compile time.}\\[2pt] #1}}%
+    \end{center}\par
+  \fi}
+
+% \medaGraphic{path}{width fraction}{what the screenshot must show}
+% Includes a graphics file if it is on disk; otherwise falls back to \medaTodoBox.
+\providecommand{\medaGraphic}[3]{%
+  \IfFileExists{#1}{\includegraphics[width=#2\linewidth]{#1}}%
+    {\medaTodoBox{Screenshot \texttt{#1} has not been captured yet. It must
+      show: #3}}}
+
+% \medaInput{file without .tex}{what the figure shows}
+\providecommand{\medaInput}[2]{%
+  \IfFileExists{#1.tex}{\input{#1}}%
+    {\medaTodoBox{Generated figure \texttt{#1.tex} is missing. It should
+      show: #2}}}
+
+% \medaInputIfCmd{probe control-sequence name}{file without .tex}{what it shows}
+% Same as \medaInput, but first checks that a control sequence provided by the
+% figure's required package already exists.
+\providecommand{\medaInputIfCmd}[3]{%
+  \ifcsname #1\endcsname
+    \medaInput{#2}{#3}%
+  \else
+    \medaTodoBox{Figure \texttt{#2.tex} needs a package that \texttt{main.tex}
+      does not yet load (probe macro \texttt{\textbackslash #1} is undefined);
+      see the preamble note in \texttt{generated/figure-helpers.tex}. The
+      figure shows: #3}%
+  \fi}

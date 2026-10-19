@@ -1,0 +1,77 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+\section{Motivation}
+
+Medication adherence is more than a yes-or-no event. A person can take a dose
+on time, take it late, skip it, stop treatment, ask a medical question, or send
+a reply that stays ambiguous. The reason matters as well: forgetting, running
+out, a suspected side effect, and a deliberate choice each call for different
+follow-up. Non-adherence is a large and long-documented clinical
+problem~\cite{osterberg2005adherence}, and self-report instruments differ widely
+in phrasing, recall window, and response format~\cite{stirratt2015selfreport}.
+A system that records only ``yes'' or ``no'' discards the context that
+separates these cases. SMS suits low-friction check-ins because it needs no new
+application or account, yet most reminder systems send one-way messages or accept a small
+keyword vocabulary, which leaves the patient to classify their own reply.
+
+Language models allow a different interface. The patient replies in their own
+words and the system maps the text into a small, validated schema
+(Figure~\ref{fig:sms-hero}). MedAdhere draws four boundaries around the model. Model output is constrained at
+generation time and validated at the boundary. Safety-sensitive language never
+depends on a single probabilistic detector. Raw text and phone numbers have a
+deletion path. Operational failures become visible records instead of silent
+gaps.
+
+\input{generated/fig-sms-hero}
+
+\section{Problem Statement}
+
+This project asks whether one developer can build and evaluate a small
+serverless platform that runs scheduled SMS check-ins end to end, from
+enrollment through clinician review. It must classify free-text replies into a
+defensible adherence schema, route acute physical danger, crisis language, and
+medical questions through an always-on safety layer, and carry a multi-turn
+conversation that updates a durable clinical record while deterministic code
+keeps control of every clinical decision and safety-critical message. It must
+also stay reproducible, testable, affordable, and easy to tear down. The
+question is technical feasibility, not clinical efficacy. MedAdhere is an
+honours-project prototype used only with a test account and fictional adherence
+behaviour; it is not a medical device, makes no treatment recommendations, and
+was not evaluated with real patients.
+
+\section{Contributions}
+
+\begin{enumerate}
+  \item \textbf{A reproducible event-driven platform.} TypeScript CDK declares
+    the AWS infrastructure, database, Lambda functions, monitoring, and internal
+    data API. The message pipeline separates the time-critical Twilio webhook
+    from asynchronous language-model work, orders each patient's messages on a
+    FIFO queue, detects non-response with per-dose schedules, and serves an
+    authenticated dashboard and a pseudonymized export.
+  \item \textbf{A taxonomy-grounded classifier contract with a safety layer.}
+    The classifier produces an adherence state, an independent reason code,
+    and a tiered safety flag. A forced tool schema and a strict shared parser
+    keep model output inside that contract, which matters because
+    carrier-delivered patient text is an indirect prompt-injection
+    setting~\cite{abdelnabi2023indirect}. Deterministic crisis and
+    acute-symptom matching runs before the model, and every safety response is
+    fixed referral text (Chapter~\ref{ch:architecture}).
+  \item \textbf{A bounded-authority conversational clinical agent.} In a
+    longitudinal SMS conversation, the patient's words update a durable clinical record under one rule: the
+    language model \emph{proposes} and deterministic code disposes. Extracted claims
+    must pass a schema gate. Resolution, the append-only clinical
+    record~\cite{fowler2005eventsourcing}, and the information needs that hold
+    an unanswered question in the database instead of a
+    session~\cite{balaraman2021dst} are pure code. Ten runtime validators admit
+    patient-facing wording above a deterministic template floor, and
+    emergency, opt-out, and review-bearing turns never reach generation
+    (Chapter~\ref{ch:conversational}).
+  \item \textbf{A pre-registered evaluation.} A 207-row labeled gold set
+    covers every adherence class, safety slices, ambiguity, language
+    registers, and adversarial cases. Gates, thresholds, and analysis rules are fixed before each run and honored afterwards. It
+    reports exact confidence intervals, per-class support, a
+    confusion matrix, error analysis, safety repeatability, API cost,
+    deterministic baselines, and a guarded ablation.
+    Chapter~\ref{ch:conversational} adds a conversation-level contract.
+\end{enumerate}

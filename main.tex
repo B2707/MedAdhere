@@ -1,0 +1,145 @@
+\documentclass[12pt,oneside]{report}
+
+% Standard CTAN packages only; builds with pdfLaTeX + BibTeX (Overleaf) or tectonic.
+\input{style/medadhere}          % fonts, palette, headings, captions, tables
+\input{generated/sms-macros}     % tcolorbox; SMS bubble + record-box styles
+\input{generated/figure-helpers} % \medaGraphic / \medaInput / \medaInputIfCmd
+
+% ---------------------------------------------------------------------------
+% Front-matter fields
+% ---------------------------------------------------------------------------
+\newcommand{\thesistitle}{MedAdhere: A Serverless SMS Platform for
+  Medication-Adherence Monitoring with a Bounded-Authority Conversational
+  Clinical Agent}
+\newcommand{\thesisauthor}{Bader El-Asadi}
+\newcommand{\studentnumber}{101280679}
+\newcommand{\thesisterm}{Summer 2026}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true, linktoc=page,
+  linkcolor=medTealDark, citecolor=medTeal, urlcolor=medTeal,
+  pdftitle={\thesistitle}, pdfauthor={\thesisauthor},
+}
+
+% Title page: the part of \thesistitle before the colon is set as the
+% wordmark, the rest as the subtitle.
+\def\medSplitTitle#1: #2\medEnd{%
+  {\fontsize{40}{44}\selectfont\bfseries\color{medTeal}#1\par}%
+  \vspace{14pt}%
+  {\LARGE\color{medInk}\raggedright #2\par}}
+\newcommand{\medMarkTile}{%
+  \tikz[baseline=(m.base)]\node[fill=medTeal, rounded corners=3pt,
+    minimum size=1.1cm, inner sep=0pt, text=white,
+    font=\sffamily\bfseries\fontsize{22}{22}\selectfont] (m) {M};}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+
+% ---------------------------------------------------------------------------
+% Title page
+% ---------------------------------------------------------------------------
+\begin{titlepage}
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[medTeal] (current page.north west) rectangle
+      ([xshift=0.42in]current page.south west);
+    \fill[medTint] ([xshift=0.42in]current page.north west) rectangle
+      ([xshift=0.50in]current page.south west);
+  \end{tikzpicture}%
+  \sffamily\raggedright
+  \vspace*{0.4in}
+  \medMarkTile\hspace{12pt}%
+  {\small\bfseries\color{medMuted}\medTracked{HONOURS THESIS}}
+  \par\vspace{1.6in}
+  \expandafter\medSplitTitle\thesistitle\medEnd
+  \vspace{22pt}
+  {\color{medTeal}\rule{0.18\linewidth}{2pt}\par}
+  \vspace{22pt}
+  {\Large\bfseries\color{medInk}\thesisauthor\par}
+  \vspace{4pt}
+  {\normalsize\color{medMuted}Student number: \studentnumber\par}
+  \vfill
+  {\color{medRule}\rule{\linewidth}{0.5pt}\par}
+  \vspace{8pt}
+  \begin{minipage}[t]{0.65\linewidth}
+    \normalsize\color{medInk}
+    COMP 4905 -- Honours Project\\
+    School of Computer Science\\
+    Carleton University
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.3\linewidth}
+    \raggedleft\normalsize\bfseries\color{medTeal}\thesisterm
+  \end{minipage}
+  \par\vspace*{0.2in}
+\end{titlepage}
+
+% ---------------------------------------------------------------------------
+% Abstract
+% ---------------------------------------------------------------------------
+\chapter*{Abstract}
+\thispagestyle{empty}
+Medication-adherence monitoring systems often reduce a patient's response to a
+button press or a keyword, which throws away both the ambiguity and the reason
+behind a missed dose. This thesis presents MedAdhere, a serverless platform that
+sends scheduled SMS check-ins, turns free-text replies into a structured,
+two-axis adherence record grounded in the ESPACOMP ABC taxonomy, and carries the
+exchange forward as a multi-turn clinical conversation. It is a TypeScript
+monorepo deployed on AWS with CDK, using Twilio for SMS and the Anthropic
+Messages API for inference. Deterministic safety routing sends fixed emergency
+referral text, and the platform also detects non-response, holds drug
+side-effect reference data, and serves an authenticated clinician dashboard.
+
+The first model-facing contract is a single-shot reply classifier: a Claude
+Haiku 4.5 call constrained by a forced tool schema and a parse-or-fail gate,
+behind a deterministic safety prefilter. On a 207-row hand-labeled gold set the
+production prompt classified every row without error and reached 0.966 accuracy
+(95\% CI 0.932--0.986), 1.000 life-safety recall (95\% CI 0.894--1.000), and
+0.802 reason-code completeness (95\% CI 0.699--0.883). Deterministic
+comparators reach 0.319 and 0.705 accuracy and cannot raise a safety flag. A
+repeatability run caught 165 of 165 life-safety trials. A guarded ablation of
+added medication context was evaluated and not shipped, because it did not
+improve reason-code completeness.
+
+The second contract is a conversational clinical agent built on one rule: the
+model proposes and deterministic code disposes. Claim extraction is constrained
+generation behind a schema gate. Resolution and the append-only, event-sourced
+clinical record are pure code, and dialogue state persists in the database as
+durable information needs. Patient-facing wording must pass ten pure-code
+runtime validators, with a fail-closed template floor that is checked again at
+send time. On real carrier infrastructure the agent answered a bare dose reply
+in 16 seconds end to end. Its deterministic core is pinned by 3{,}483 passing
+tests across 227 files, with statement and branch coverage last measured at
+90.43\% and 85.63\%. A pre-registered conversation-level evaluation over a
+version-locked, content-hashed corpus recorded structured-output validity of
+1.00 on 27 of 27 provider-eligible turns (95\% Wilson interval 0.875--1.000).
+
+The live deployment is a single-patient field validation, and the work makes
+no clinical-effectiveness claim.
+\clearpage
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
+
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+% ---------------------------------------------------------------------------
+% Chapters
+% ---------------------------------------------------------------------------
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/architecture}
+\input{chapters/conversational-agent}
+\input{chapters/classifier-evaluation}
+\input{chapters/results}
+\input{chapters/limitations}
+\input{chapters/conclusion}
+
+% ---------------------------------------------------------------------------
+% Bibliography
+% ---------------------------------------------------------------------------
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

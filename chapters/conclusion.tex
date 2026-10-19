@@ -1,0 +1,71 @@
+\chapter{Conclusion}
+\label{ch:conclusion}
+
+\section{Summary}
+
+MedAdhere shows that one developer can build a reproducible, serverless SMS
+adherence platform that accepts natural language and still keeps the recorded
+output small, typed, and reviewable. One CDK-defined system joins per-dose
+scheduling, Twilio delivery and webhooks, asynchronous language-model work
+behind a per-patient ordered queue, a relational write contract, a day-oriented
+authenticated dashboard, monitoring, pseudonymized export, and clean teardown.
+It deploys on demand, has carried real SMS traffic over real carrier
+infrastructure, and is destroyed after each validation window.
+
+The classifier contract has two taxonomy-grounded axes and a separate tiered
+safety signal. A forced tool and a strict shared parser contain the model, and
+deterministic safety matching runs before inference. On the 207-row synthetic
+gold set the production prompt reached 0.966 accuracy, 1.000 observed
+life-safety recall, and 0.802 reason-code completeness, and passed all
+predeclared gates. Five repeated safety passes caught 165 of 165 life-safety
+trials. Two deterministic comparators on the same rows reached 0.319 and 0.705
+accuracy and had no safety axis. Adding a metformin-specific OnSIDES context
+block did not improve the primary measure, so the simpler baseline prompt
+shipped.
+
+The conversational clinical agent rests on one rule: the model proposes and
+deterministic code disposes. Neither model call, claim extraction or reply
+composition, can write a clinical fact. Extracted output must pass a schema
+gate. Resolution, the append-only clinical record in which corrections
+supersede instead of overwrite, and the durable information needs are pure
+code. Ten runtime validators, re-run in full at send time against the stored
+body, admit patient-facing wording above a deterministic template floor, and
+emergency, opt-out, and review-bearing turns are excluded from generation. That
+core has 3{,}483 passing tests across 227 files, run against a real PostgreSQL
+instance through the actual commit path, with statement and branch coverage
+last measured at 90.43\% and 85.63\%. The conversation-level harness recorded
+structured-output validity of 1.00 on 27 of 27 provider-eligible turns.
+
+The live deployment is a single-patient field validation of end-to-end
+operation on real infrastructure. Model-composed wording shipped live in the two
+lowest-risk conversational kinds: six acknowledgements and two clarifications
+were composed, and each passed the full runtime validator gate before sending.
+The work is a systems-building and evaluation-method contribution.
+
+\section{Future Work}
+
+The most valuable next step is evidence. A larger, ethically approved
+validation with diverse participants, several independent labelers, and a
+formal clinician usability protocol is the natural continuation. It should keep the precommitted analysis rule, report
+inter-rater reliability, and report safety results separately from
+adherence-state accuracy. The conversational counterpart is the external
+semantic review that the evaluation harness already defines, including a hashed
+codebook. The structural and integrity metrics exist, and the semantic families
+are designed and await raters.
+
+Product work should follow the operator's needs. Per-patient response windows,
+multi-role authorization, and optional alert channels would make the platform
+more realistic, but each adds schema, consent, and operations work that a
+tested use case should justify. Extending the semantic core beyond English is a
+design change, because the bounded-authority contract, the entity-grounding
+validator, and the GSM-7 length rule are all written for one language. Future
+ablations should compare compact, clinically meaningful context-selection
+strategies across several covered ingredients, under a primary metric defined
+before anyone inspects the prompts.
+
+The main design lesson is that model capability is a small part of a safe
+message pipeline. The larger part is the authority boundary around the model:
+an explicit taxonomy, constrained generation behind a parse-or-fail gate,
+runtime validators over every generated sentence, deterministic safety routing,
+an append-only record, idempotent event handling, honest unknowns, deletable
+data, and evidence reported at its observed value.

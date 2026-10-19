@@ -1,0 +1,43 @@
+\chapter{Limitations}
+\label{ch:limitations}
+
+The items below set the scope of this project and the next steps that follow
+from it.
+
+\begin{itemize}
+  \item \textbf{Live validation scope.} The live deployment had one
+    participant, the researcher, in an n-of-1 design~\cite{vohra2015cent} with
+    fictional adherence behaviour. It validates end-to-end operation on real
+    infrastructure, and the work makes no claim about clinical effectiveness,
+    usability, or adherence outcomes. An ethically approved, multi-site study
+    with real patients is the next step, together with a formal clinician
+    usability study of the dashboard.
+  \item \textbf{Gold-set construction.} The 207 classifier inputs are
+    synthetic, and one researcher authored and labeled them, so the classifier
+    results describe this gold set. A second independent rater and an
+    evaluation on collected patient replies would add inter-rater reliability
+    and real-language coverage. Every adherence signal is also patient
+    self-report, which varies with phrasing, recall window, and response
+    format~\cite{stirratt2015selfreport}.
+  \item \textbf{Safety-layer coverage.} Life-safety recall was 1.000 on the
+    tested synthetic cases and across five repeated runs. That result bounds
+    behaviour on tested cases, and deployed messages can differ from a
+    benchmark~\cite{bedi2025testing}. Broader coverage of euphemisms,
+    languages, spelling variants, and multi-symptom messages is future work.
+    The layer routes to emergency services and does not diagnose or triage,
+    and MedAdhere is not a crisis service.
+  \item \textbf{Conversation evaluation.} Nine of the eighteen conversation
+    metrics are scored by external semantic review against the hashed
+    codebook, and the semantic core targets English. Scoring those metrics
+    with independent raters and extending the core to the corpus's other
+    languages are the next evaluation steps.
+  \item \textbf{Platform and data.} The prototype runs in one AWS region on a
+    Single-AZ database, with one administrator, one carrier, and one model
+    provider, which suits a research deployment. Clinical use would add
+    multi-AZ availability, role-based access, and a data-residency review,
+    because inference runs through the Anthropic API in the United States. The
+    research export is pseudonymized, not anonymous, so access control
+    protects it until its deletion after grading. The adversarial gold-set
+    slice samples prompt injection, a formalized attack
+    space~\cite{liu2024promptinjection}, without covering it exhaustively.
+\end{itemize}

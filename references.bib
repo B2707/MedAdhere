@@ -1,0 +1,534 @@
+% Primary sources the project actually relies on. Add further sources as the
+% background chapter is written.
+
+@article{vrijens2012taxonomy,
+  author  = {Vrijens, Bernard and De Geest, Sabina and Hughes, Dyfrig A. and
+             Przemyslaw, Kardas and Demonceau, Jenny and Ruppar, Todd and
+             Dobbels, Fabienne and Fargher, Emily and Morrison, Valerie and
+             Lewek, Pawel and Matyjaszczyk, Michal and Mshelia, Comfort and
+             Clyne, Wendy and Aronson, Jeffrey K. and Urquhart, John},
+  title   = {A new taxonomy for describing and defining adherence to medications},
+  journal = {British Journal of Clinical Pharmacology},
+  year    = {2012},
+  volume  = {73},
+  number  = {5},
+  pages   = {691--705},
+  doi     = {10.1111/j.1365-2125.2012.04167.x}
+}
+
+@article{degeest2018emerge,
+  author  = {De Geest, Sabina and Zullig, Leah L. and Dunbar-Jacob, Jacqueline
+             and Helmy, Remon and Hughes, Dyfrig A. and Wilson, Ira B. and
+             Vrijens, Bernard},
+  title   = {{ESPACOMP} Medication Adherence Reporting Guideline ({EMERGE})},
+  journal = {Annals of Internal Medicine},
+  year    = {2018},
+  volume  = {169},
+  number  = {1},
+  pages   = {30--35},
+  doi     = {10.7326/M18-0543}
+}
+
+@article{tanaka2025onsides,
+  author  = {Tanaka, Yutaro and others},
+  title   = {{OnSIDES} database: Extracting adverse drug events from drug
+             labels using natural language processing models},
+  journal = {Med},
+  year    = {2025},
+  volume  = {6},
+  number  = {7},
+  pages   = {100642},
+  doi     = {10.1016/j.medj.2025.100642},
+  note    = {Drug side-effect reference data used by the deterministic
+             adverse-event matcher (OnSIDES v3.1.x, MIT license)}
+}
+% verified 2026-08-16 via Crossref (api.crossref.org/works/10.1016/j.medj.2025.100642):
+% Med 6(7):100642, 2025; DOI resolves to the Elsevier record.
+% NOTE: BibTeX treats `%` inside an entry as a field name, not a comment — these
+% two lines previously sat inside the braces and silently killed the entry.
+
+@article{thakkar2016sms,
+  author  = {Thakkar, Jay and Kurup, Rahul and Laba, Tracey-Lea and Santo,
+             Karla and Thiagalingam, Aravinda and Rodgers, Anthony and
+             Woodward, Mark and Redfern, Julie and Chow, Clara K.},
+  title   = {Mobile telephone text messaging for medication adherence in
+             chronic disease: A meta-analysis},
+  journal = {JAMA Internal Medicine},
+  year    = {2016},
+  volume  = {176},
+  number  = {3},
+  pages   = {340--349},
+  doi     = {10.1001/jamainternmed.2015.7667},
+  note    = {PMID: 26831740}
+}
+% verified 2026-08-16 via Crossref (api.crossref.org/works/10.1001/jamainternmed.2015.7667):
+% JAMA Internal Medicine 176(3):340, title confirmed.
+
+@misc{openfda,
+  author       = {{U.S. Food and Drug Administration}},
+  title        = {{openFDA}},
+  year         = {2026},
+  howpublished = {\url{https://open.fda.gov/}},
+  note         = {Structured prescribing information (drug product labeling
+                  API); data frozen at enrollment in this project. Accessed
+                  16 August 2026}
+}
+
+@misc{rxnorm,
+  author       = {{U.S. National Library of Medicine}},
+  title        = {{RxNorm}},
+  year         = {2026},
+  howpublished = {\url{https://www.nlm.nih.gov/research/umls/rxnorm/}},
+  note         = {Normalized drug naming; used for typo-tolerant medication
+                  name resolution at enrollment. Accessed 16 August 2026}
+}
+
+@misc{dpd,
+  author       = {{Health Canada}},
+  title        = {Drug Product Database},
+  year         = {2026},
+  howpublished = {\url{https://health-products.canada.ca/dpd-bdpp/}},
+  note         = {Canadian market existence check ({DIN} and {ATC} class) at
+                  enrollment. Accessed 16 August 2026}
+}
+
+
+% ---------------------------------------------------------------------------
+% additions.bib — candidate citations for the MedAdhere honours report.
+%
+% Provenance rule for this file (lane L, 2026-08-16): every entry below was
+% verified by opening its landing page (publisher record, DOI target, arXiv
+% abstract page, ACL Anthology page, or dblp bibliographic record) and reading
+% the title, authors, venue and year off that page. The URL used for that
+% check is recorded in a trailing "% verified:" comment on each entry.
+%
+% This file is NOT wired into main.tex. Merge the entries you actually cite
+% into references.bib; leaving an unused entry here costs nothing.
+%
+% Grouping:
+%   A. Constrained / structured LLM output and tool use
+%   B. Prompt injection: attacks and defenses
+%   C. Two-way SMS health interventions with NLP
+%   D. LLMs and conversational agents in healthcare; safety evaluation
+%   E. Medication adherence measurement
+%   F. LLM evaluation methodology
+%   G. Theory foundations named by the depth directive
+% ---------------------------------------------------------------------------
+
+
+% ===========================================================================
+% A. Constrained / structured LLM output and tool use
+% ===========================================================================
+
+@inproceedings{scholak2021picard,
+  author    = {Scholak, Torsten and Schucher, Nathan and Bahdanau, Dzmitry},
+  title     = {{PICARD}: Parsing Incrementally for Constrained Auto-Regressive
+               Decoding from Language Models},
+  booktitle = {Proceedings of the 2021 Conference on Empirical Methods in
+               Natural Language Processing},
+  year      = {2021},
+  pages     = {9895--9901},
+  doi       = {10.18653/v1/2021.emnlp-main.779}
+}
+% verified: https://aclanthology.org/2021.emnlp-main.779/
+
+@inproceedings{geng2023grammar,
+  author    = {Geng, Saibo and Josifoski, Martin and Peyrard, Maxime and
+               West, Robert},
+  title     = {Grammar-Constrained Decoding for Structured {NLP} Tasks without
+               Finetuning},
+  booktitle = {Proceedings of the 2023 Conference on Empirical Methods in
+               Natural Language Processing},
+  year      = {2023},
+  pages     = {10932--10952},
+  doi       = {10.18653/v1/2023.emnlp-main.674}
+}
+% verified: https://aclanthology.org/2023.emnlp-main.674/
+
+@misc{willard2023guided,
+  author       = {Willard, Brandon T. and Louf, R{\'e}mi},
+  title        = {Efficient Guided Generation for Large Language Models},
+  year         = {2023},
+  howpublished = {arXiv preprint arXiv:2307.09702},
+  eprint       = {2307.09702},
+  archivePrefix= {arXiv},
+  note         = {Preprint; no peer-reviewed venue listed on the arXiv record}
+}
+% verified: https://arxiv.org/abs/2307.09702
+
+@inproceedings{tam2024format,
+  author    = {Tam, Zhi Rui and Wu, Cheng-Kuang and Tsai, Yi-Lin and
+               Lin, Chieh-Yen and Lee, Hung-yi and Chen, Yun-Nung},
+  title     = {Let Me Speak Freely? A Study On The Impact Of Format
+               Restrictions On Large Language Model Performance},
+  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in
+               Natural Language Processing: Industry Track},
+  year      = {2024},
+  pages     = {1218--1236},
+  doi       = {10.18653/v1/2024.emnlp-industry.91}
+}
+% verified: https://aclanthology.org/2024.emnlp-industry.91/
+
+@misc{schick2023toolformer,
+  author       = {Schick, Timo and Dwivedi-Yu, Jane and Dess{\`i}, Roberto and
+                  Raileanu, Roberta and Lomeli, Maria and Zettlemoyer, Luke and
+                  Cancedda, Nicola and Scialom, Thomas},
+  title        = {Toolformer: Language Models Can Teach Themselves to Use Tools},
+  year         = {2023},
+  howpublished = {arXiv preprint arXiv:2302.04761},
+  eprint       = {2302.04761},
+  archivePrefix= {arXiv},
+  note         = {Preprint; no peer-reviewed venue listed on the arXiv record}
+}
+% verified: https://arxiv.org/abs/2302.04761
+
+
+% ===========================================================================
+% B. Prompt injection: attacks and defenses
+% ===========================================================================
+
+@inproceedings{abdelnabi2023indirect,
+  author    = {Abdelnabi, Sahar and Greshake, Kai and Mishra, Shailesh and
+               Endres, Christoph and Holz, Thorsten and Fritz, Mario},
+  title     = {Not What You've Signed Up For: Compromising Real-World
+               {LLM}-Integrated Applications with Indirect Prompt Injection},
+  booktitle = {Proceedings of the 16th {ACM} Workshop on Artificial
+               Intelligence and Security ({AISec} '23)},
+  year      = {2023},
+  pages     = {79--90},
+  publisher = {ACM},
+  doi       = {10.1145/3605764.3623985},
+  note      = {The arXiv preprint (arXiv:2302.12173) lists Greshake as first
+               author; the published proceedings version lists Abdelnabi first.
+               Author order here follows the published version}
+}
+% verified: https://dblp.org/db/conf/ccs/aisec2023.html (published record)
+% verified: https://arxiv.org/abs/2302.12173 (preprint title/authors/year)
+
+@misc{hines2024spotlighting,
+  author       = {Hines, Keegan and Lopez, Gary and Hall, Matthew and
+                  Zarfati, Federico and Zunger, Yonatan and Kiciman, Emre},
+  title        = {Defending Against Indirect Prompt Injection Attacks With
+                  Spotlighting},
+  year         = {2024},
+  howpublished = {arXiv preprint arXiv:2403.14720},
+  eprint       = {2403.14720},
+  archivePrefix= {arXiv},
+  note         = {Preprint; no peer-reviewed venue listed on the arXiv record}
+}
+% verified: https://arxiv.org/abs/2403.14720
+
+@inproceedings{liu2024promptinjection,
+  author    = {Liu, Yupei and Jia, Yuqi and Geng, Runpeng and Jia, Jinyuan and
+               Gong, Neil Zhenqiang},
+  title     = {Formalizing and Benchmarking Prompt Injection Attacks and
+               Defenses},
+  booktitle = {Proceedings of the 33rd {USENIX} Security Symposium
+               ({USENIX} Security 24)},
+  year      = {2024},
+  eprint    = {2310.12815},
+  archivePrefix = {arXiv},
+  note      = {Venue confirmed on the arXiv record; page numbers not verified}
+}
+% verified: https://arxiv.org/abs/2310.12815
+
+
+% ===========================================================================
+% C. Two-way SMS health interventions with NLP
+% ===========================================================================
+
+@article{davoudi2022intents,
+  author  = {Davoudi, Anahita and Lee, Natalie S. and Luong, ThaiBinh and
+             Delaney, Timothy and Asch, Elizabeth and Chaiyachati, Krisda and
+             Mowery, Danielle},
+  title   = {Identifying Medication-Related Intents From a Bidirectional Text
+             Messaging Platform for Hypertension Management Using an
+             Unsupervised Learning Approach: Retrospective Observational Pilot
+             Study},
+  journal = {Journal of Medical Internet Research},
+  year    = {2022},
+  volume  = {24},
+  number  = {6},
+  pages   = {e36151},
+  doi     = {10.2196/36151}
+}
+% verified: https://www.jmir.org/2022/6/e36151/PDF (published PDF, page 1)
+
+@article{feldacker2024twoway,
+  author  = {Feldacker, Caryl and Klabbers, Robin E. and Huwa, Jacqueline and
+             Kiruthu-Kamamia, Christine and Thawani, Agness and Tembo, Petros
+             and Chintedza, Joseph and Chiwaya, Godfrey and Kudzala, Alice and
+             Bisani, Pachawo and Ndhlovu, David and Seyani, Joseph and
+             Tweya, Hannock},
+  title   = {The effect of proactive, interactive, two-way texting on 12-month
+             retention in antiretroviral therapy: Findings from a
+             quasi-experimental study in Lilongwe, Malawi},
+  journal = {PLOS ONE},
+  year    = {2024},
+  volume  = {19},
+  number  = {8},
+  pages   = {e0298494},
+  doi     = {10.1371/journal.pone.0298494},
+  note    = {PMID: 39208237}
+}
+% verified: https://pubmed.ncbi.nlm.nih.gov/?term=Feldacker+effect+of+proactive+interactive+two-way+texting+12-month+retention+antiretroviral+therapy+Lilongwe
+
+
+% ===========================================================================
+% D. LLMs and conversational agents in healthcare; safety evaluation
+% ===========================================================================
+
+@article{laranjo2018conversational,
+  author  = {Laranjo, Liliana and Dunn, Adam G. and Tong, Huong Ly and
+             Kocaballi, Ahmet Baki and Chen, Jessica and Bashir, Rabia and
+             Surian, Didi and Gallego, Blanca and Magrabi, Farah and
+             Lau, Annie Y. S. and Coiera, Enrico},
+  title   = {Conversational agents in healthcare: a systematic review},
+  journal = {Journal of the American Medical Informatics Association},
+  year    = {2018},
+  volume  = {25},
+  number  = {9},
+  pages   = {1248--1258},
+  doi     = {10.1093/jamia/ocy072},
+  note    = {PMID: 30010941}
+}
+% verified: https://pubmed.ncbi.nlm.nih.gov/?term=Laranjo+Conversational+agents+in+healthcare+a+systematic+review
+
+@article{singhal2023clinical,
+  author  = {Singhal, Karan and Azizi, Shekoofeh and Tu, Tao and
+             Mahdavi, S. Sara and Wei, Jason and Chung, Hyung Won and others},
+  title   = {Large language models encode clinical knowledge},
+  journal = {Nature},
+  year    = {2023},
+  volume  = {620},
+  number  = {7972},
+  pages   = {172--180},
+  note    = {PMID: 37438534}
+}
+% verified: https://pubmed.ncbi.nlm.nih.gov/?term=Singhal+Large+language+models+encode+clinical+knowledge+Nature+2023
+%% TODO(lane L): the Nature landing page and doi.org both refused an anonymous
+%% fetch, so the DOI is NOT verified and is deliberately omitted. Add
+%% doi = {10.1038/s41586-023-06291-9} only after opening the article page
+%% through an institutional session and confirming it.
+
+@article{bedi2025testing,
+  author  = {Bedi, Suhana and Liu, Yutong and Orr-Ewing, Lucy and Dash, Dev and
+             Koyejo, Sanmi and Callahan, Alison and Fries, Jason A. and
+             Wornow, Michael and Swaminathan, Akshay and
+             Lehmann, Lisa Soleymani and Hong, Hyo Jung and Kashyap, Mehr and
+             Chaurasia, Akash R. and Shah, Nirav R. and Singh, Karandeep and
+             Tazbaz, Troy and Milstein, Arnold and Pfeffer, Michael A. and
+             Shah, Nigam H.},
+  title   = {Testing and Evaluation of Health Care Applications of Large
+             Language Models: A Systematic Review},
+  journal = {JAMA},
+  year    = {2025},
+  volume  = {333},
+  number  = {4},
+  pages   = {319--328},
+  note    = {PMID: 39405325}
+}
+% verified: https://pubmed.ncbi.nlm.nih.gov/?term=Bedi+Testing+and+Evaluation+of+Health+Care+Applications+of+Large+Language+Models+systematic+review+JAMA
+%% TODO(lane L): jamanetwork.com refused an anonymous fetch, so the DOI is NOT
+%% verified and is deliberately omitted. Add
+%% doi = {10.1001/jama.2024.21700} only after confirming it on the publisher page.
+
+@misc{tu2024amie,
+  author       = {Tu, Tao and Palepu, Anil and Schaekermann, Mike and
+                  Saab, Khaled and Freyberg, Jan and Tanno, Ryutaro and
+                  Wang, Amy and Li, Brenna and Amin, Mohamed and
+                  Tomasev, Nenad and Azizi, Shekoofeh and Singhal, Karan and
+                  Cheng, Yong and Hou, Le and Webson, Albert and
+                  Kulkarni, Kavita and Mahdavi, S. Sara and
+                  Semturs, Christopher and Gottweis, Juraj and Barral, Joelle
+                  and Chou, Katherine and Corrado, Greg S. and Matias, Yossi
+                  and Karthikesalingam, Alan and Natarajan, Vivek},
+  title        = {Towards Conversational Diagnostic {AI}},
+  year         = {2024},
+  howpublished = {arXiv preprint arXiv:2401.05654},
+  eprint       = {2401.05654},
+  archivePrefix= {arXiv},
+  note         = {Preprint; no journal reference listed on the arXiv record}
+}
+% verified: https://arxiv.org/abs/2401.05654
+
+
+% ===========================================================================
+% E. Medication adherence measurement
+% ===========================================================================
+
+@article{osterberg2005adherence,
+  author  = {Osterberg, Lars and Blaschke, Terrence},
+  title   = {Adherence to medication},
+  journal = {New England Journal of Medicine},
+  year    = {2005},
+  volume  = {353},
+  number  = {5},
+  pages   = {487--497},
+  doi     = {10.1056/NEJMra050100},
+  note    = {PMID: 16079372}
+}
+% verified: https://pubmed.ncbi.nlm.nih.gov/?term=16079372
+
+@article{stirratt2015selfreport,
+  author  = {Stirratt, Michael J. and Dunbar-Jacob, Jacqueline and
+             Crane, Heidi M. and Simoni, Jane M. and Czajkowski, Susan and
+             Hilliard, Marisa E. and Aikens, James E. and Hunter, Christine M.
+             and Velligan, Dawn I. and Huntley, Kristen and
+             Ogedegbe, Gbenga and Rand, Cynthia S. and Schron, Eleanor and
+             Nilsen, Wendy J.},
+  title   = {Self-report measures of medication adherence behavior:
+             recommendations on optimal use},
+  journal = {Translational Behavioral Medicine},
+  year    = {2015},
+  volume  = {5},
+  number  = {4},
+  pages   = {470--482},
+  doi     = {10.1007/s13142-015-0315-2},
+  note    = {PMID: 26622919}
+}
+% verified: https://pubmed.ncbi.nlm.nih.gov/?term=%22Self-report+measures+of+medication+adherence+behavior%22+Transl+Behav+Med
+
+
+% ===========================================================================
+% F. LLM evaluation methodology
+% ===========================================================================
+
+@misc{zheng2023judge,
+  author       = {Zheng, Lianmin and Chiang, Wei-Lin and Sheng, Ying and
+                  Zhuang, Siyuan and Wu, Zhanghao and Zhuang, Yonghao and
+                  Lin, Zi and Li, Zhuohan and Li, Dacheng and Xing, Eric P. and
+                  Zhang, Hao and Gonzalez, Joseph E. and Stoica, Ion},
+  title        = {Judging {LLM}-as-a-Judge with {MT}-Bench and Chatbot Arena},
+  year         = {2023},
+  howpublished = {arXiv preprint arXiv:2306.05685},
+  eprint       = {2306.05685},
+  archivePrefix= {arXiv},
+  note         = {NeurIPS 2023 Datasets and Benchmarks Track}
+}
+% verified: https://arxiv.org/abs/2306.05685
+
+@misc{liang2023helm,
+  author       = {Liang, Percy and Bommasani, Rishi and Lee, Tony and
+                  Tsipras, Dimitris and Soylu, Dilara and others},
+  title        = {Holistic Evaluation of Language Models},
+  year         = {2022},
+  howpublished = {arXiv preprint arXiv:2211.09110},
+  eprint       = {2211.09110},
+  archivePrefix= {arXiv},
+  note         = {Published in Transactions on Machine Learning Research, 2023}
+}
+% verified: https://arxiv.org/abs/2211.09110
+
+
+% ===========================================================================
+% G. Theory foundations named by the depth directive
+% ===========================================================================
+
+@article{saltzer1975protection,
+  author  = {Saltzer, Jerome H. and Schroeder, Michael D.},
+  title   = {The Protection of Information in Computer Systems},
+  journal = {Proceedings of the IEEE},
+  year    = {1975},
+  volume  = {63},
+  number  = {9},
+  pages   = {1278--1308},
+  doi     = {10.1109/PROC.1975.9939}
+}
+% verified: https://dblp.org/rec/journals/pieee/SaltzerS75.html (volume/number/pages/DOI)
+% verified: https://web.mit.edu/Saltzer/www/publications/protection/ (title/authors)
+
+@misc{fowler2005eventsourcing,
+  author       = {Fowler, Martin},
+  title        = {Event Sourcing},
+  year         = {2005},
+  howpublished = {\url{https://martinfowler.com/eaaDev/EventSourcing.html}},
+  note         = {Published 12 December 2005; accessed 16 August 2026}
+}
+% verified: https://martinfowler.com/eaaDev/EventSourcing.html
+
+@misc{fowler2011cqrs,
+  author       = {Fowler, Martin},
+  title        = {{CQRS}},
+  year         = {2011},
+  howpublished = {\url{https://martinfowler.com/bliki/CQRS.html}},
+  note         = {Published 14 July 2011; accessed 16 August 2026}
+}
+% verified: https://martinfowler.com/bliki/CQRS.html
+
+@book{nygard2018releaseit,
+  author    = {Nygard, Michael},
+  title     = {Release It! Design and Deploy Production-Ready Software},
+  edition   = {Second},
+  publisher = {The Pragmatic Programmers},
+  year      = {2018},
+  isbn      = {9781680502398}
+}
+% verified: https://pragprog.com/titles/mnee2/release-it-second-edition/
+% note: the publisher page renders the author as "Michael Nygard"; the printed
+% cover uses "Michael T. Nygard". Either is defensible; keep one consistently.
+
+@article{helland2012idempotence,
+  author  = {Helland, Pat},
+  title   = {Idempotence Is Not a Medical Condition},
+  journal = {ACM Queue},
+  year    = {2012},
+  volume  = {10},
+  number  = {4},
+  pages   = {30},
+  doi     = {10.1145/2181796.2187821},
+  note    = {Also republished in Communications of the ACM 55(5):56--65, 2012,
+             doi 10.1145/2160718.2160734}
+}
+% verified: https://dblp.org/search?q=Idempotence+Is+Not+a+Medical+Condition
+
+@inproceedings{balaraman2021dst,
+  author    = {Balaraman, Vevake and Sheikhalishahi, Seyedmostafa and
+               Magnini, Bernardo},
+  title     = {Recent Neural Methods on Dialogue State Tracking for
+               Task-Oriented Dialogue Systems: A Survey},
+  booktitle = {Proceedings of the 22nd Annual Meeting of the Special Interest
+               Group on Discourse and Dialogue},
+  year      = {2021},
+  pages     = {239--251},
+  doi       = {10.18653/v1/2021.sigdial-1.25}
+}
+% verified: https://aclanthology.org/2021.sigdial-1.25/
+
+@misc{king2019parse,
+  author       = {King, Alexis},
+  title        = {Parse, don't validate},
+  year         = {2019},
+  howpublished = {\url{https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/}},
+  note         = {Published 5 November 2019; accessed 16 August 2026}
+}
+% verified: https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/
+
+@article{clopper1934confidence,
+  author  = {Clopper, C. J. and Pearson, E. S.},
+  title   = {The Use of Confidence or Fiducial Limits Illustrated in the Case
+             of the Binomial},
+  journal = {Biometrika},
+  year    = {1934},
+  volume  = {26},
+  number  = {4},
+  pages   = {404--413},
+  doi     = {10.1093/biomet/26.4.404}
+}
+% verified: https://academic.oup.com/biomet/article/26/4/404/291538
+
+@article{vohra2015cent,
+  author  = {Vohra, Sunita and Shamseer, Larissa and Sampson, Margaret and
+             Bukutu, Cecilia and Schmid, Christopher H. and Tate, Robyn and
+             Nikles, Jane and Zucker, Deborah R. and Kravitz, Richard and
+             Guyatt, Gordon and Altman, Douglas G. and Moher, David},
+  title   = {{CONSORT} extension for reporting N-of-1 trials ({CENT}) 2015
+             Statement},
+  journal = {BMJ},
+  year    = {2015},
+  volume  = {350},
+  pages   = {h1738},
+  doi     = {10.1136/bmj.h1738},
+  note    = {PMID: 25976398; CENT Group}
+}
+% verified: https://pubmed.ncbi.nlm.nih.gov/?term=Vohra+CONSORT+extension+for+reporting+N-of-1+trials+CENT+2015+statement

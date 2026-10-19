@@ -1,0 +1,160 @@
+\chapter{Results}
+\label{ch:results}
+
+\section{End-to-End Validation Run}
+\label{sec:results-live}
+
+The live validation used one test patient, the researcher, with a real Canadian
+mobile number and metformin as the screened medication name; all adherence
+behaviour was fictional. Twelve doses were scheduled across a four-day window;
+eleven schedules fired and were delivered, and the final schedule was drained
+when the researcher ended the run. Three replies entered the Inbound and
+Classifier paths and were recorded as \texttt{taken}; one was attributed after a
+long delay, which exercised the late-reply path. Eight delivered check-ins
+received no reply and became \texttt{unknown}/\texttt{missed} timeout outcomes.
+No safety event was recorded and no row was unattributed, so the final export
+reconciles all 11 delivered messages into three classifier decisions and eight
+timeout decisions.
+
+Scheduling, delivery, webhook handling, asynchronous classification, timeout
+detection, persistence, dashboard retrieval, export, and teardown all produced
+evidence on live infrastructure. Outbound delivered eleven check-ins, Timeout
+recorded eight events, and Inbound and Classifier recorded three each. A
+separate short deployment exercised opt-out: a real STOP reply produced a fresh
+inbound row, set the test patient inactive with an opt-out timestamp, and left
+zero remaining schedules. After the final export the stack was destroyed, and
+the post-destroy check found no MedAdhere stack, RDS instance, or export
+bucket.
+
+\section{Final Classifier-Evaluation Results}
+
+The final production-prompt run classified all 207 gold items with zero errored
+rows, predicting the correct adherence state on 200, for accuracy 0.966 (95\% CI
+0.932--0.986), above the 0.80 floor. Table~\ref{tab:per-class-results} gives the
+per-class results: every class exceeded the support floor and every observed
+precision and recall was at least 0.88.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Final adherence-state results for production prompt v1. Intervals
+  are 95\% Clopper--Pearson exact intervals.}
+  \label{tab:per-class-results}
+  \begin{tabular}{lrrll}
+    \toprule
+    Class & Support & Correct & Precision (95\% CI) & Recall (95\% CI) \\
+    \midrule
+    Taken & 66 & 62 & 1.000 (0.942--1.000) & 0.939 (0.852--0.983) \\
+    Delayed & 22 & 22 & 0.880 (0.688--0.975) & 1.000 (0.846--1.000) \\
+    Skipped & 27 & 26 & 1.000 (0.868--1.000) & 0.963 (0.810--0.999) \\
+    Stopped & 26 & 26 & 1.000 (0.868--1.000) & 1.000 (0.868--1.000) \\
+    Question & 19 & 18 & 0.947 (0.740--0.999) & 0.947 (0.740--0.999) \\
+    Unknown & 47 & 46 & 0.939 (0.831--0.987) & 0.979 (0.887--0.999) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:confusion-matrix} shows where the seven errors went: none crosses
+between \texttt{taken} and \texttt{skipped} or \texttt{stopped}, and they
+concentrate on the \texttt{taken}/\texttt{delayed} timing boundary and on the
+\texttt{unknown} row and column.
+
+\medaInputIfCmd{cellcolor}{generated/confusion-matrix}{the six-by-six
+gold-versus-predicted matrix for the final run, row-normalized shading, showing
+the seven off-diagonal cells and the absence of any taken/skipped confusion}
+
+Table~\ref{tab:baselines} places that accuracy against two deterministic
+comparators over the identical 207 rows. Always predicting the majority class
+scores 0.319, and a keyword and regular-expression matcher written against the
+same label vocabulary scores 0.705. Neither can raise a safety flag, so both
+record 0.000 life-safety recall against the classifier's 1.000. The language
+model adds the safety axis as well as state accuracy.
+
+\input{generated/baselines}
+
+The life-safety tier caught all 33 acute-physical and crisis items, recall 1.000
+(95\% CI 0.894--1.000); the deterministic prefilter caught all 15
+lexicon-matchable safety rows, 1.000 (95\% CI 0.782--1.000), and the model all 16
+semantic-safety rows, 1.000 (95\% CI 0.794--1.000). Medical questions had recall
+1.000 (95\% CI 0.768--1.000) and precision 0.875 (95\% CI 0.617--0.984). All four
+gates passed.
+
+Reason-code completeness was 65 of 81 non-\texttt{none} reason labels, or 0.802
+(95\% CI 0.699--0.883). Table~\ref{tab:reason-completeness} decomposes it by
+code. The three specific reasons are preserved almost or entirely intact:
+\texttt{side\_effect} 41 of 46 (0.891), \texttt{ran\_out} 5 of 5,
+\texttt{forgot} 6 of 6. The residual category \texttt{other} accounts for 11 of
+the 16 misses, at 13 of 24 (0.542). The misses concentrate in the one code
+defined by exclusion instead of content, which points to a sharper reason taxonomy or a
+clarifying question, not more prompt context.
+
+\input{generated/reason-completeness}
+
+Table~\ref{tab:error-exemplars} prints all seven state errors with their inputs.
+The axes fail independently: all seven carried the correct reason code
+\emph{and} the correct safety flag despite the wrong state, including the
+crisis-labelled and acute-physical rows. No error invented a confident dose
+outcome. The seven predictions were \texttt{delayed} (three), \texttt{unknown}
+(three), or \texttt{question} (one), and \texttt{unknown} predictions route to
+human review.
+
+\input{generated/error-exemplars}
+
+The guarded medication-context ablation was evaluated and not shipped, because
+it did not improve completeness. Both arms retained 0.96618 state accuracy, 1.0
+life-safety recall, and 0.97619 side-effect precision, and completeness was
+0.80247 for the baseline against 0.76543 for the enriched arm
+(Figure~\ref{fig:ablation-plot}), so the baseline v1 prompt remains.
+
+\section{Descriptive Statistics from the Pseudonymized Export}
+
+The final pseudonymized CSV contains 11 data rows and the fixed allowlisted
+header, with no phone number, display name, medication name, raw reply, or
+database identifier. Table~\ref{tab:export-results} summarizes it.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Descriptive statistics from the retained final export.}
+  \label{tab:export-results}
+  \begin{tabular}{lr}
+    \toprule
+    Measure & Result \\
+    \midrule
+    Delivered check-ins & 11 \\
+    Classifier decisions & 3 \\
+    Timeout decisions & 8 \\
+    Taken states & 3 \\
+    Unknown states & 8 \\
+    Safety flags & 0 \\
+    Unattributed rows & 0 \\
+    Study-day distribution & 3, 3, 3, 2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+For the three classifier-attributed replies, response latency had minimum 14
+seconds, median 18 seconds, mean 1,772.67 seconds, and maximum 5,286 seconds.
+The intentionally accepted late reply dominates the mean, so it does not
+represent model-inference latency. Timeout rows were excluded because their
+empty or zero latency field means non-response, not a zero-second reply. These
+statistics come from the local CSV export, read back after teardown.
+
+\section{Cost and Operational Observations}
+
+The final 207-call production-prompt evaluation consumed 281,697 input tokens
+and 15,520 output tokens, at a mean API latency of 1,300 ms and p95 of
+2,951 ms. Estimated inference cost was USD 0.359297, or about USD 0.00174 per
+classification; the 414-call two-arm ablation cost USD 0.7591, so the two
+together cost approximately USD 1.12 and both remained below their enforced USD
+1.50 per-run caps.
+
+With only three production classifications in the live validation, model
+inference was not the main platform expense. The always-on NAT gateway and
+database set the deployed cost, which is why the stack is deployed on demand and
+destroyed after the export. The complete pre-deploy gate passed before this
+deployment. The repository's 1,240 tests passed at 89.78\% statement and 80.64\%
+branch coverage, all workspaces type-checked, lint and the production dashboard
+build passed, and CDK synthesis completed. The larger suite reported in
+Chapter~\ref{ch:conversational} is a separate measurement and is not combined
+with these figures. The production-only dependency audit reported zero
+vulnerabilities.

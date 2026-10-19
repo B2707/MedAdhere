@@ -1,0 +1,26 @@
+% confusion-matrix.tex
+% Source: backend/eval/results/eval-v1-2026-08-04T00-11-50-026Z.json
+% (the 207-row production-prompt v1 classifier run; 200/207 correct =
+% 0.966 accuracy, matching tab:per-class-results in chapters/results.tex).
+% Requires \usepackage[table]{xcolor} in the preamble (row-normalized
+% cell shading via \cellcolor). Standalone \input-able.
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Confusion matrix for the final production-prompt v1 classifier run (gold rows $\times$ predicted columns, $n=207$). Shading is row-normalized (darker = larger share of that gold class's rows).}
+  \label{tab:confusion-matrix}
+  \begin{tabular}{lrrrrrrr}
+    \toprule
+    Gold $\downarrow$ / Pred $\rightarrow$ & Taken & Delayed & Skipped & Stopped & Question & Unknown & Total \\
+    \midrule
+    Taken & \cellcolor{medTeal!94}\textcolor{white}{\textbf{62}} & \cellcolor{medTeal!3}2 & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!2}1 & \cellcolor{medTeal!2}1 & 66 \\
+    Delayed & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!100}\textcolor{white}{\textbf{22}} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & 22 \\
+    Skipped & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!96}\textcolor{white}{\textbf{26}} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!4}1 & 27 \\
+    Stopped & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!100}\textcolor{white}{\textbf{26}} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & 26 \\
+    Question & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!95}\textcolor{white}{\textbf{18}} & \cellcolor{medTeal!5}1 & 19 \\
+    Unknown & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!2}1 & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \textcolor{medMuted!60}{0} & \cellcolor{medTeal!98}\textcolor{white}{\textbf{46}} & 47 \\
+    \midrule
+    Total & 62 & 25 & 26 & 26 & 19 & 49 & 207 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

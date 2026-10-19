@@ -1,0 +1,412 @@
+% The conversational clinical agent. Every number and quoted string is
+% traceable to a named run artifact or source file.
+
+\chapter{From Classifier to Conversational Agent}
+\label{ch:conversational}
+
+\section{From One Reply to a Conversation}
+\label{sec:conv-motivation}
+
+The pipeline of Chapter~\ref{ch:architecture} treats each inbound SMS as an
+independent unit of work. That makes the classifier measurable, but it also
+leaves the system without memory. It cannot ask a follow-up question, let a later
+message revise an earlier one, or attribute a reply to one of several
+medications.
+
+The conversational clinical agent removes that limit. The unit of work becomes a
+\emph{turn} in a longitudinal conversation. Claims are extracted from the
+message, resolved against the patient's own history and timezone, folded into an
+append-only clinical record, and answered with at most one question drawn from a
+durable set of unmet information needs. This adds two capabilities: a bounded
+clarifying-SMS loop that asks one follow-up instead of recording an ambiguous
+reply as \texttt{unknown}, and support for more than one active medication per
+patient. The language model gains no new authority over the clinical record.
+Dialogue management in health-care conversational agents is mostly finite-state
+and frame-based~\cite{laranjo2018conversational}, and this agent stays within
+that tradition. Its contribution is the authority boundary drawn around the
+model: unlike diagnostic dialogue systems such as AMIE~\cite{tu2024amie}, this
+agent never originates a clinical conclusion.
+
+\section{Bounded Authority: The Design Frame}
+\label{sec:conv-bounded}
+
+The design rests on a split this thesis calls \textbf{bounded authority}. A
+language model may only \emph{propose}: a set of claims about what the patient
+said, or a candidate wording for a reply. Deterministic code \emph{disposes}: it
+decides what is recorded, what is asked, and what is sent. No model output
+becomes durable or reaches a patient without passing a code-only gate that can
+reject it outright. Figure~\ref{fig:pipeline-conversational} traces one turn
+through these stages. The composer cannot originate a clinical action. It runs
+only after the clinical commit, and its output is stored in a separate column.
+The sender may transmit that text in place of the deterministic template it is
+paired with, and sends the template whenever the composed text is absent or
+rejected.
+
+\input{generated/fig-pipeline-conversational}
+
+\subsection{Untrusted Claim Extraction}
+\label{sec:conv-extraction}
+
+Claim extraction is a \textbf{dual-model trust boundary}. The extractor is
+treated as an untrusted input processor, and its output is schema-parsed before
+anything else happens, because the text it reads is attacker-controllable. This
+is the indirect prompt-injection setting of
+Chapter~\ref{ch:background}~\cite{abdelnabi2023indirect,liu2024promptinjection}.
+The design assumes that a hostile message will eventually arrive, so the system
+fails closed instead of relying on detection.
+
+An inbound reply is persisted and enqueued before any model work starts. A queue
+worker drains it, opens a \texttt{turn\_job} row, and calls the interpretation
+stage of the model gateway. Extraction runs on a Sonnet-class model with a forced
+tool, so a schema-shaped tool call is the only possible output. Format
+restriction can cost task performance~\cite{tam2024format}. For a clinical
+record, an unparseable claim is worse than a slightly less fluent one, so the
+trade is accepted.
+
+The prompt applies the same rule at the semantic level. The extractor treats all
+message text as untrusted data, never as instructions. It quotes only exact
+trimmed substrings and preserves negation, experiencer, temporal status and
+patient uncertainty unchanged. It may not emit stable identifiers, inferred
+medication or dose bindings, adherence classifications, canonical symptom
+concepts, safety tiers, causality, clinician prose or response wording. The
+deterministic core owns all of those.
+
+The handler does not rely on the generation-time constraint alone. It rejects
+any response whose \texttt{stop\_reason} is not \texttt{tool\_use}, that carries
+more than one content block, or that names an unexpected tool, and then passes
+the tool input through a canonical Zod parser~\cite{king2019parse}. Only
+\texttt{malformed} outcomes are retried, up to three attempts. Refusals,
+truncations and provider errors surface immediately. A well-formed extraction
+can still fail the shared grounding gate, with a quote that is not an exact or
+unique substring, or a field not copied verbatim from inside its quote. The
+handler then re-asks once with the violated rule stated plainly, and on any
+further failure keeps the first extraction, so the human-review path is never
+lost.
+
+\subsection{Prompt Caching}
+\label{sec:conv-caching}
+
+Both model calls send a large static system prompt with one short SMS. Each call
+marks that prompt as an ephemeral cache breakpoint, so the provider restores the
+encoded prefix instead of re-encoding it and billed input covers only the new
+suffix. The cache is keyed on exact prompt bytes, so both prompts are versioned
+and hashed. Every stage-usage record meters \emph{cache-creation} and
+\emph{cache-read} input tokens separately from ordinary input and output tokens,
+and rejects the response if any of the four counts is missing or not a finite
+non-negative number. One recorded development run of 27 provider turns metered
+3{,}991 cache-creation input tokens, 103{,}766 cache-read input tokens and
+8{,}028 uncached input tokens. The static prefix was paid for once and re-read on
+nearly every later call.\footnote{Source: the \texttt{execution} block of the run
+artifact \texttt{conversation-eval-\allowbreak 20260814T160303463Z-\allowbreak
+db747eee\dots.json} in \texttt{backend/eval/results/}.}
+
+\subsection{Deterministic Resolution and the Append-Only Reducer}
+\label{sec:conv-record}
+
+Resolution is pure code. It attaches each extracted claim to a dose, a
+medication and an instant in the patient's timezone, decides whether a claim
+corrects an earlier one, and emits commands that a pure reducer folds into the
+clinical record.
+
+The record is an \textbf{event-sourced} log~\cite{fowler2005eventsourcing}:
+current state is a left fold over an append-only sequence of events, not a
+mutable row that overwrites its history. The \texttt{clinical\_event} table has a
+\texttt{supersedes\_id} self-reference, guarded by a not-self \texttt{CHECK} and
+a patient-scoped foreign key. A correction appends a successor event that points
+at the event it revises, and nothing is updated in place. Supersession lets the
+record answer both \emph{what does the patient believe now} and \emph{what did
+they say first}, which the single-shot write contract of
+Section~\ref{sec:arch-data} cannot. Currency is derived at load time: an event is
+current when no successor supersedes it. The dashboard reads projections folded
+from this log, the read-model half of the CQRS pattern~\cite{fowler2011cqrs}. The
+reducer is a pure function of loaded memory and commands, so replaying the log is
+deterministic. Before folding, it re-parses memory and commands through their
+canonical schemas, checks the lineage of the existing event graph, and rejects
+duplicate command identifiers.
+
+\subsection{Durable Information Needs}
+\label{sec:conv-needs}
+
+When resolution finds a clinically relevant field missing, it opens an
+\texttt{information\_need} row. This is \textbf{dialogue state tracking} in its
+classical slot-filling form~\cite{balaraman2021dst}, with two differences from a
+conventional in-memory dialogue state. First, the state is durable and
+patient-scoped in PostgreSQL, because an SMS conversation has no session: a
+patient may answer two days later, from a different network, after several
+unrelated messages. Second, the schema constrains it. A database \texttt{CHECK}
+limits the requested field to a closed fifteen-value vocabulary covering
+identity, symptom characterization and timing, and a target-scope constraint
+requires every non-identity need to name a specific versioned clinical event, so
+every question is tied to the fact it is about.
+
+Fixed policies bound this state. The agent asks at most one question per turn,
+and restates an asked question at most once, only on a turn with no new clinical
+content and never while an emergency pause is open. A single symptom gets at
+most four questions, and any ``I don't know'', decline or change of subject ends
+that line of questioning. Questions follow a fixed priority: identity, then
+symptom characterization, then dose timing, then duration, body site and
+frequency, so the agent knows what it is talking about before asking for detail.
+Needs also expire. An asked need that has outlived three \emph{substantive}
+turns, or the patient's local day boundary, is marked \texttt{expired} rather
+than deleted, with a one-turn grace window in which a late but clear answer can
+still resolve it.
+
+\subsection{Deterministic Safety and the Never-Composed Set}
+\label{sec:conv-safety}
+
+The tiered safety design of Section~\ref{sec:arch-safety} still applies. The
+deterministic lexicon prefilter runs before inference, emergency output is exact
+fixed text, and code decides each turn's policy tier: routine, question,
+important, emergency, STOP, unsupported language, human review, or stale
+snapshot.
+
+The conversational agent adds one structural rule: the composition gate accepts
+only \texttt{routine} and \texttt{question} plans. Every other plan kind belongs
+to the \emph{never-composed} set and ships its exact template. So does any turn
+carrying a safety event, a non-empty review-reason list, an unresolved-report
+delta, paused routine clarifications, a runtime failure, record-only
+suppression, or a restated pending question. The gate is one function, and the
+code documents the set as one that ``may only ever grow''. This is \emph{least
+privilege} in Saltzer and Schroeder's sense~\cite{saltzer1975protection},
+enforced at the type level: the composition request is a discriminated union
+that cannot express an emergency or STOP reply. It is paired with \emph{fail-safe
+defaults}. Every composer failure path resolves to the template, and the
+operator kill switch treats any unrecognized value, including a typo, as
+``disabled'', so a misconfigured flag can only make the system more conservative.
+
+\section{The Bounded Composer}
+\label{sec:conv-composer}
+
+Composition is the only stage where a model writes words a patient will read,
+and it is the most constrained. The intent is built deterministically from the
+committed turn: a kind (acknowledgement, question, or greeting), the patient's
+medication list, deterministic status facts, and, for a question, the need's
+field and its key vocabulary. The model is told \emph{what} to say and chooses
+only \emph{how} to say it.
+
+\paragraph{Instruction--data separation.}
+The composer prompt applies \textbf{spotlighting}~\cite{hines2024spotlighting}.
+All patient-authored text is JSON-encoded inside a delimited untrusted block, the
+compose instruction sits outside it, and the closing delimiter carries a
+per-request nonce, so text inside the block cannot close it without guessing the
+nonce. A patient could still type the literal tag name, so the encoder also
+neutralizes delimiter tags inside the untrusted payload, character for
+character, and keeps the JSON valid. A constant canary token in the system prompt
+is blocked as prompt leakage if it appears in output.
+
+\paragraph{Alias indirection.}
+Medication names never reach the model. The composer envelope rewrites every
+display name to \texttt{med\_1..n} before building the request, including inside
+the required-token and key-vocabulary fields, and de-aliases deterministically
+after validation. This minimizes data, and it also helps validation. Because the
+model sees only aliases, the grounding check treats any \texttt{med\_N} token
+outside the patient's alias set as ungrounded, and it masks medication tokens
+before counting numerals, so \texttt{med\_1} can never ground a fabricated ``1''.
+
+\paragraph{Runtime verification of the generated text.}
+Ten pure-code validators (Table~\ref{tab:conv-validators}) check the composed
+SMS. They are the only gate: there is no scoring step and no model judging
+another model, and any failure discards the candidate. The most important
+clinically is entity grounding. It blocks a reply that invents a symptom, a dose
+time or a severity the patient never reported, and it stops a bare ``No'' from
+being acknowledged as a taken dose.
+
+The validators run twice, on the aliased text and again on the de-aliased final
+text, so de-aliasing cannot introduce a violation after the checks pass. A
+failure allows one retry with the failure reason fed back to the model, after
+which the deterministic template ships. The full set runs again at send time
+against the stored body, together with an integrity hash over that body and a
+message-kind check. This is \emph{complete mediation}~\cite{saltzer1975protection}:
+the stored text is never trusted unchecked between validation and transmission,
+and a row that fails the re-check has its composed text withdrawn and sends the
+template.
+
+% Table content checked against
+% backend/src/conversation/clinical-memory/composer-validators.ts (class numbering from its
+% file header; runtime order differs and is stated in the caption).
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{The ten composer validators. Numbering follows the implementation; at runtime
+  the structural injection screen runs first, so an injected payload is labelled as such
+  instead of failing a later check. Any failure triggers one retry, then the deterministic
+  template.}
+  \label{tab:conv-validators}
+  \begin{tabular}{@{}p{0.5cm}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{9.6cm}@{}}
+    \toprule
+    \raggedright \# & \raggedright Validator & \raggedright What it enforces \tabularnewline
+    \midrule
+    1 & Structured output &
+      \raggedright Exactly one JSON object with a single \texttt{sms} string key, non-empty
+      after trimming \tabularnewline
+    2 & Entity grounding &
+      \raggedright Every numeral, time reference, symptom term and adherence-outcome word
+      must appear in the intent or verbatim in today's patient messages (medication tokens
+      masked first) \tabularnewline
+    3 & Coverage &
+      \raggedright Required tokens the intent declares must be present; a question about a
+      specific medication must name that medication \tabularnewline
+    4 & Question identity &
+      \raggedright At most one question, only when the intent asks one; the question span
+      must contain the need field's key vocabulary, except on the five symptom-context
+      fields where the model may author the wording and every content word must instead be
+      grounded in a closed question glossary or the patient's own words; greeting questions
+      may not probe symptoms and may carry at most one grounded medication
+      question \tabularnewline
+    5 & Prohibited medication advice &
+      \raggedright No medication-change instruction, detected by the shared advice module
+      over advice-masked text, including digit-free phrasings \tabularnewline
+    6 & Advice verbs, doses, foreign drugs &
+      \raggedright No advice verb in any sentence once a medication or care-logistics noun
+      appears anywhere in the reply (past-tense interrogatives excepted), no
+      dose-with-unit pattern, no drug name outside the patient's own list, and, on every
+      clause of every reply, no directive to act on the body or to seek (or not seek)
+      care \tabularnewline
+    7 & Reassurance and minimization &
+      \raggedright No normalizing or dismissive phrasing, and no agreement bait \tabularnewline
+    8 & Banned severity terms &
+      \raggedright No clinician-owned triage label (severe, serious, critical, urgent,
+      dangerous) in generated text, enforced at runtime as well as over build-time
+      templates \tabularnewline
+    9 & Injection markers &
+      \raggedright No canary echo, prompt-tag echo, URL, phone number, base64 run,
+      zero-width or Unicode tag character, refusal or role-play boilerplate, safety-lexicon
+      hit, or promotional drift \tabularnewline
+    10 & GSM-7 and length &
+      \raggedright GSM-7 characters only (emoji excluded) and at most 320 code points after
+      trimming; the overage is measured and fed to the retry, never truncated \tabularnewline
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Bulkheads, encoding and an auto-disable.}
+The composer has its own provider circuit key and its own per-patient token
+buckets, separate from the extractor's. These are \emph{bulkheads} in Nygard's
+sense~\cite{nygard2018releaseit}: a busy conversation day cannot use up clinical
+extraction's budget, and a composer outage cannot open the extractor's circuit
+for every patient. One character outside the SMS 7-bit alphabet forces UCS-2
+encoding and halves capacity, so the composer normalizes typographic punctuation
+to GSM-safe ASCII and records a septet-accurate segment count. A pre-registered
+abort sits above this. A \texttt{composer\_control} row keeps a rolling 60-minute
+window of compose attempts and fallbacks under a row lock. Once fallbacks exceed
+30\% of compositions in that window, with a minimum of ten compositions so one
+early failure cannot trip it, the composer durably disables itself, templates
+ship, and an identifier-free metric line records the window counts. The fallback
+share either stays under the threshold or composition stops.
+
+None of this involves learning. The system does no model training or fine-tuning
+and uses no learned or embedding-based retrieval. The validators are a runtime
+check on generated text, not a proof.
+
+\section{The Offline Conversation Evaluation}
+\label{sec:conv-offline}
+
+The conversational agent was specified with a conversation-level evaluation from
+the start. Bedi et al.'s review of health-care LLM evaluation~\cite{bedi2025testing}
+makes the same point the design assumes: per-message benchmark accuracy does not
+show that a deployed system behaves safely across a dialogue. The corpus is
+versioned, content-hashed, and split into a development set and an untouched
+holdout. A versioned scorer produces each run record, which carries the corpus
+hash, the prompt hash, the output-schema hash and the scorer version alongside
+its numbers.
+
+\subsection{Design and Scope}
+
+Scenarios are multi-turn transcripts with per-turn expectations. Each
+expectation declares which metrics apply, and denominators come from the
+reviewed expectation set, not from successful provider responses. A missing,
+refused, truncated or malformed turn stays in every denominator it applies to
+and counts as no success. The metrics module enforces this rule.
+
+The evaluation defines eighteen metrics in two families. Eleven are \emph{hard
+gates} at threshold 1.0, among them critical emergency safety recall,
+structured-output validity, prohibited medication-advice blocking, cross-doctor
+isolation, and the token, context and cost ceilings. The other seven are
+\emph{quality} metrics: draft faithfulness, clinical-field completeness, and the
+clarification properties of usefulness, priority, single-interrogative form and
+non-repetition, with thresholds between 0.85 and 0.95, plus an
+unnecessary-question rate capped at 0.10. Every proportion carries a 95\% Wilson
+score interval. Chapter~\ref{ch:evaluation} uses Clopper--Pearson exact
+intervals~\cite{clopper1934confidence} for the classifier, and each reported
+number names its estimator. Nine of the eighteen metrics are scored by
+external semantic review against a hashed codebook. Automated scoring may record
+a \emph{failure} when a strict check proves one, but never a success, so those
+metrics are scored by a human reader of the prose.
+
+The evaluation covers claim extraction, temporal attribution, clarification
+behaviour, safety routing, isolation and output validity. SMS transport, carrier
+behaviour and delivery timing are exercised in deployment instead
+(Section~\ref{sec:conv-live}). The patient turns are authored for the corpus,
+which spans four primary languages (Arabic, English, Spanish, French). The
+semantic core targets English, and the scored results below are English.
+
+\subsection{What the evaluation establishes}
+
+Table~\ref{tab:conv-eval-summary} describes the locked corpus. Two results are
+established.
+
+\medaInput{generated/conv-eval-summary}{the locked corpus definition: version,
+partition sizes, turn counts, and category and language composition}
+
+The first concerns the model. On the recorded English development run,
+structured-output validity is 1.00 on 27 of 27 provider-eligible turns (95\%
+Wilson interval 0.875--1.000). The run's outcome counts record no refusal,
+truncation, timeout, provider error or malformed response, and its total metered
+cost was \$0.09. Evidence and template-ID allowlist integrity and
+retrieval-coverage reporting are also 1.00 on the turns where they applied (3 of
+3 each).\footnote{Source: the \texttt{execution} and \texttt{metrics.overall}
+blocks of the run artifact cited in Section~\ref{sec:conv-caching}. This
+thesis reports the structured-output and integrity metrics. The semantic-review
+and answer-key metric families, temporal attribution included, are reported as
+evaluation \emph{design}, and no scored multi-turn semantic result is claimed.} The forced-tool design exists to make every
+provider turn parse, and everything downstream depends on it: a claim that
+cannot be parsed never reaches the reducer.
+
+The second result concerns the deterministic code, and it is the larger body of
+evidence. A suite of 3{,}483 tests across 227 files pins the clinical core:
+resolution, the reducer, information needs, temporal attribution, reminders and
+summaries. All pass on the pinned Node~24 toolchain, every workspace
+typechecks, the high-severity dependency audit is clean, and a multi-stage
+pre-deploy gate includes infrastructure synthesis and policy
+checks.\footnote{Source: the recorded verification summary for the clinical
+core. Statement and branch coverage were last measured at 90.43\% and 85.63\%
+on an earlier verification run.} The tests run against a real
+PostgreSQL container through the actual commit path. They show that the
+deterministic half of the pipeline, which owns every clinical fact, behaves as
+specified under controlled inputs. Under bounded authority, that is the half
+whose correctness matters most.
+
+\section{Deployment}
+\label{sec:conv-live}
+
+The conversational agent has run in production. The AWS stack of
+Chapter~\ref{ch:architecture} is deployed on demand for a validation window and
+destroyed afterwards. Within a window it serves a live patient over real SMS
+through Twilio on real carrier infrastructure. Scheduled check-ins go out at dose
+time, free-text replies come back, claims are extracted and committed to the
+clinical record, information needs are opened and asked, reminder guards hold or
+release reminders, and the clinician dashboard shows the result. Nothing in the
+live path was simulated or stubbed. The live cohort is one patient: the
+developer, on his own phone, flagged \texttt{is\_test}, with metformin as the
+medication and \texttt{America/Toronto} as the timezone. This is an n-of-1
+deployment study~\cite{vohra2015cent}. It shows the system operating end to end
+on real infrastructure and makes no clinical-effectiveness claim.
+
+Two properties of the deployment stand out. The first is latency. A bare dose
+answer texted at 3:21~PM local drew its reply 16~seconds later, measured from the
+live message log.\footnote{Source: the production message log exported through
+the clinician dashboard, 2026-08-16.} That time covers the whole inbound path
+(webhook authentication, persistence, queue hop, model call, resolution, commit
+and send) within the account-level ceiling of ten simultaneous Lambda executions
+that the whole system shares. The second is ordering. Inbound replies go onto an
+SQS FIFO queue whose message group is the patient identifier, so one patient's
+messages are processed in the order sent and a correction can never overtake the
+message it corrects.
+
+One live day exercised the whole loop. The patient reported a headache in
+ordinary words. The agent asked how strong it was, then when it had started,
+then what it felt like, one question per message. Each answer was bound to the
+question it answered and committed as its own clinical event, and the reported
+severity appeared on the clinician's symptom chart the same day. Neither side
+was scripted: the patient wrote freely, and the record was assembled
+deterministically from what he wrote.
