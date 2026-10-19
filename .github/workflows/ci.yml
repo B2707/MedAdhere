@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Node 22 for the TEST RUNNER only (the Lambda runtime stays nodejs20.x).
       # Node 20's bundled undici lacks `webidl.util.markAsUncloneable`, which the
@@ -123,7 +123,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node 22
         uses: actions/setup-node@v4
